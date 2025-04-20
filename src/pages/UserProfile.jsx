@@ -33,11 +33,11 @@ const UserProfile = () => {
           </div>
           <div className="flex md:justify-around w-[96%] text-[0.85em]">
             <div className="sm:grid sm:grid-cols-2 flex flex-col gap-4 w-[96%]">
-              <div className="md:border border-gray-400 rounded p-1 sm:text-sm w-[75%]">
+              <div className="md:border border-gray-400 rounded p-1 sm:text-sm w-[75%] cursor-pointer">
                 <MdLocationOn className="inline-flex" size={16} /> United
                 States, 3601 Old Capitol Trall, Unit A-7, Suite
               </div>
-              <div className="md:border border-gray-400 rounded p-1 sm:text-sm w-[75%]">
+              <div className="md:border border-gray-400 rounded p-1 sm:text-sm w-[75%] cursor-pointer">
                 <MdLocationOn className="inline-flex" size={16} /> Moscow city,
                 Street name, Building lenin, House 77
               </div>
@@ -78,7 +78,7 @@ const UserProfile = () => {
                 </div>
                 <Button
                   variant="outlined"
-                  className="w-[30%] text-red-600 border-red-600 rounded-md text-[0.6em] p-0 sm:text-xs sm:w-[20%]"
+                  className="w-[30%] text-red-600 border-red-600 rounded-md text-[0.6em] p-0 sm:text-xs sm:w-[20%] hover:text-[#FFF] hover:bg-red-500 hover:font-normal"
                 >
                   Cancel order
                 </Button>
