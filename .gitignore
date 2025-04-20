@@ -1,10 +1,12 @@
 # dependencies
 node_modules/
 .env
+src/assets/
 
 # build output
 dist/
 build/
+
 
 # misc
 .DS_Store
