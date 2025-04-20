@@ -3,7 +3,7 @@
 
 # production
 /dist
-
+/assets
 # misc
 .env
 .DS_Store
