@@ -14,7 +14,7 @@ const Order = () => {
         </div>
         <Button
           variant="outlined"
-          className="w-[30%] text-red-600 border-red-600 rounded-md text-[0.6em] p-0 sm:text-xs sm:w-[20%]"
+          className="w-[30%] text-red-600 border-red-600 rounded-md text-[0.6em] p-0 sm:text-xs sm:w-[20%]  hover:text-[#FFF] hover:bg-red-500 hover:font-normal"
         >
           Cancel order
         </Button>
