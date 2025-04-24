@@ -3,29 +3,13 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
-import Header from "./components/Header";
 import Products from "./pages/Products";
 import WishList from "./pages/WishList";
-import UserProfile from "./pages/UserProfile"
-import Footer from "./components/Footer";
-import Type from "./components/Type";
-import Categories from "./components/Categories";
-import Services from "./components/Services";
-import Productsshow from "./components/Productsshow";
-import Banner from "./components/Banner";
+import UserProfile from "./pages/UserProfile";
 
 const App = () => {
   return (
     <div>
-      <Header />
-      <Banner />
-
-      <Categories />
-      <Type />
-
-      <Productsshow />
-      <Services />
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -35,7 +19,6 @@ const App = () => {
         <Route path="/wishlist" element={<WishList />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer />
     </div>
   );
 };
