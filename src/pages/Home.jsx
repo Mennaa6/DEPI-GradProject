@@ -1,3 +1,4 @@
+
 import Banner from "../components/Banner";
 import Categories from "../components/Categories";
 import Footer from "../components/Footer";
@@ -8,13 +9,6 @@ import Header from "./../components/Header";
 const Home = () => {
   return (
     <div>
-      {/* <Header />
-      <Banner />
-      <Categories />
-      <Type />
-      <Productsshow />
-      <Services />
-      <Footer /> */}
       <Header />
       <Banner />
       <Categories />
@@ -27,3 +21,4 @@ const Home = () => {
 };
 
 export default Home;
+
