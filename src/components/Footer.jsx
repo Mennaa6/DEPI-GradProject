@@ -1,3 +1,4 @@
+
 import { FaSquareFacebook } from "react-icons/fa6";
 
 import { FaInstagram } from "react-icons/fa";
@@ -127,6 +128,4 @@ const Footer = () => {
       </div>
     </div>
   );
-};
 
-export default Footer;
