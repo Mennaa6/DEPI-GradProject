@@ -111,7 +111,7 @@ const Footer = () => {
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iste
               accusamus consequatur eaque ex at aperiam modi! Et vel saepe
               praesentium, rerum placeat pariatur quibusdam, eligendi sint
-              repellendus esse impedit eveniet?
+              repellendus esse impedit eveniet
             </p>
 
             <h1 className=" text-black text-xl font-semibold mt-5">
