@@ -8,11 +8,24 @@ import Products from "./pages/Products";
 import WishList from "./pages/WishList";
 import UserProfile from "./pages/UserProfile"
 import Footer from "./components/Footer";
+import Type from "./components/Type";
+import Categories from "./components/Categories";
+import Services from "./components/Services";
+import Productsshow from "./components/Productsshow";
+import Banner from "./components/Banner";
 
 const App = () => {
   return (
     <div>
       <Header />
+      <Banner />
+
+      <Categories />
+      <Type />
+
+      <Productsshow />
+      <Services />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
