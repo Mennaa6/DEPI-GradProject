@@ -8,13 +8,6 @@ import Header from "./../components/Header";
 const Home = () => {
   return (
     <div>
-      {/* <Header />
-      <Banner />
-      <Categories />
-      <Type />
-      <Productsshow />
-      <Services />
-      <Footer /> */}
       <Header />
       <Banner />
       <Categories />
