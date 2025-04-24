@@ -9,7 +9,14 @@ module.exports = withMT({
     "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors:{
+        main:"#E4E0E1",
+        second:"#D6C0B3",
+        buttonColor:"#493628",
+        hoverColor:"#AB886D"
+      }
+    },
   },
   plugins: [],
 });
