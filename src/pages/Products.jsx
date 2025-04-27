@@ -12,10 +12,13 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
+import SingleProduct from "../components/SingleProduct";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState(null); // State for selected product
+  const [openDialog, setOpenDialog] = useState(false); // State for dialog open/close
 
   const fetchData = () => {
     fetch("https://spotted-thankful-mambo.glitch.me/products")
@@ -38,6 +41,18 @@ const Products = () => {
 
     fetchData();
   }, []);
+
+  // Function to handle product click and open dialog
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setOpenDialog(true);
+  };
+
+  // Function to close dialog
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedProduct(null);
+  };
 
   if (loading) {
     return (
@@ -63,7 +78,7 @@ const Products = () => {
               data-aos="zoom-in"
               data-aos-delay="100"
               key={item.id}
-              className="w-full relative cursor-pointer"
+              className="w-full relative "
             >
               <CardHeader shadow={false} floated={false} className="h-96 ">
                 <img
@@ -77,19 +92,21 @@ const Products = () => {
                 >
                   <div
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white "
+              rounded-full p-2 text-white cursor-pointer"
+                    onClick={() => handleProductClick(item)}
                   >
                     <MdOutlineRemoveRedEye />
                   </div>
                   <div
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white "
+              rounded-full p-2 text-white cursor-pointer"
                   >
                     <FaRegHeart />
                   </div>
                   <div
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white "
+              rounded-full p-2 text-white cursor-pointer"
+                    onClick={() => handleProductClick(item)}
                   >
                     <MdAddShoppingCart />
                   </div>
@@ -98,10 +115,10 @@ const Products = () => {
               <CardBody>
                 <div className="mb-2 flex items-center justify-between">
                   <Typography color="blue-gray" className="font-semibold">
-                    {item.title} 
+                    {item.title}
                   </Typography>
                   <Typography color="blue-gray" className="font-medium">
-                    ${item.price} 
+                    ${item.price}
                   </Typography>
                 </div>
                 <Typography
@@ -109,7 +126,7 @@ const Products = () => {
                   color="gray"
                   className="font-normal opacity-75"
                 >
-                  {item.description} 
+                  {item.description}
                 </Typography>
               </CardBody>
               <CardFooter className="pt-0">
@@ -117,6 +134,7 @@ const Products = () => {
                   ripple={false}
                   fullWidth={true}
                   className="bg-buttonColor  hover:bg-hoverColor text-white shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                  onClick={() => handleProductClick(item)}
                 >
                   Add to Cart
                 </Button>
@@ -127,6 +145,14 @@ const Products = () => {
           <Typography className="text-center">Loading products...</Typography>
         )}
       </div>
+      {/* Render SingleProduct dialog */}
+      {selectedProduct && (
+        <SingleProduct
+          open={openDialog}
+          handleClose={handleCloseDialog}
+          product={selectedProduct}
+        />
+      )}
     </div>
   );
 };

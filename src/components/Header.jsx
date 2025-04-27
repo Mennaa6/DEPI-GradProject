@@ -9,7 +9,11 @@ import {
 } from "@material-tailwind/react";
 import { FaCartShopping } from "react-icons/fa6";
 import { MdFavorite } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom"; // Import Link
+
 const Header = () => {
+  const navigate = useNavigate();
   const [openNav, setOpenNav] = React.useState(false);
 
   React.useEffect(() => {
@@ -56,7 +60,9 @@ const Header = () => {
         color="blue-gray"
         className="p-1 font-bold "
       >
-        <a href="#" className="flex items-center"></a>
+        <Link to="/products" className="flex items-center">
+          Products
+        </Link>
       </Typography>
     </ul>
   );
@@ -64,7 +70,7 @@ const Header = () => {
   return (
     <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4">
       <div className="flex items-center justify-between text-blue-gray-900">
-        <div>
+        <div onClick={() => navigate("/")} className="cursor-pointer">
           <img src={logo} alt="" />
         </div>
         <div className="flex items-center gap-4">
