@@ -4,7 +4,11 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import { productshow } from "../assets/productsShow";
+import { useNavigate } from "react-router-dom";
+
 const Productsshow = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     AOS.init({
       offset: 100,
@@ -84,6 +88,7 @@ const Productsshow = () => {
         ))}
       </div>
       <button
+        onClick={() => navigate("/products")}
         data-aos="zoom-in"
         data-aos-delay="100"
         className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black font-semibold px-8 py-3 rounded-lg mt-10"
