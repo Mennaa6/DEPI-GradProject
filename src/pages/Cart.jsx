@@ -10,11 +10,11 @@ const Cart = () => {
   const { cartItems, addToCart, deleteFromCart, increaseQuantity, decreaseQuantity } = useContext(ProductContext);
   const navigate = useNavigate();
   const proceedTocheckout = () => {
-    if (cartItems.length === 0)
-    {
-      alert("your cart is empty");
-      return;
-    }
+    // if (cartItems.length === 0)
+    // {
+    //   alert("your cart is empty");
+    //   return;
+    // }
       navigate('/checkout');
   }
 
@@ -62,7 +62,7 @@ const Cart = () => {
         <p className='flex justify-between mb-2'><span>Delivery</span><span>50</span></p>
         <hr className='my-3' />
         <p className='flex justify-between font-semibold text-lg'><span>Total</span><span>{cartItems.map((item) => item.price * item.quantity).reduce((total,product)=>total+product+50 ,0).toFixed(2)}  EGP</span></p>
-        <Button className='w-full mt-4 bg-[#493628] hover:bg-[#AB886D]'>Checkout</Button>
+        <Button className='w-full mt-4 bg-[#493628] hover:bg-[#AB886D]' onClick={()=>proceedTocheckout()}>Checkout</Button>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ const App = () => {
     <div>
       <ProductProvider>
       <Routes>
-          <Route path='/cart' element={<Cart />} />
+          <Route path='/' element={<Cart />} />
           <Route path='/checkout' element={<Checkout />} />
       </Routes>
         </ProductProvider>
