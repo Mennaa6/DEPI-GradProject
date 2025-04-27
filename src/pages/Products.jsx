@@ -98,10 +98,10 @@ const Products = () => {
               <CardBody>
                 <div className="mb-2 flex items-center justify-between">
                   <Typography color="blue-gray" className="font-semibold">
-                    {item.title} {/* Use the product's title */}
+                    {item.title} 
                   </Typography>
                   <Typography color="blue-gray" className="font-medium">
-                    ${item.price} {/* Use the product's price */}
+                    ${item.price} 
                   </Typography>
                 </div>
                 <Typography
@@ -109,7 +109,7 @@ const Products = () => {
                   color="gray"
                   className="font-normal opacity-75"
                 >
-                  {item.description} {/* Use the product's description */}
+                  {item.description} 
                 </Typography>
               </CardBody>
               <CardFooter className="pt-0">
