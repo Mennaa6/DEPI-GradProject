@@ -83,49 +83,20 @@ const Cart = () => {
           </Button>
         </div>
 
-        <div className="w-full lg:w-1/3 bg-[#D6C0B3] shadow-md p-6 rounded-md">
-          <h2 className="text-lg md:text-3xl font-bold text-black p-2 mb-4 text-center">
-            CHECKOUT
-          </h2>
-          <p className="text-center text-sm mb-4">
-            By placing your order, you agree to the{" "}
-            <span className="text-blue-600">Delivery Terms</span>
-          </p>
+     <div className='w-full lg:w-1/3 bg-[#D6C0B3] shadow-md p-6 rounded-md'>
+      <h2 className='text-lg md:text-3xl font-bold text-black p-2 mb-4 text-center'>CHECKOUT</h2>
+      <p className='text-center text-sm mb-4'>By placing your order, you agree to the <span className='text-blue-600'>Delivery Terms</span></p>
 
-          <h3 className="font-bold text-lg mb-2">ORDER SUMMARY:</h3>
-          <div className="bg-white p-4 rounded-md shadow">
-            <p className="flex justify-between mb-2">
-              <span>Sub Total</span>
-              <span>
-                {cartItems
-                  .map((item) => item.price * item.quantity)
-                  .reduce((total, product) => total + product, 0)
-                  .toFixed(2)}{" "}
-                EGP
-              </span>
-            </p>
-            <p className="flex justify-between mb-2">
-              <span>Delivery</span>
-              <span>50</span>
-            </p>
-            <hr className="my-3" />
-            <p className="flex justify-between font-semibold text-lg">
-              <span>Total</span>
-              <span>
-                {cartItems
-                  .map((item) => item.price * item.quantity)
-                  .reduce((total, product) => total + product + 50, 0)
-                  .toFixed(2)}{" "}
-                EGP
-              </span>
-            </p>
-            <Button className="w-full mt-4 bg-[#493628] hover:bg-[#AB886D]">
-              Checkout
-            </Button>
-          </div>
+      <h3 className='font-bold text-lg mb-2'>ORDER SUMMARY:</h3>
+      <div className='bg-white p-4 rounded-md shadow'>
+        <p className='flex justify-between mb-2'><span>Sub Total</span><span>{cartItems.map((item) => item.price * item.quantity).reduce((total,product)=>total+product ,0).toFixed(2)} EGP</span></p>
+        <p className='flex justify-between mb-2'><span>Delivery</span><span>50</span></p>
+        <hr className='my-3' />
+        <p className='flex justify-between font-semibold text-lg'><span>Total</span><span>{cartItems.map((item) => item.price * item.quantity).reduce((total,product)=>total+product+50 ,0).toFixed(2)}  EGP</span></p>
+        <Button className='w-full mt-4 bg-[#493628] hover:bg-[#AB886D]' onClick={()=>proceedTocheckout()}>Checkout</Button>
         </div>
       </div>
-    </div>
+     </div></div>
   );
 };
 
