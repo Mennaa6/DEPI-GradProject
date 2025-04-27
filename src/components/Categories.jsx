@@ -6,7 +6,11 @@ import hoodie from "../assets/hoodie.jpeg";
 import jeans from "../assets/jeans.jpeg";
 import earring from "../assets/earring.jpeg";
 import jacket from "../assets/jacket.jpeg";
+import { Button } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 const Categories = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     AOS.init({
       offset: 100,
@@ -28,9 +32,12 @@ const Categories = () => {
         <h1 className="text-black font-semibold lg:text-[42px] text-[30px] lg:text-start text-center leading-[50px] ">
           Popular Categories
         </h1>
-        <button className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black lg:px-8 px-7 py-3 rounded-lg font-semibold mt-[60px] ">
+        <Button
+          onClick={() => navigate("/products")}
+          className="w-full bg-buttonColor hover:bg-hoverColor px-6 md:w-[8rem]"
+        >
           VIEW ALL
-        </button>
+        </Button>
       </div>
       <div className="lg:w-[85%] w-fill grid lg:grid-cols-5 grid-cols-1 justify-center items-start gap-10">
         <div
