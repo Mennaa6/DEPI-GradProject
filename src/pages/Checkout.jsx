@@ -1,21 +1,7 @@
-import React from 'react'
-import { ProductContext } from '../context/ProductContext';
-import ContactForm from '../components/ContactForm'
-import Shippingmethod from '../components/Shippingmethod'
-import PaymentMethod from '../components/PaymentMethod';
-import OrderSummary from '../components/OrderSummary';
+import React from "react";
 
 const Checkout = () => {
-  return (
-    <div className=''>
-      <ContactForm />
-      <Shippingmethod />
-      <PaymentMethod />
-      <OrderSummary/>
-       
-           
-    </div>
-  )
-}
+  return <div>checkout</div>;
+};
 
 export default Checkout;
