@@ -48,33 +48,11 @@ const Productsshow = () => {
             key={index}
             className="flex flex-col justify-center items-center gap-2 bg-gray-100 p-2 rounded-lg cursor-pointer relative"
           >
-            <img src={item.image} alt="" className="mt-7" />
-            <div
-              id="icons"
-              className="flex justify-center items-center gap-3 absolute top-[5px]"
-            >
-              <div
-                className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white "
-              >
-                <MdOutlineRemoveRedEye />
-              </div>
-              <div
-                className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white "
-              >
-                <FaRegHeart />
-              </div>
-              <div
-                className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white "
-              >
-                <MdAddShoppingCart />
-              </div>
-            </div>
+            <img src={item.image} alt="" className="mt-2" />
+
             <h1 className="text-l text-gray-600 font-thin ">{item.category}</h1>
             <h1 className="text-xl text-black font-semibold">{item.name}</h1>
-            <h1 className="text-lg font-semibold">Price: ${item.price}</h1>
+
             <div className="flex justify-between items-center gap-6 mt-3">
               <div className="flex justify-start items-center gap-1 ">
                 <FaStar className="text-yellow-800" />
