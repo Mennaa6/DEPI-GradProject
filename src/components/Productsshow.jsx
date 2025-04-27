@@ -78,12 +78,7 @@ const Productsshow = () => {
                 <FaStar className="text-yellow-800" />
                 <FaStar className="text-yellow-800" />
                 <FaStar className="text-yellow-800" />
-                <FaStar className="text-yellow-800" />
               </div>
-              <button className="bg-buttonColor text-white px-4 py-2 rounded-lg text-[13px] font-semibold">
-                {" "}
-                SALE 14%
-              </button>
             </div>
           </div>
         ))}
@@ -91,7 +86,7 @@ const Productsshow = () => {
       <button
         data-aos="zoom-in"
         data-aos-delay="100"
-        className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black font-semibold px-8 py-3 rounded-lg mt-5"
+        className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black font-semibold px-8 py-3 rounded-lg mt-10"
       >
         VIEW MORE
       </button>

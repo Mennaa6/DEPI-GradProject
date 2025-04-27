@@ -1,24 +1,30 @@
 import { Route, Routes } from "react-router-dom";
-import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+// import NotFound from "./pages/NotFound";
+// import Login from "./pages/Login";
+// import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
-import WishList from "./pages/WishList";
-import UserProfile from "./pages/UserProfile";
+import Footer from "./components/Footer";
+import Cart from "./pages/Cart";
+import ProductProvider from "./context/ProductContext";
+import Checkout from "./pages/Checkout";
 
 const App = () => {
   return (
     <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/wishlist" element={<WishList />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <ProductProvider>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} /> */}
+          <Route path="/products" element={<Products />} />
+          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+        </Routes>
+        <Footer />
+      </ProductProvider>
     </div>
   );
 };
