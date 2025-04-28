@@ -14,6 +14,7 @@ const Productsshow = () => {
       offset: 100,
       duration: 500,
       easing: "ease-in-out",
+      once: true,
     });
     AOS.refresh();
   }, []);
