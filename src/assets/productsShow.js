@@ -1,11 +1,8 @@
 import p_img1 from "./p_img1.png";
 import p_img2_1 from "./p_img2_1.png";
-import p_img3 from "./p_img3.png";
-import p_img4 from "./p_img4.png";
-import p_img5 from "./p_img5.png";
-import p_img6 from "./p_img6.png";
+
 import p_img7 from "./p_img7.png";
-import p_img8 from "./p_img8.png";
+
 import nec_1 from "./nec_1.jpeg";
 
 export const productshow = [
