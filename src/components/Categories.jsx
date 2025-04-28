@@ -45,8 +45,8 @@ const Categories = () => {
           data-aos-delay="100"
           className="flex flex-col justify-center items-center gap-6"
         >
-          <img src={tshirt} alt="" className="rounded-full cursor-pointer " />
-          <h1 className="text-black text-xl font-semibold hover:text-hoverColor  hover:cursor-pointer">
+          <img src={tshirt} alt="" className="rounded-full " />
+          <h1 className="text-black text-xl font-semibold hover:text-hoverColor">
             T-SHIRTS
           </h1>
         </div>
@@ -55,8 +55,8 @@ const Categories = () => {
           data-aos-delay="200"
           className="flex flex-col justify-center items-center gap-6"
         >
-          <img src={hoodie} alt="" className="rounded-full cursor-pointer " />
-          <h1 className="text-black text-xl font-semibold  hover:cursor-pointer hover:text-hoverColor">
+          <img src={hoodie} alt="" className="rounded-full " />
+          <h1 className="text-black text-xl font-semibold hover:text-hoverColor">
             HOODIES
           </h1>
         </div>
@@ -65,8 +65,8 @@ const Categories = () => {
           data-aos-delay="300"
           className="flex flex-col justify-center items-center gap-6"
         >
-          <img src={jacket} alt="" className="rounded-full cursor-pointer " />
-          <h1 className="text-black text-xl font-semibold hover:cursor-pointer hover:text-hoverColor">
+          <img src={jacket} alt="" className="rounded-full " />
+          <h1 className="text-black text-xl font-semibold hover:text-hoverColor">
             JACKETS
           </h1>
         </div>
@@ -75,8 +75,8 @@ const Categories = () => {
           data-aos-delay="400"
           className="flex flex-col justify-center items-center gap-6"
         >
-          <img src={jeans} alt="" className="rounded-full cursor-pointer " />
-          <h1 className="text-black text-xl font-semibold hover:cursor-pointer hover:text-hoverColor">
+          <img src={jeans} alt="" className="rounded-full " />
+          <h1 className="text-black text-xl font-semibold hover:text-hoverColor">
             JEANS
           </h1>
         </div>{" "}
@@ -85,8 +85,8 @@ const Categories = () => {
           data-aos-delay="500"
           className="flex flex-col justify-center items-center gap-6"
         >
-          <img src={earring} alt="" className="rounded-full cursor-pointer " />
-          <h1 className="text-black text-xl font-semibold hover:cursor-pointer hover:text-hoverColor">
+          <img src={earring} alt="" className="rounded-full " />
+          <h1 className="text-black text-xl font-semibold  hover:text-hoverColor">
             EARRINGS
           </h1>
         </div>

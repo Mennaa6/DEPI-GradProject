@@ -25,7 +25,7 @@ const Footer = () => {
       id="contact"
       className="w-full flex flex-col justify-center items-center"
     >
-      <div className="w-full bg-buttonColor lg:px-20 px-5 py-10 grid grid-cols-1  lg:grid-cols-3 gap-10">
+      <div className="w-full bg-buttonColor lg:px-20 px-5 py-5 grid grid-cols-1  lg:grid-cols-3 gap-10">
         {/* Column 1: Logo, Description, Socials */}
         <div
           data-aos="fade-right"
@@ -35,10 +35,10 @@ const Footer = () => {
           <div className="flex flex-col justify-start items-start gap-4">
             <img src={logo} alt="Logo" className="w-32 h-auto" />
             <p className="text-gray-500 text-justify">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iste
-              accusamus consequatur eaque ex at aperiam modi! Et vel saepe
-              praesentium, rerum placeat pariatur quibusdam, eligendi sint
-              repellendus esse impedit eveniet?
+              VIN-TAGE brings you timeless style and modern essentials. We
+              believe fashion should feel effortless, confident, and true to
+              you. From everyday basics to statement pieces, we craft clothing
+              that empowers self-expression.
             </p>
           </div>
           <div className="flex flex-col justify-start items-start gap-4">
@@ -104,10 +104,10 @@ const Footer = () => {
               PRIVACY POLICY
             </h1>
             <p className="text-gray-500 text-justify">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iste
-              accusamus consequatur eaque ex at aperiam modi! Et vel saepe
-              praesentium, rerum placeat pariatur quibusdam, eligendi sint
-              repellendus esse impedit eveniet?
+              We respect and protect your personal information. Any data you
+              share with us is handled securely and used only to enhance your
+              shopping experience. We never sell or share your information with
+              third parties without your consent.
             </p>
           </div>
           <div>

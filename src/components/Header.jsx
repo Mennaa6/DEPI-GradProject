@@ -30,9 +30,9 @@ const Header = () => {
         color="blue-gray"
         className="p-1 font-bold"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/women" className="flex items-center">
           Women
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -40,9 +40,9 @@ const Header = () => {
         color="blue-gray"
         className="p-1 font-bold"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/men" className="flex items-center">
           Men
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -50,9 +50,9 @@ const Header = () => {
         color="blue-gray"
         className="p-1 font-bold"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/accessories" className="flex items-center">
           Accessories
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
