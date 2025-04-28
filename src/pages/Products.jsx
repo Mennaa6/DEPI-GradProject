@@ -12,15 +12,11 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
-import SingleProduct from "../components/SingleProduct";
-import { FaSearch } from "react-icons/fa";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+
   const fetchData = () => {
     fetch("https://spotted-thankful-mambo.glitch.me/products")
       .then((res) => res.json())
@@ -43,19 +39,6 @@ const Products = () => {
     fetchData();
   }, []);
 
-  const handleProductClick = (product) => {
-    setSelectedProduct(product);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedProduct(null);
-  };
-
-  const filteredProducts = products.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -69,40 +52,18 @@ const Products = () => {
       <h1
         data-aos="zoom-in"
         data-aos-delay="200"
-        className="text-brown-700 font-semibold text-[42px] leading-[50px] text-center mb-2"
+        className="text-brown-700 font-semibold text-[42px] leading-[50px] text-center"
       >
         Browse All Products
       </h1>
-      <div
-        data-aos="zoom-in"
-        data-aos-delay="200"
-        className="w-full max-w-sm min-w-[200px]"
-      >
-        <div className="relative flex items-center">
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600"
-          >
-            <FaSearch size={20} className="text-brown-400" />;
-          </svg>
-
-          <input
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-gray-50 text-sm border border-second rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-gray-300 shadow-md focus:shadow"
-            placeholder="Search product name..."
-          />
-        </div>
-      </div>
       <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((item) => (
+        {products && products.length > 0 ? (
+          products.map((item) => (
             <Card
               data-aos="zoom-in"
               data-aos-delay="100"
               key={item.id}
-              className="w-full relative "
+              className="w-full relative cursor-pointer"
             >
               <CardHeader shadow={false} floated={false} className="h-96 ">
                 <img
@@ -116,21 +77,19 @@ const Products = () => {
                 >
                   <div
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white cursor-pointer"
-                    onClick={() => handleProductClick(item)}
+              rounded-full p-2 text-white "
                   >
                     <MdOutlineRemoveRedEye />
                   </div>
                   <div
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white cursor-pointer"
+              rounded-full p-2 text-white "
                   >
                     <FaRegHeart />
                   </div>
                   <div
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black
-              rounded-full p-2 text-white cursor-pointer"
-                    onClick={() => handleProductClick(item)}
+              rounded-full p-2 text-white "
                   >
                     <MdAddShoppingCart />
                   </div>
@@ -139,10 +98,10 @@ const Products = () => {
               <CardBody>
                 <div className="mb-2 flex items-center justify-between">
                   <Typography color="blue-gray" className="font-semibold">
-                    {item.title}
+                    {item.title} 
                   </Typography>
                   <Typography color="blue-gray" className="font-medium">
-                    ${item.price}
+                    ${item.price} 
                   </Typography>
                 </div>
                 <Typography
@@ -150,7 +109,7 @@ const Products = () => {
                   color="gray"
                   className="font-normal opacity-75"
                 >
-                  {item.description}
+                  {item.description} 
                 </Typography>
               </CardBody>
               <CardFooter className="pt-0">
@@ -158,7 +117,6 @@ const Products = () => {
                   ripple={false}
                   fullWidth={true}
                   className="bg-buttonColor  hover:bg-hoverColor text-white shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-                  onClick={() => handleProductClick(item)}
                 >
                   Add to Cart
                 </Button>
@@ -166,22 +124,9 @@ const Products = () => {
             </Card>
           ))
         ) : (
-          <Typography
-            variant="h5"
-            className=" w-full text-center col-span-full text-brown-700 mt-4 mb-10"
-          >
-            No matches found...
-          </Typography>
+          <Typography className="text-center">Loading products...</Typography>
         )}
       </div>
-      {/* Render SingleProduct dialog */}
-      {selectedProduct && (
-        <SingleProduct
-          open={openDialog}
-          handleClose={handleCloseDialog}
-          product={selectedProduct}
-        />
-      )}
     </div>
   );
 };
