@@ -4,8 +4,11 @@ import acc_coll from "../assets/acc_coll.jpeg";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Type = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     AOS.init({
       offset: 100,
@@ -27,7 +30,10 @@ const Type = () => {
           className="flex flex-col justify-center items-center gap-6 "
         >
           <img src={coat1} alt="" className="rounded-full " />
-          <button className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black lg:px-8 px-7 py-3 rounded-lg font-semibold  ">
+          <button
+            onClick={() => navigate("/women")}
+            className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black lg:px-8 px-7 py-3 rounded-lg font-semibold  "
+          >
             SHOP WOMEN
           </button>
         </div>
@@ -37,7 +43,10 @@ const Type = () => {
           className="flex flex-col justify-center items-center gap-6"
         >
           <img src={mencoll} alt="" className="rounded-full " />
-          <button className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black lg:px-8 px-7 py-3 rounded-lg font-semibold  ">
+          <button
+            onClick={() => navigate("/men")}
+            className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black lg:px-8 px-7 py-3 rounded-lg font-semibold  "
+          >
             SHOP MEN
           </button>
         </div>
@@ -47,7 +56,10 @@ const Type = () => {
           className="flex flex-col justify-center items-center gap-6"
         >
           <img src={acc_coll} alt="" className="rounded-full  " />
-          <button className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black lg:px-8 px-7 py-3 rounded-lg font-semibold  ">
+          <button
+            onClick={() => navigate("/accessories")}
+            className="bg-buttonColor hover:bg-hoverColor text-white hover:text-black lg:px-8 px-7 py-3 rounded-lg font-semibold  "
+          >
             SHOP ACCESSORIES
           </button>
         </div>
