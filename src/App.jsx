@@ -10,6 +10,9 @@ import ProductProvider from "./context/ProductContext";
 import Checkout from "./pages/Checkout";
 import Header from "./components/Header";
 import { useEffect } from "react";
+import Women from "./pages/collections/Women";
+import Men from "./pages/collections/Men";
+import Accessories from "./pages/collections/Accessories";
 
 const App = () => {
   const location = useLocation();
@@ -19,19 +22,20 @@ const App = () => {
     location.pathname !== "/sign-up" &&
     location.pathname !== "/products" &&
     location.pathname !== "/cart" &&
-    location.pathname !== "/checkout";
+    location.pathname !== "/checkout" &&
+    location.pathname !== "/women" &&
+    location.pathname !== "/men" &&
+    location.pathname !== "/accessories";
 
   // Scroll to top on route change and handle hash navigation
   useEffect(() => {
-    // Scroll to top on pathname change
     window.scrollTo(0, 0);
 
-    // Handle hash scrolling (if any) after a short delay to ensure page is at top
     if (location.hash) {
       setTimeout(() => {
         const element = document.getElementById(location.hash.substring(1));
         if (element) {
-          const offset = 80; // Adjust for fixed header height
+          const offset = 80;
           const elementPosition =
             element.getBoundingClientRect().top + window.pageYOffset;
           window.scrollTo({
@@ -39,9 +43,9 @@ const App = () => {
             behavior: "smooth",
           });
         }
-      }, 0); // Delay to allow initial scroll to top
+      }, 0);
     }
-  }, [location.pathname, location.hash]); // Trigger on pathname or hash change
+  }, [location.pathname, location.hash]);
   return (
     <div>
       <ProductProvider>
@@ -54,6 +58,9 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/women" element={<Women />} />
+          <Route path="/men" element={<Men />} />
+          <Route path="/accessories" element={<Accessories />} />
         </Routes>
         {!isNotFoundPage && <Footer />}
       </ProductProvider>

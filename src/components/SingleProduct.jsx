@@ -22,7 +22,13 @@ const SingleProduct = ({ open, handleClose, product }) => {
   };
 
   return (
-    <Dialog open={open} handler={handleClose} className="p-4 max-w-3xl">
+    <Dialog
+      open={open}
+      handler={handleClose}
+      className="p-3 w-full max-w-3xl
+    max-h-[95vh] overflow-y-auto
+    lg:max-h-none lg:overflow-visible"
+    >
       <DialogHeader className="flex justify-between items-center">
         <Typography variant="h5" color="blue-gray">
           {product.title}
