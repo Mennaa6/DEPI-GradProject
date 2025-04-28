@@ -9,6 +9,10 @@ import Cart from "./pages/Cart";
 import ProductProvider from "./context/ProductContext";
 import Checkout from "./pages/Checkout";
 import Header from "./components/Header";
+import { useEffect } from "react";
+import Women from "./pages/collections/Women";
+import Men from "./pages/collections/Men";
+import Accessories from "./pages/collections/Accessories";
 
 const App = () => {
   const location = useLocation();
@@ -18,8 +22,30 @@ const App = () => {
     location.pathname !== "/sign-up" &&
     location.pathname !== "/products" &&
     location.pathname !== "/cart" &&
-    location.pathname !== "/checkout";
+    location.pathname !== "/checkout" &&
+    location.pathname !== "/women" &&
+    location.pathname !== "/men" &&
+    location.pathname !== "/accessories";
 
+  // Scroll to top on route change and handle hash navigation
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    if (location.hash) {
+      setTimeout(() => {
+        const element = document.getElementById(location.hash.substring(1));
+        if (element) {
+          const offset = 80;
+          const elementPosition =
+            element.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({
+            top: elementPosition - offset,
+            behavior: "smooth",
+          });
+        }
+      }, 0);
+    }
+  }, [location.pathname, location.hash]);
   return (
     <div>
       <ProductProvider>
@@ -31,7 +57,11 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path='/deliveryterms' element={<DeliveryTerms/>}/>
           <Route path="*" element={<NotFound />} />
+          <Route path="/women" element={<Women />} />
+          <Route path="/men" element={<Men />} />
+          <Route path="/accessories" element={<Accessories />} />
         </Routes>
         {!isNotFoundPage && <Footer />}
       </ProductProvider>
