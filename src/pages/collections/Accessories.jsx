@@ -12,21 +12,20 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
-import SingleProduct from "../components/SingleProduct";
-import { FaSearch } from "react-icons/fa";
+import SingleProduct from "../../components/SingleProduct";
 
-const Products = () => {
+const Accessories = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+
   const fetchData = () => {
     fetch("https://spotted-thankful-mambo.glitch.me/products")
       .then((res) => res.json())
       .then((data) => {
-        const allProducts = [...data.men, ...data.women, ...data.accessories];
-        setProducts(allProducts);
+        const accProducts = [...data.accessories];
+        setProducts(accProducts);
         setLoading(false);
       })
       .catch((e) => console.log(e.message));
@@ -53,9 +52,6 @@ const Products = () => {
     setSelectedProduct(null);
   };
 
-  const filteredProducts = products.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -69,35 +65,13 @@ const Products = () => {
       <h1
         data-aos="zoom-in"
         data-aos-delay="200"
-        className="text-brown-700 font-semibold text-[42px] leading-[50px] text-center mb-2"
+        className="text-brown-700 font-semibold text-[42px] leading-[50px] text-center"
       >
-        Browse All Products
+        Accessories Collection
       </h1>
-      <div
-        data-aos="zoom-in"
-        data-aos-delay="200"
-        className="w-full max-w-sm min-w-[200px]"
-      >
-        <div className="relative flex items-center">
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600"
-          >
-            <FaSearch size={20} className="text-brown-400" />;
-          </svg>
-
-          <input
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-gray-50 text-sm border border-second rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-gray-300 shadow-md focus:shadow"
-            placeholder="Search product name..."
-          />
-        </div>
-      </div>
       <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((item) => (
+        {products && products.length > 0 ? (
+          products.map((item) => (
             <Card
               data-aos="zoom-in"
               data-aos-delay="100"
@@ -166,12 +140,7 @@ const Products = () => {
             </Card>
           ))
         ) : (
-          <Typography
-            variant="h5"
-            className=" w-full text-center col-span-full text-brown-700 mt-4 mb-10"
-          >
-            No matches found...
-          </Typography>
+          <Typography className="text-center">Loading products...</Typography>
         )}
       </div>
       {/* Render SingleProduct dialog */}
@@ -186,4 +155,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Accessories;
