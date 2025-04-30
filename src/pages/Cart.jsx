@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
  
 const Cart = () => { 
-  const { cartItems,setCartItems, addToCart, deleteFromCart, increaseQuantity, decreaseQuantity,moveTowishlist } = useContext(ProductContext);
+  const { cartItems,setCartitems, addTocart, deleteFromcart, increaseQuantity, decreaseQuantity,moveTowishlist } = useContext(ProductContext);
   const navigate = useNavigate();
   const proceedTocheckout = () => {
     if (cartItems.length === 0)

@@ -72,8 +72,7 @@ export const ProductProvider = ({ children }) => {
     });
     const response = await response.json();
     setCartitems(updatedCart);
-    setWishlistitems(response);
-   }
+    }
   
   
   const addTocart = async (id) => {
@@ -129,7 +128,7 @@ export const ProductProvider = ({ children }) => {
     const product = cartItems.find(item => item.id === id);
     if (!product) return;
      const updatedCart = cartItems.filter(item => item.id !== id);
-    const updatedWishlist = [...wishlist, product];
+    const updatedWishlist = [...wishlistItems, product];
     setCartitems(updatedCart);
     setWishlistitems(updatedWishlist);
   
