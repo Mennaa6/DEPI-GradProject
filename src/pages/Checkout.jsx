@@ -170,8 +170,8 @@ const Checkout = () => {
             </div>
             <div className="flex flex-col  mt-6">
               
-              <Button onClick={()=>clickPlaceorder()} className="bg-[#493628] hover:bg-[#AB886D] mb-4 w-full text-sm md:text-md rounded-lg ">Place Order</Button>
-              <Button className=" bg-[#493628] hover:bg-[#AB886D] w-full text-sm md:text-md rounded-lg " onClick={()=>returnTocart()} >
+              <Button onClick={()=>clickPlaceorder()} className="bg-[#493628] hover:bg-[#AB886D] mb-4 w-full text-xs md:text-md rounded-lg ">Place Order</Button>
+              <Button className=" bg-[#493628] hover:bg-[#AB886D] w-full text-xs  md:text-md rounded-lg " onClick={()=>returnTocart()} >
                   Return to Cart</Button></div>
               
 

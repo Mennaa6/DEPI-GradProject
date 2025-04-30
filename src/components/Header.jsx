@@ -76,7 +76,7 @@ const Header = () => {
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
           <div className="flex items-center gap-4 text-xl  ">
-            <a href="#">
+            <a href="/cart">
               {" "}
               <FaCartShopping />
             </a>
@@ -126,8 +126,8 @@ const Header = () => {
       <MobileNav open={openNav}>
         {navList}
         <div className="flex items-center gap-x-1">
-          <a href="#">
-            {" "}
+          <a href="/cart">
+            {""}
             <FaCartShopping />
           </a>
           <a href="">
