@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom"; // Import Link
+
 import { Button } from "@material-tailwind/react";
 
 const Login = () => {
@@ -87,12 +89,12 @@ const Login = () => {
 
             <div className="text-center text-[#493628]">
               Don't Have an Account?{" "}
-              <a
-                href="/sign-up"
+              <Link
+                to="/sign-up"
                 className="text-[#493628] hover:text-[#AB886D] font-medium hover:underline"
               >
                 Sign up
-              </a>
+              </Link>
             </div>
           </form>
         </div>
