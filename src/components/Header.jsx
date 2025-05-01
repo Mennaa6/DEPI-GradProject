@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 import { FaCartShopping } from "react-icons/fa6";
 import { MdFavorite } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom"; // Import Link
 
@@ -76,13 +77,16 @@ const Header = () => {
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
           <div className="flex items-center gap-4 text-xl  ">
-            <a href="#">
+            <Link to="/cart">
               {" "}
               <FaCartShopping />
-            </a>
-            <a href="">
+            </Link>
+            <Link to="/wishlist">
               <MdFavorite />
-            </a>
+            </Link>
+            <Link to="/profile">
+              <CgProfile />
+            </Link>
           </div>
           <IconButton
             variant="text"

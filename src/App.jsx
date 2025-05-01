@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
 import Accessories from "./pages/collections/Accessories";
+import Profile from './pages/UserProfile'
 
 const App = () => {
   const location = useLocation();
@@ -25,8 +26,9 @@ const App = () => {
     location.pathname !== "/checkout" &&
     location.pathname !== "/women" &&
     location.pathname !== "/men" &&
-    location.pathname !== "/accessories";
-
+    location.pathname !== "/accessories" &&
+    location.pathname !== "/profile";
+  
   // Scroll to top on route change and handle hash navigation
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -61,6 +63,7 @@ const App = () => {
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
           <Route path="/accessories" element={<Accessories />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         {!isNotFoundPage && <Footer />}
       </ProductProvider>
