@@ -14,6 +14,7 @@ import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
 import Accessories from "./pages/collections/Accessories";
 import Profile from './pages/UserProfile'
+import Wishlist from "./pages/WishList"
 
 const App = () => {
   const location = useLocation();
@@ -27,6 +28,7 @@ const App = () => {
     location.pathname !== "/women" &&
     location.pathname !== "/men" &&
     location.pathname !== "/accessories" &&
+    location.pathname !== "/wishlist" &&
     location.pathname !== "/profile";
   
   // Scroll to top on route change and handle hash navigation
@@ -64,6 +66,7 @@ const App = () => {
           <Route path="/men" element={<Men />} />
           <Route path="/accessories" element={<Accessories />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
         {!isNotFoundPage && <Footer />}
       </ProductProvider>
