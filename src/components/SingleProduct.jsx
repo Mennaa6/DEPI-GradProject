@@ -10,6 +10,8 @@ import {
 } from "@material-tailwind/react";
 import { FaStar } from "react-icons/fa";
 import { MdCancelPresentation } from "react-icons/md";
+import { useContext } from "react";
+import { ProductContext } from "../context/ProductContext";
 
 const SingleProduct = ({ open, handleClose, product }) => {
   const [selectedSize, setSelectedSize] = useState(null);
@@ -20,6 +22,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
+  const { addTocart } = useContext(ProductContext);
 
   return (
     <Dialog
@@ -133,7 +136,11 @@ const SingleProduct = ({ open, handleClose, product }) => {
           <Button
             variant="filled"
             color="brown"
-            onClick={handleClose}
+            onClick={()=> {
+              handleClose();
+              addTocart(product.id);
+             }
+            }
             className=" hover:bg-hoverColor"
             disabled={!selectedSize}
           >

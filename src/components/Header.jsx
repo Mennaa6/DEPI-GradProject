@@ -130,8 +130,8 @@ const Header = () => {
       <MobileNav open={openNav}>
         {navList}
         <div className="flex items-center gap-x-1">
-          <a href="#">
-            {" "}
+          <a href="/cart">
+            {""}
             <FaCartShopping />
           </a>
           <a href="">

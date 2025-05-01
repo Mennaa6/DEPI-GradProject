@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
-import ProductProvider from "./context/ProductContext";
+import { ProductProvider } from "./context/ProductContext";
 import Checkout from "./pages/Checkout";
 import Header from "./components/Header";
 import { useEffect } from "react";
@@ -15,6 +15,9 @@ import Men from "./pages/collections/Men";
 import Accessories from "./pages/collections/Accessories";
 import Profile from './pages/UserProfile'
 import Wishlist from "./pages/WishList"
+import DeliveryTerms from "./pages/DeliveryTerms";
+import { ToastContainer } from 'react-toastify';
+ 
 
 const App = () => {
   const location = useLocation();
@@ -53,6 +56,7 @@ const App = () => {
   return (
     <div>
       <ProductProvider>
+        <ToastContainer position="top-right"    />
         {!isNotFoundPage && <Header />}
         <Routes>
           <Route path="/" element={<Home />} />
@@ -67,6 +71,7 @@ const App = () => {
           <Route path="/accessories" element={<Accessories />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/deliveryterms" element={<DeliveryTerms/>}/>
         </Routes>
         {!isNotFoundPage && <Footer />}
       </ProductProvider>
