@@ -16,7 +16,7 @@ import { Spinner } from "@material-tailwind/react";
 import SingleProduct from "../components/SingleProduct";
 import { useNavigate } from "react-router-dom";
 
-const Men = () => {
+const Wishlist = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -183,4 +183,4 @@ const Men = () => {
   );
 };
 
-export default Men;
+export default Wishlist;

@@ -2,8 +2,7 @@ import React, { useState, useContext } from "react";
 import { ProductContext } from '../context/ProductContext';
 import { Button } from "@material-tailwind/react";
 import {  FaCreditCard } from "react-icons/fa"; 
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const { cartItems } = useContext(ProductContext);
@@ -18,9 +17,6 @@ const Checkout = () => {
   const handleShippingChange = (key, value) => {
     setShippingdetails(prev => ({...prev, [key]: value }));
   };
-  
-  
-
   const [paymentDetails, setPaymentdetails] = useState({
     cardNumber: "",
     expDate: "",
@@ -37,15 +33,8 @@ const Checkout = () => {
     }
     setPaymentdetails(prev => ({ ...prev, [key]: value }));
   }
-  const deliveryFee = shippingDetails.state === "Mansoura" ? 80 : 50;
+  const deliveryFee = shippingDetails.governorate === "Mansoura" ? 80 : 50;
   
-  const clickPlaceorder = () => {};
-  const navigate = useNavigate();
-
-  const returnTocart = () => {
-    navigate("/cart");
-  }
-
   return (
     <div className="bg-[#E4E0E1] p-8">
       <div className="max-w-4xl mx-auto bg-[#E4E0E1]  p-6 shadow-lg grounded-xl">
@@ -158,7 +147,7 @@ const Checkout = () => {
               }
               <div className="flex justify-between font-semibold mb-2">
                 <p>Delivery</p>
-                <p>{deliveryFee.toFixed(2)}</p>
+                <p>{cartItems.length>0 ? deliveryFee.toFixed(2):0 }</p>
               </div>
               <hr className='my-3' />
 
@@ -170,9 +159,10 @@ const Checkout = () => {
             </div>
             <div className="flex flex-col  mt-6">
               
-              <Button onClick={()=>clickPlaceorder()} className="bg-[#493628] hover:bg-[#AB886D] mb-4 w-full text-xs md:text-md rounded-lg ">Place Order</Button>
-              <Button className=" bg-[#493628] hover:bg-[#AB886D] w-full text-xs  md:text-md rounded-lg " onClick={()=>returnTocart()} >
-                  Return to Cart</Button></div>
+              <Button className="bg-[#493628] hover:bg-[#AB886D] mb-4 w-full text-xs md:text-md rounded-lg ">Place Order</Button>
+              <Link to="/cart"><Button className=" bg-[#493628] hover:bg-[#AB886D] w-full text-xs  md:text-md rounded-lg " >
+              Return to Cart</Button></Link>
+              </div>
               
 
             

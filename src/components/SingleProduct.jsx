@@ -22,7 +22,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
-  const { addTocart } = useContext(ProductContext);
+  const {  addTocart } = useContext(ProductContext);
 
   return (
     <Dialog

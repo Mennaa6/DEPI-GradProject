@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "../assets/logo2.png";
 import {
   Navbar,
@@ -12,10 +12,11 @@ import { MdFavorite } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom"; // Import Link
-
+import { ProductContext } from '../context/ProductContext';
 const Header = () => {
   const navigate = useNavigate();
   const [openNav, setOpenNav] = React.useState(false);
+  const { cartItems =[] } = useContext(ProductContext);
 
   React.useEffect(() => {
     window.addEventListener(
@@ -76,11 +77,13 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
-          <div className="flex items-center gap-4 text-xl  ">
-            <Link to="/cart">
-              {" "}
-              <FaCartShopping />
-            </Link>
+          <div className="flex items-center  gap-4 text-xl  ">
+              <div className="relative inline-flex  items-center justify-center ">
+              <Link to="/cart">
+                <FaCartShopping />
+                </Link>
+                <span className=" absolute -top-2 -right-2  text-sm">{cartItems.length > 0 ? cartItems.reduce((total, item) => total + item.quantity, 0) :""}</span>
+              </div>
             <Link to="/wishlist">
               <MdFavorite />
             </Link>
@@ -130,13 +133,13 @@ const Header = () => {
       <MobileNav open={openNav}>
         {navList}
         <div className="flex items-center gap-x-1">
-          <a href="/cart">
+          <Link to="/cart">
             {""}
             <FaCartShopping />
-          </a>
-          <a href="">
+          </Link>
+          <Link to="/wishlist">
             <MdFavorite />
-          </a>
+          </Link>
         </div>
       </MobileNav>
     </Navbar>
