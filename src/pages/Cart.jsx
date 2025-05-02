@@ -2,18 +2,16 @@ import React, { useContext } from 'react'
 import { ProductContext } from '../context/ProductContext';
 import { Button } from "@material-tailwind/react";
 import { useNavigate } from 'react-router-dom';
- 
+import { toast } from 'react-toastify';
 
- 
-
- 
 const Cart = () => { 
-  const { cartItems,setCartitems, addTocart, deleteFromcart, increaseQuantity, decreaseQuantity,moveTowishlist } = useContext(ProductContext);
+  const { cartItems, addTocart, deleteFromcart, increaseQuantity, decreaseQuantity,moveTowishlist } = useContext(ProductContext);
   const navigate = useNavigate();
   const proceedTocheckout = () => {
     if (cartItems.length === 0)
     {
-      alert("your cart is empty");
+     toast(
+      <div className="bg-white text-[#493628] px-4 py-2 rounded-md">🛒 Your cart is empty!</div>,{autoClose: 1000})
       return;
     }
       navigate('/checkout');
@@ -23,22 +21,20 @@ const Cart = () => {
   }
 
   return (
-    <div className='h-screen bg-[#E4E0E1] px-4 py-6'>
-  <div className='flex flex-col lg:flex-row gap-6'>
+  <div className='min-h-screen bg-[#E4E0E1] px-4 py-6'>
+   <div className='flex flex-col lg:flex-row gap-6'>
     <div className='w-full lg:w-2/3 bg-white shadow-lg p-6 rounded-md'>
       <h1 className='text-xl md:text-2xl font-bold mb-4'>YOUR CART</h1>
-      {cartItems.length === 0 ? (
-        <p className='italic text-center'>Your cart is empty</p>
-      ) : (
+      {cartItems.length === 0 ? (<p className='italic text-center'>Your cart is empty</p>) : (
         cartItems.map((item) => (
           <div key={item.id} className='flex flex-col md:flex-row gap-4 mb-6 border-b pb-4'>
-            <img className="w-28 h-28 rounded-lg object-cover shadow-md" src={item.image} alt={item.title} />
+            <img className="w-28 h-28 rounded-lg object-cover shadow-md" src={item.thumbnail} alt={item.title} />
             <div className='flex-1'>
               <h2 className='font-semibold text-lg'>{item.title}</h2>
               <p className='text-sm text-gray-600'>Category: {item.category}</p>
               <div className='flex gap-3 text-xs mt-3'>
-                <button className='underline text-red-600' onClick={() => deleteFromCart(item.id)}>Delete</button>
-                <button className='underline ' onClick={()=>moveTowishlist(item.id)}>
+                <button className='underline text-red-600' onClick={() => deleteFromcart(item.id)}>Delete</button>
+                <button className='underline' onClick={()=>moveTowishlist(item.id)}>
                   Move to Wishlist</button>
               </div>
             </div>
@@ -64,7 +60,7 @@ const Cart = () => {
       <div className='bg-white p-4 rounded-md shadow'>
         <p className='flex justify-between mb-2'><span>Sub Total</span><span>{cartItems.reduce((total,item)=>total+(item.price * item.quantity) ,0).toFixed(2)} EGP</span></p>
         <hr className='my-3' />
-         <Button className='w-full mt-4 bg-[#493628] hover:bg-[#AB886D]' onClick={()=>proceedTocheckout()}>Checkout</Button>
+         <Button className='w-full mt-4 bg-[#493628] hover:bg-[#AB886D]' Link  to="/checkout"onClick={()=>proceedTocheckout()}>Checkout</Button>
       </div>
     </div>
   </div>

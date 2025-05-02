@@ -1,54 +1,45 @@
 import React, { createContext, useState ,useEffect} from 'react'
 export const ProductContext = createContext();
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState({ men: [], women: [], accessories: [] });
-   
   const [signedUser, setSigneduser] = useState(null);
   const [cartItems, setCartitems] = useState([]);
   const [wishlistItems, setWishlistitems] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation();
+  
   // ---------------------------------
-  const getProducts = async () => { 
-    try {
-      const request = await fetch("https://shared-dust-zoo.glitch.me/products");
-      const response = await request.json()
-      setProducts(response);
-    } catch (error)
-    {
-      console.error("product fetch error:", error);
-    }
+  const getProducts = () => {
+    fetch("https://shared-dust-zoo.glitch.me/products")
+      .then((response) => response.json())
+      .then((data) => setProducts(data))
+      .catch((error) => {
+        console.error("product fetch error:", error);
+      });
   }
   
-  const getSigneduser = async () => {
-    const userstr = localStorage.getItem("id");
-      if (!userstr){ 
-        navigate("/login");
-        return;
-      }
-      try{
-       const user = JSON.parse(userstr)
-      const request = await fetch(`https://shared-dust-zoo.glitch.me/users/${user.id}`);
-       const response = await request.json();
-       setSigneduser(response);
-      setCartitems(response.cartItems);
-      setWishlistitems(response.wishlist);
-   
-     } catch (error)
-     {
-        console.error("User fetch error:", error);
-        navigate("/login");
-     }
-     
-   }
-   useEffect(() => {
-    getProducts();
-    getSigneduser();
-   }, []);
+  const getSigneduser = () => {
+    const userId = JSON.parse(localStorage.getItem("id"));
+    fetch(`https://shared-dust-zoo.glitch.me/users/${userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSigneduser(data)
+        setCartitems(data.cartItems);
+        setWishlistitems(data.wishlist);
+      }).catch((error) => {
+        console.error("user fetch error:", error);
+      
+      })
+  }
+  useEffect(() => {
+    if (localStorage.getItem("id")) {
+      navigate("/login");
+    } else {
+      getProducts();
+      getSigneduser();
+    }}, []);
   // --------------------------
   const ensureLoggedin = () => {
     if (!signedUser) {
@@ -57,96 +48,120 @@ export const ProductProvider = ({ children }) => {
           ⚠️ Please log in to continue.
         </div>
       );
-      navigate("/login" , { state: { from: location.pathname } });
+      navigate("/login");
       return false;
     }
     return true;
   };
     
-  const updateCartserver = async (updatedCart) => {
-    if (!signedUser) return;
-    const request = await fetch(`https://shared-dust-zoo.glitch.me/users/${signedUser.id}`, {
+  const updateCartserver = (updatedCart) => {
+    const userId = JSON.parse(localStorage.getItem("id"));
+    fetch(`https://shared-dust-zoo.glitch.me/users/${userId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cartItems: updatedCart })
-    });
-    const response = await response.json();
-    setCartitems(updatedCart);
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("HTTP error status");
+      }
+      return response.json()
+    })
+      .then((data) => {
+        setSigneduser(prev => ({...prev, ...data}))
+        setCartitems(data.cartItems || updatedCart);
+      }).catch((error) => {
+        console.error("error updating cart:", error);
+      } 
+    )
+}
+       
+  const updateWishlistserver = (updatedCart, updatedWishlist) => {
+    const userId = JSON.parse(window.localStorage.getItem("id"));     
+    fetch(`https://shared-dust-zoo.glitch.me/users/${userId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cartItems: updatedCart , wishlist : updatedWishlist })
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("HTTP error status");
+      }
+      return response.json()
+    })
+      .then((data) => {
+        setSigneduser(prev =>({...prev, ...data}))
+        setCartitems(data.cartItems || updatedCart);
+        setWishlistitems(data.wishlist || updatedWishlist)
+      }).catch((error) => {
+        console.error("error updating cart:", error);
+      } 
+    )
+    
+      }
+       
+
+  const addTocart = (id) => {
+    if (!ensureLoggedin()) return; 
+    let product = null;
+    for (const cat in products) {
+      product = products[cat].find(item => item.id === id);
+      if (product) break;
     }
-  
-  
-  const addTocart = async (id) => {
-    if (!ensureLoggedin()) return;
+    if (!product) {
+      console.error("product not found");
+      return;
+    }
     const exists = cartItems.find(item => item.id === id);
-    let updatedCart;
+    let updatedCart = null;
     if (exists) {
-      updatedCart = cartItems.map(item =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+      updatedCart = cartItems.map(item =>item.id === id ? { ...item, quantity: item.quantity + 1 } : item)
     } else {
-      updatedCart = [...cartItems, { id, quantity: 1 }]
+      updatedCart = [...cartItems, { id,title:product.title,price:product.price ,thumbnail: product.thumbnail, quantity: 1 }]
     }
-    await updateCartserver(updatedCart);
+     updateCartserver(updatedCart);    
     toast(
       <div className="bg-white text-[#493628] px-4 py-2 rounded-md">
         🛒 Item added to cart!
-      </div>)
-    
-     
-  }    
+      </div>,
+      {
+        autoClose: 1500
+      }
+    )  }    
   
-   const deleteFromcart = async (id) => {
+   const deleteFromcart =  (id) => {
      if (!ensureLoggedin()) return;
      const updatedCart = cartItems.filter(item => item.id !== id);
-     await updateCartserver(updatedCart);
-      
-    }   
+      updateCartserver(updatedCart);
+   }   
   
-   const increaseQuantity = async (id) => {
+   const increaseQuantity = (id) => {
     if (!ensureLoggedin()) return;
-    const updatedCart = cartItems.map(item => 
-      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-    )
-    await updateCartserver(updatedCart);
-  }
-   const decreaseQuantity = async (id) => {
+    const updatedCart = cartItems.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item)
+      updateCartserver(updatedCart);
+   }
+   const decreaseQuantity =  (id) => {
      if (!ensureLoggedin()) return;
      const item = cartItems.find((item) => item.id === id);
      if (!item) return;
      let updatedCart;
-    if (item.quantity > 1) {
-     updatedCart =cartItems.map((item => 
-        item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-      ))
+     if (item.quantity > 1) {
+     updatedCart = cartItems.map((item => item.id === id ? { ...item, quantity: item.quantity - 1 } : item))
     } else {
       updatedCart = cartItems.filter(item => item.id !== id);
      }
-     await updateCartserver(updatedCart);
-  }
-  const moveTowishlist = async (id) => {
+     updateCartserver(updatedCart);
+   }
+  
+  const moveTowishlist = (id) => {
     if (!ensureLoggedin()) return;
     const product = cartItems.find(item => item.id === id);
     if (!product) return;
-     const updatedCart = cartItems.filter(item => item.id !== id);
-    const updatedWishlist = [...wishlistItems, product];
-    setCartitems(updatedCart);
-    setWishlistitems(updatedWishlist);
-  
-     const response = await fetch(`https://shared-dust-zoo.glitch.me/users/${signedUser.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        cartItems: updatedCart,
-        wishlist: updatedWishlist
-      })
-     });
-     const updatedUser = await response.json();
-     setSigneduser(updatedUser);
-    
+    const updatedCart = cartItems.filter(item => item.id !== id);
+    const updatedWishlist = [...wishlistItems, product.id];
+    updateWishlistserver(updatedCart, updatedWishlist);
   }
    
   return (
-      < ProductContext.Provider value={{ products,signedUser,cartItems,  wishlistItems,setCartitems,addTocart ,deleteFromcart,increaseQuantity,decreaseQuantity,moveTowishlist}} >{children }</ProductContext.Provider>
+      < ProductContext.Provider value={{ products,signedUser,cartItems,wishlistItems,addTocart ,deleteFromcart,increaseQuantity,decreaseQuantity,moveTowishlist}} >{children }</ProductContext.Provider>
   )
 }
  

@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
 import Accessories from "./pages/collections/Accessories";
-import Profile from "./pages/UserProfile";
+import UserProfile from "./pages/UserProfile";
 import Wishlist from "./pages/WishList";
 import DeliveryTerms from "./pages/DeliveryTerms";
 import { ToastContainer } from "react-toastify";
@@ -68,7 +68,7 @@ const App = () => {
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
           <Route path="/accessories" element={<Accessories />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<UserProfile />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/deliveryterms" element={<DeliveryTerms />} />
         </Routes>
