@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Cart = () => { 
-  const { cartItems, addTocart, deleteFromcart, increaseQuantity, decreaseQuantity,moveTowishlist } = useContext(ProductContext);
+  const { cartItems=[], deleteFromcart, increaseQuantity, decreaseQuantity,moveTowishlist } = useContext(ProductContext);
   const navigate = useNavigate();
   const proceedTocheckout = () => {
     if (cartItems.length === 0)

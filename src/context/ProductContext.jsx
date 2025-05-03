@@ -8,7 +8,7 @@ export const ProductProvider = ({ children }) => {
   const [signedUser, setSigneduser] = useState(null);
   const [cartItems, setCartitems] = useState([]);
   const [wishlistItems, setWishlistitems] = useState([]);
-  const navigate = useNavigate();
+   const navigate = useNavigate();
   
   // ---------------------------------
   const getProducts = () => {
