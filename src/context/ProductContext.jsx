@@ -8,6 +8,7 @@ export const ProductProvider = ({ children }) => {
   const [signedUser, setSigneduser] = useState(null);
   const [cartItems, setCartitems] = useState([]);
   const [wishlistItems, setWishlistitems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
   // ---------------------------------
@@ -161,7 +162,7 @@ export const ProductProvider = ({ children }) => {
   }
    
   return (
-      < ProductContext.Provider value={{ products,signedUser,cartItems,wishlistItems,addTocart ,deleteFromcart,increaseQuantity,decreaseQuantity,moveTowishlist}} >{children }</ProductContext.Provider>
+      < ProductContext.Provider value={{ products,signedUser,cartItems,wishlistItems,loading,addTocart ,deleteFromcart,increaseQuantity,decreaseQuantity,moveTowishlist}} >{children }</ProductContext.Provider>
   )
 }
  
