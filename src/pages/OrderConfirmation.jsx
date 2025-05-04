@@ -1,46 +1,104 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 
 const OrderConfirmation = () => {
+  const [orderDetails, setOrderDetails] = useState(null);
   const navigate = useNavigate();
 
-  const handleGoHome = () => {
-    navigate("/");
-  };
+  useEffect(() => {
+    const storedOrder = JSON.parse(localStorage.getItem("orderDetails"));
+    if (!storedOrder) {
+      navigate("/"); 
+    } else {
+      setOrderDetails(storedOrder);
+    }
+  }, [navigate]);
+
+  if (!orderDetails) return null;
+
+  const { shippingDetails, paymentDetails, cartItems } = orderDetails;
+  const deliveryFee = shippingDetails.governorate === "Mansoura" ? 80 : 50;
+
+  const total =
+    cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0) +
+    deliveryFee;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9F6F2] px-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-        <FaCheckCircle className="text-green-500 text-5xl mx-auto mb-4" />
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Thank You for Your Order!
+    <div className="bg-[#E4E0E1] min-h-screen p-8">
+      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-center text-[#493628] mb-8">
+          <FaCheckCircle className="inline mr-2 text-green-500" />
+          🎉 Order Confirmed!
         </h1>
-        <p className="text-gray-600 mb-6">
-          Your order has been successfully placed. We'll send you an update when
-          it ships.
-        </p>
 
-        {/* Example Order Details (can be dynamic if needed) */}
-        <div className="bg-gray-100 rounded-md p-4 text-left text-sm text-gray-700 mb-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Shipping Details</h2>
           <p>
-            <span className="font-semibold">Order Number:</span> #123456789
+            <strong>Name:</strong> {shippingDetails.name}
           </p>
           <p>
-            <span className="font-semibold">Estimated Delivery:</span> 3–5
-            business days
+            <strong>Email:</strong> {shippingDetails.email}
           </p>
           <p>
-            <span className="font-semibold">Total Paid:</span> 850.00 EGP
+            <strong>Address:</strong> {shippingDetails.address}
+          </p>
+          <p>
+            <strong>City:</strong> {shippingDetails.city}
+          </p>
+          <p>
+            <strong>Governorate:</strong> {shippingDetails.governorate}
+          </p>
+          <p>
+            <strong>ZIP:</strong> {shippingDetails.zip}
           </p>
         </div>
 
-        <button
-          onClick={handleGoHome}
-          className="bg-[#493628] text-white px-6 py-2 rounded-md hover:bg-[#AB886D] transition"
-        >
-          Back to Home
-        </button>
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Payment Info</h2>
+          <p>
+            <strong>Card Number:</strong> {paymentDetails.cardNumber}
+          </p>
+          <p>
+            <strong>Expiration Date:</strong> {paymentDetails.expDate}
+          </p>
+          <p>
+            <strong>CVV:</strong> ***
+          </p>
+        </div>
+
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-4">Order Items</h2>
+          {cartItems.map((item) => (
+            <div key={item.id} className="flex justify-between text-sm mb-2">
+              <span>{item.title}</span>
+              <span>Qty: {item.quantity}</span>
+              <span>{(item.quantity * item.price).toFixed(2)} EGP</span>
+            </div>
+          ))}
+          <hr className="my-3" />
+          <div className="flex justify-between font-semibold">
+            <p>Delivery:</p>
+            <p>{deliveryFee.toFixed(2)} EGP</p>
+          </div>
+          <div className="flex justify-between font-bold mt-2 text-lg">
+            <p>Total:</p>
+            <p>{total.toFixed(2)} EGP</p>
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-4 mt-6">
+          <Link to="/">
+            <button className="bg-[#493628] text-white px-4 py-2 rounded-lg hover:bg-[#AB886D]">
+              Go to Home
+            </button>
+          </Link>
+          <Link to="/products">
+            <button className="bg-[#493628] text-white px-4 py-2 rounded-lg hover:bg-[#AB886D]">
+              View Products
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
