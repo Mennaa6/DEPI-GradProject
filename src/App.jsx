@@ -13,6 +13,9 @@ import { useEffect } from "react";
 import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
 import Accessories from "./pages/collections/Accessories";
+import OrderConfirmation from "./pages/OrderConfirmation";
+// ...
+
 
 const App = () => {
   const location = useLocation();
@@ -25,6 +28,7 @@ const App = () => {
     location.pathname !== "/checkout" &&
     location.pathname !== "/women" &&
     location.pathname !== "/men" &&
+    location.pathname !== "/order-confirmation" &&
     location.pathname !== "/accessories";
 
   // Scroll to top on route change and handle hash navigation
@@ -61,6 +65,7 @@ const App = () => {
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
           <Route path="/accessories" element={<Accessories />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />;
         </Routes>
         {!isNotFoundPage && <Footer />}
       </ProductProvider>
