@@ -16,9 +16,9 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!window.localStorage.getItem("id")) {
-      navigate("/login");
-    }
+    // if (!window.localStorage.getItem("id")) {
+    //   navigate("/login");
+    // }
 
     const userId = Number(JSON.parse(window.localStorage.getItem("id")));
     fetch("https://spotted-thankful-mambo.glitch.me/users")
@@ -103,8 +103,8 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="flex justify-around sm:m-8 m-3">
-      <div className="bg-[#E4E0E1] w-full flex flex-col justify-center rounded-lg border border-gray-600 h-fit pt-6 pb-6">
+    <div className="flex justify-around sm:m-8 m-3 ">
+      <div className=" w-full flex flex-col justify-center rounded-lg border border-gray-600 h-fit pt-6 pb-6 bg-white">
         <div className="flex flex-col gap-4 h-[90%]">
           <div className="flex justify-around">
             <div className="flex gap-3 w-[96%] text-[0.9em]">
