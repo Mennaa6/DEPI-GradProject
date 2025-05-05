@@ -1,7 +1,7 @@
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import NotFound from "./pages/NotFound";
-// import Login from "./pages/Login";
-// import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Footer from "./components/Footer";
@@ -9,7 +9,7 @@ import Cart from "./pages/Cart";
 import { ProductProvider } from "./context/ProductContext";
 import Checkout from "./pages/Checkout";
 import Header from "./components/Header";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
 import Accessories from "./pages/collections/Accessories";
@@ -26,7 +26,8 @@ import AdProducts from "./admindashboard/pages/AdProducts";
 import Users from "./admindashboard/pages/Users";
 import UserForm from "./admindashboard/pages/UserForm";
 import UserDetails from "./admindashboard/pages/UserDetails";
-import AdNotFound from "./admindashboard/pages/AdNotFound";
+
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   // const [loading, setLoading] = useState(true);
@@ -45,25 +46,14 @@ const App = () => {
   //     </div>
   //   );
   // }
-
   const location = useLocation();
-  const isNotFoundPage =
-    location.pathname !== "/" &&
-    // location.pathname !== "/login" &&
-    // location.pathname !== "/sign-up" &&
-    location.pathname !== "/products" &&
-    location.pathname !== "/cart" &&
-    location.pathname !== "/checkout" &&
-    location.pathname !== "/women" &&
-    location.pathname !== "/men" &&
-    location.pathname !== "/accessories" &&
-    location.pathname !== "/wishlist" &&
-    location.pathname !== "/profile";
 
-  // Scroll to top on route change and handle hash navigation
+  const hideHeaderFooter = ["/", "/login", "/sign-up"].includes(
+    location.pathname
+  );
+
   useEffect(() => {
     window.scrollTo(0, 0);
-
     if (location.hash) {
       setTimeout(() => {
         const element = document.getElementById(location.hash.substring(1));
@@ -79,19 +69,19 @@ const App = () => {
       }, 0);
     }
   }, [location.pathname, location.hash]);
+
   return (
     <div>
       <ProductProvider>
         <ToastContainer position="top-right" />
-        {!isNotFoundPage && <Header />}
+        {!hideHeaderFooter && <Header />}
         <Routes>
-          <Route path="/" element={<Home />} />
-          {/* <Route path="/login" element={<Login />} />
-          <Route path="/sign-up" element={<SignUp />} /> */}
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
           <Route path="/accessories" element={<Accessories />} />
@@ -99,26 +89,50 @@ const App = () => {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/deliveryterms" element={<DeliveryTerms />} />
 
-          <Route path="/dashboard" element={<DashboardLayout />}>
+          {/* ✅ Protected Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <DashboardLayout />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<Dashboard />} />
           </Route>
 
-          <Route path="/admin/products" element={<DashboardLayout />}>
+          <Route
+            path="/admin/products"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <DashboardLayout />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<AdProducts />} />
             <Route path="new" element={<ProductForm />} />
             <Route path=":id" element={<ProductDetails />} />
             <Route path=":id/edit" element={<ProductForm />} />
           </Route>
 
-          <Route path="/admin/users" element={<DashboardLayout />}>
+          <Route
+            path="/admin/users"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <DashboardLayout />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<Users />} />
             <Route path="new" element={<UserForm />} />
             <Route path=":id" element={<UserDetails />} />
             <Route path=":id/edit" element={<UserForm />} />
           </Route>
-        </Routes>
 
-        {!isNotFoundPage && <Footer />}
+          {/* 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        {!hideHeaderFooter && <Footer />}
       </ProductProvider>
     </div>
   );
