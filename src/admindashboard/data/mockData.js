@@ -233,3 +233,102 @@ export const mockUsers = [
 
 // Mock Recent Users (subset of users)
 export const mockRecentUsers = mockUsers.slice(0, 5);
+// Mock Orders Data
+export const mockOrders = [
+  {
+    id: 1,
+    orderNumber: "ORD-2025-001",
+    customer: {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      avatar:
+        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+    items: [
+      { id: 1, product: "Apple MacBook Pro 16", quantity: 1, price: 2499.99 },
+      { id: 2, product: "Sony WH-1000XM5", quantity: 1, price: 349.99 },
+    ],
+    total: 2849.98,
+    status: "completed",
+    paymentStatus: "paid",
+    shippingAddress: "123 Main St, New York, NY 10001",
+    createdAt: "2025-05-14T10:30:00.000Z",
+    updatedAt: "2025-05-14T15:45:00.000Z",
+  },
+  {
+    id: 2,
+    orderNumber: "ORD-2025-002",
+    customer: {
+      name: "Jane Smith",
+      email: "jane.smith@example.com",
+      avatar:
+        "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+    items: [{ id: 1, product: "Leather Jacket", quantity: 1, price: 299.99 }],
+    total: 299.99,
+    status: "processing",
+    paymentStatus: "paid",
+    shippingAddress: "456 Oak Ave, Los Angeles, CA 90001",
+    createdAt: "2025-05-14T11:15:00.000Z",
+    updatedAt: "2025-05-14T11:15:00.000Z",
+  },
+  {
+    id: 3,
+    orderNumber: "ORD-2025-003",
+    customer: {
+      name: "Robert Johnson",
+      email: "robert.johnson@example.com",
+      avatar:
+        "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+    items: [
+      { id: 1, product: "Ergonomic Office Chair", quantity: 2, price: 189.99 },
+      { id: 2, product: "Cast Iron Skillet", quantity: 1, price: 39.99 },
+    ],
+    total: 419.97,
+    status: "pending",
+    paymentStatus: "pending",
+    shippingAddress: "789 Pine St, Chicago, IL 60601",
+    createdAt: "2025-05-14T12:00:00.000Z",
+    updatedAt: "2025-05-14T12:00:00.000Z",
+  },
+  {
+    id: 4,
+    orderNumber: "ORD-2025-004",
+    customer: {
+      name: "Sarah Wilson",
+      email: "sarah.wilson@example.com",
+      avatar:
+        "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+    items: [
+      { id: 1, product: "Samsung Galaxy S25", quantity: 1, price: 999.99 },
+    ],
+    total: 999.99,
+    status: "shipped",
+    paymentStatus: "paid",
+    shippingAddress: "321 Elm St, Houston, TX 77001",
+    createdAt: "2025-05-14T13:45:00.000Z",
+    updatedAt: "2025-05-14T16:30:00.000Z",
+  },
+  {
+    id: 5,
+    orderNumber: "ORD-2025-005",
+    customer: {
+      name: "Michael Brown",
+      email: "michael.brown@example.com",
+      avatar:
+        "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+    items: [
+      { id: 1, product: "Sony WH-1000XM5", quantity: 1, price: 349.99 },
+      { id: 2, product: "Cast Iron Skillet", quantity: 2, price: 39.99 },
+    ],
+    total: 429.97,
+    status: "cancelled",
+    paymentStatus: "refunded",
+    shippingAddress: "654 Maple Ave, Seattle, WA 98101",
+    createdAt: "2025-05-14T14:20:00.000Z",
+    updatedAt: "2025-05-14T17:15:00.000Z",
+  },
+];

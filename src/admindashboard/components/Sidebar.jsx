@@ -6,6 +6,7 @@ import {
   FaUsers,
   FaChevronLeft,
   FaChevronRight,
+  FaShoppingCart,
 } from "react-icons/fa";
 
 const Sidebar = ({ isOpen, toggleSidebar, isMobile }) => {
@@ -15,6 +16,11 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile }) => {
     { path: "/dashboard", name: "Dashboard", icon: <FaHome size={18} /> },
     { path: "/admin/products", name: "Products", icon: <FaBox size={18} /> },
     { path: "/admin/users", name: "Users", icon: <FaUsers size={18} /> },
+    {
+      path: "/admin/orders",
+      name: "Orders",
+      icon: <FaShoppingCart size={18} />,
+    },
   ];
 
   const handleOverlayClick = (e) => {

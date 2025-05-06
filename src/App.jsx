@@ -27,6 +27,8 @@ import Users from "./admindashboard/pages/Users";
 import UserForm from "./admindashboard/pages/UserForm";
 import UserDetails from "./admindashboard/pages/UserDetails";
 import AdNotFound from "./admindashboard/pages/AdNotFound";
+import Orders from "./admindashboard/pages/Orders";
+import OrderDetails from "./admindashboard/pages/OrderDetails";
 
 const App = () => {
   // const [loading, setLoading] = useState(true);
@@ -115,6 +117,11 @@ const App = () => {
             <Route path="new" element={<UserForm />} />
             <Route path=":id" element={<UserDetails />} />
             <Route path=":id/edit" element={<UserForm />} />
+          </Route>
+
+          <Route path="/admin/orders" element={<DashboardLayout />}>
+            <Route index element={<Orders />} />
+            <Route path=":id" element={<OrderDetails />} />
           </Route>
         </Routes>
 
