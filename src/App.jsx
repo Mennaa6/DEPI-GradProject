@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import AdminView from "./adminView";
 import UserView from "./userView";
 import NotFound from "./pages/NotFound";
+import { useState } from "react";
 
 const App = () => {
   // const [loading, setLoading] = useState(true);
@@ -23,13 +24,19 @@ const App = () => {
   //   );
   // }
 
+  // this is supposed to be changed when backend reaches
+  const [role] = useState("admin");
+
   return (
     <div>
       <ProductProvider>
         <ToastContainer position="top-right" />
         <Routes>
           <Route path="/*" element={<UserView />} />
-          <Route path="/admin/*" element={<AdminView />} />
+          <Route
+            path="/admin/*"
+            element={role == "admin" ? <AdminView /> : <NotFound />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </ProductProvider>
