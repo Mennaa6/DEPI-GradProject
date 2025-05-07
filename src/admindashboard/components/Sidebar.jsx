@@ -13,7 +13,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile }) => {
   const location = useLocation();
 
   const navItems = [
-    { path: "/dashboard", name: "Dashboard", icon: <FaHome size={18} /> },
+    { path: "/admin/dashboard", name: "Dashboard", icon: <FaHome size={18} /> },
     { path: "/admin/products", name: "Products", icon: <FaBox size={18} /> },
     { path: "/admin/users", name: "Users", icon: <FaUsers size={18} /> },
     {

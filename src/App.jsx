@@ -17,18 +17,7 @@ import UserProfile from "./pages/UserProfile";
 import Wishlist from "./pages/WishList";
 import DeliveryTerms from "./pages/DeliveryTerms";
 import { ToastContainer } from "react-toastify";
-
-import DashboardLayout from "./admindashboard/layouts/DashboardLayout";
-import Dashboard from "./admindashboard/pages/Dashboard";
-import ProductDetails from "./admindashboard/pages/ProductDetails";
-import ProductForm from "./admindashboard/pages/ProductForm";
-import AdProducts from "./admindashboard/pages/AdProducts";
-import Users from "./admindashboard/pages/Users";
-import UserForm from "./admindashboard/pages/UserForm";
-import UserDetails from "./admindashboard/pages/UserDetails";
-import AdNotFound from "./admindashboard/pages/AdNotFound";
-import Orders from "./admindashboard/pages/Orders";
-import OrderDetails from "./admindashboard/pages/OrderDetails";
+import AdminView from "./adminView";
 
 const App = () => {
   // const [loading, setLoading] = useState(true);
@@ -93,36 +82,17 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
           <Route path="/accessories" element={<Accessories />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/deliveryterms" element={<DeliveryTerms />} />
-
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-          </Route>
-
-          <Route path="/admin/products" element={<DashboardLayout />}>
-            <Route index element={<AdProducts />} />
-            <Route path="new" element={<ProductForm />} />
-            <Route path=":id" element={<ProductDetails />} />
-            <Route path=":id/edit" element={<ProductForm />} />
-          </Route>
-
-          <Route path="/admin/users" element={<DashboardLayout />}>
-            <Route index element={<Users />} />
-            <Route path="new" element={<UserForm />} />
-            <Route path=":id" element={<UserDetails />} />
-            <Route path=":id/edit" element={<UserForm />} />
-          </Route>
-
-          <Route path="/admin/orders" element={<DashboardLayout />}>
-            <Route index element={<Orders />} />
-            <Route path=":id" element={<OrderDetails />} />
-          </Route>
+          <Route path="*" element={<NotFound />} />
+          
+          
+          
+          <Route path="/admin/*" element={<AdminView />} />
         </Routes>
 
         {!isNotFoundPage && <Footer />}

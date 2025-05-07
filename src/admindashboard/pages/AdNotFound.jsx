@@ -22,7 +22,7 @@ const AdNotFound = () => {
             variant="filled"
             color="blue"
             className="flex items-center justify-center gap-2"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/admin/dashboard")}
           >
             <FaHome size={16} /> Go to Dashboard
           </Button>
