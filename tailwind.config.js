@@ -10,12 +10,12 @@ module.exports = withMT({
   ],
   theme: {
     extend: {
-      colors:{
-        main:"#E4E0E1",
-        second:"#D6C0B3",
-        buttonColor:"#493628",
-        hoverColor:"#AB886D"
-      }
+      colors: {
+        main: "#E4E0E1",
+        second: "#D6C0B3",
+        buttonColor: "#493628",
+        hoverColor: "#AB886D",
+      },
     },
   },
   plugins: [],

@@ -1,4 +1,8 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import { ProductProvider } from "./context/ProductContext";
+import { ToastContainer } from "react-toastify";
+import AdminView from "./adminView";
+import UserView from "./userView";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -6,10 +10,9 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
-import { ProductProvider } from "./context/ProductContext";
 import Checkout from "./pages/Checkout";
 import Header from "./components/Header";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
 import Accessories from "./pages/collections/Accessories";
@@ -17,10 +20,11 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import UserProfile from "./pages/UserProfile";
 import Wishlist from "./pages/WishList";
 import DeliveryTerms from "./pages/DeliveryTerms";
-import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const location = useLocation();
+  const [role] = useState("admin");
+
   const isNotFoundPage =
     location.pathname !== "/" &&
     location.pathname !== "/login" &&
@@ -60,12 +64,11 @@ const App = () => {
         <ToastContainer position="top-right" />
         {!isNotFoundPage && <Header />}
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/*" element={<UserView />} />
+          <Route
+            path="/admin/*"
+            element={role === "admin" ? <AdminView /> : <NotFound />}
+          />
           <Route path="*" element={<NotFound />} />
           <Route path="/women" element={<Women />} />
           <Route path="/men" element={<Men />} />
@@ -75,7 +78,6 @@ const App = () => {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/deliveryterms" element={<DeliveryTerms />} />
         </Routes>
-        {!isNotFoundPage && <Footer />}
       </ProductProvider>
     </div>
   );

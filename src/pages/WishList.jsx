@@ -47,7 +47,10 @@ const Wishlist = () => {
               setProducts(userProducts);
             });
             console.log(userProducts);
+
             
+
+
           });
         setLoading(false);
       })
@@ -55,10 +58,17 @@ const Wishlist = () => {
   };
 
   useEffect(() => {
+
     if (!window.localStorage.getItem("id")) {
       window.localStorage.setItem("id", "1");
       navigate("/login");
     }
+
+    // if (!window.localStorage.getItem("id")) {
+    //   window.localStorage.setItem("id", "1");
+    //   navigate("/login");
+    // }
+
 
     AOS.init({
       offset: 100,
@@ -127,7 +137,11 @@ const Wishlist = () => {
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black
               rounded-full p-2 text-white cursor-pointer"
                   >
+
                     <FaRegHeart  />
+
+                    <FaRegHeart />
+
                   </div>
                   <div
                     className="bg-buttonColor hover:bg-hoverColor hover:text-black

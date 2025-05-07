@@ -14,6 +14,7 @@ const Checkout = () => {
     governorate: "",
     zip: "",
   });
+
   const handleShippingChange = (key, value) => {
     setShippingdetails((prev) => ({ ...prev, [key]: value }));
   };
@@ -23,13 +24,14 @@ const Checkout = () => {
     expDate: "",
     cvv: "",
   });
+
   const handlePaymentChange = (key, value) => {
     if (key === "cardNumber") {
-      value = value.replace(/\D/g, "").slice(0, 16); 
+      value = value.replace(/\D/g, "").slice(0, 16);
       value = value.replace(/(\d{4})(?=\d)/g, "$1 ");
     }
     if (key === "cvv") {
-      value = value.replace(/\D/g, "").slice(0, 3); 
+      value = value.replace(/\D/g, "").slice(0, 3);
     }
     setPaymentdetails((prev) => ({ ...prev, [key]: value }));
   };
@@ -45,23 +47,17 @@ const Checkout = () => {
     };
     localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
     navigate("/order-confirmation");
-    {
-      /* هنا */
-    }
   };
 
   return (
     <div className="bg-[#E4E0E1] p-8">
-      <div className="max-w-4xl mx-auto bg-[#E4E0E1]  p-6 shadow-lg grounded-xl">
-        <h1 className=" text-lg md:text-4xl font-bold mb-12 text-center text-[#493628]">
-          CHECKOUT
-        </h1>
+      <div className="max-w-4xl mx-auto bg-[#E4E0E1] p-6 shadow-lg grounded-xl">
+        <h1 className="text-lg md:text-4xl font-bold mb-12 text-center text-[#493628]">CHECKOUT</h1>
 
         <div className="flex flex-col md:flex-row gap-8 mb-6">
-          <div className=" w-auto md:w-2/3">
-            <h2 className=" text-xl md:text-2xl font-semibold mb-4 ">
-              Shipping Information
-            </h2>
+          {/* Shipping & Payment Section */}
+          <div className="w-auto md:w-2/3">
+            <h2 className="text-xl md:text-2xl font-semibold mb-4">Shipping Information</h2>
             <div className="space-y-4">
               <input
                 type="text"
@@ -84,9 +80,7 @@ const Checkout = () => {
                 placeholder="Address"
                 value={shippingDetails.address}
                 required
-                onChange={(e) =>
-                  handleShippingChange("address", e.target.value)
-                }
+                onChange={(e) => handleShippingChange("address", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-md"
               />
               <input
@@ -99,9 +93,7 @@ const Checkout = () => {
               />
               <select
                 value={shippingDetails.governorate}
-                onChange={(e) =>
-                  handleShippingChange("governorate", e.target.value)
-                }
+                onChange={(e) => handleShippingChange("governorate", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-md bg-white"
               >
                 <option value="">Select State</option>
@@ -110,7 +102,6 @@ const Checkout = () => {
                 <option value="Alexandria">Alexandria</option>
                 <option value="Mansoura">Mansoura</option>
               </select>
-
               <input
                 type="text"
                 placeholder="ZIP Code"
@@ -130,9 +121,7 @@ const Checkout = () => {
                     placeholder="Card Number"
                     value={paymentDetails.cardNumber}
                     required
-                    onChange={(e) =>
-                      handlePaymentChange("cardNumber", e.target.value)
-                    }
+                    onChange={(e) => handlePaymentChange("cardNumber", e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-md"
                   />
                   <input
@@ -140,9 +129,7 @@ const Checkout = () => {
                     placeholder="Expiration Date"
                     value={paymentDetails.expDate}
                     required
-                    onChange={(e) =>
-                      handlePaymentChange("expDate", e.target.value)
-                    }
+                    onChange={(e) => handlePaymentChange("expDate", e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-md"
                   />
                   <input
@@ -158,53 +145,43 @@ const Checkout = () => {
             </div>
           </div>
 
-          <div className=" w-auto md:w-1/3 bg-[#D6C0B3] p-6 rounded-lg shadow-lg">
-            <h2 className=" text-xl md:text-2xl font-bold mb-6   text-center ">
-              Order Summary
-            </h2>
+          {/* Order Summary Section */}
+          <div className="w-auto md:w-1/3 bg-[#D6C0B3] p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl md:text-2xl font-bold mb-6 text-center">Order Summary</h2>
             <div className="space-y-4">
               {cartItems.map((item) => (
                 <div key={item.id} className="flex justify-between items-start">
-                  <h2 className="w-[40%] text-sm ">{item.title}</h2>
-                  <p className=" w-[30%] text-sm ">
-                    {" "}
-                    Quantity: {item.quantity}
-                  </p>
-                  <p className="w-[30%] text-sm">
-                    {(item.price * item.quantity).toFixed(2)}{" "}
-                  </p>
+                  <h2 className="w-[40%] text-sm">{item.title}</h2>
+                  <p className="w-[30%] text-sm">Quantity: {item.quantity}</p>
+                  <p className="w-[30%] text-sm">{(item.price * item.quantity).toFixed(2)}</p>
                 </div>
               ))}
+
               <div className="flex justify-between font-semibold mb-2">
                 <p>Delivery</p>
                 <p>{cartItems.length > 0 ? deliveryFee.toFixed(2) : 0}</p>
               </div>
               <hr className="my-3" />
-
               <div className="flex justify-between mt-4 font-semibold">
                 <span>Total</span>
                 <span>
                   {(
-                    cartItems.reduce(
-                      (total, item) => total + item.quantity * item.price,
-                      0
-                    ) + deliveryFee
+                    cartItems.reduce((total, item) => total + item.quantity * item.price, 0) +
+                    deliveryFee
                   ).toFixed(2)}
                 </span>
               </div>
             </div>
-            <div className="flex flex-col  mt-6">
-              {/*Place Order handlePlaceOrder */}
+
+            <div className="flex flex-col mt-6">
               <Button
                 onClick={handlePlaceOrder}
-                className="bg-[#493628] hover:bg-[#AB886D] mb-4 w-full text-xs md:text-md rounded-lg "
+                className="bg-[#493628] hover:bg-[#AB886D] mb-4 w-full text-xs md:text-md rounded-lg"
               >
                 Place Order
               </Button>
-
-              {/* Return to Cart */}
               <Link to="/cart">
-                <Button className=" bg-[#493628] hover:bg-[#AB886D] w-full text-xs  md:text-md rounded-lg">
+                <Button className="bg-[#493628] hover:bg-[#AB886D] w-full text-xs md:text-md rounded-lg">
                   Return to Cart
                 </Button>
               </Link>
