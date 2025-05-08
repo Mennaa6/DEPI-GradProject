@@ -13,14 +13,16 @@ export const ProductProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-   const getProducts = async () => {
-    try {
+  const getProducts = async () => {
+     try {
       const response = await axios.get("http://localhost:3000/api/products");
-      setProducts(response.data.products);
-     } catch (error) {
+       setProducts(response.data.products);
+       setLoading(false);
+    } catch (error) {
       console.error("product fetch error:", error);
     }
   };
+  
 
    const getSigneduser = async () => {
     const userId = JSON.parse(localStorage.getItem("id"));
@@ -29,27 +31,17 @@ export const ProductProvider = ({ children }) => {
       setSigneduser(response.data.User);
       setCartitems(response.data.User.cartItems);
       setWishlistitems(response.data.User.wishlist);
+      setLoading(false);
      } catch (error) {
       console.error("user fetch error:", error);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getProducts();
-        if (localStorage.getItem("id")) {
-          await getSigneduser();
+    getProducts();
+    if (localStorage.getItem("id")) {
+        getSigneduser();
         }
-      } catch (error) {
-        console.error(error);
-        
-      } finally {
-        setLoading(false);
-      }
-     
-    }
-    
   }, []);
 
    const ensureLoggedin = () => {

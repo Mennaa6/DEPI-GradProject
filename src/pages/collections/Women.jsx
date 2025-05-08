@@ -23,7 +23,10 @@ const Women = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const women = products.filter((product) => product.category === "women");
+ 
 
+
+ 
 
   // const fetchData = () => {
   //   fetch("https://spotted-thankful-mambo.glitch.me/products")

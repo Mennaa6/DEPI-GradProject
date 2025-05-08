@@ -25,7 +25,6 @@ const Products = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
  
-
   
   // const fetchData = () => {
   //   fetch("https://spotted-thankful-mambo.glitch.me/products")
