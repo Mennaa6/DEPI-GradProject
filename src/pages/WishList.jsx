@@ -2,7 +2,7 @@ import { FaStar, FaRegHeart } from "react-icons/fa";
 import { MdAddShoppingCart, MdOutlineRemoveRedEye } from "react-icons/md";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Card,
   CardHeader,
@@ -14,44 +14,49 @@ import {
 } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import SingleProduct from "../components/SingleProduct";
-import { useNavigate } from "react-router-dom";
+import { ProductContext } from '../context/ProductContext';
+
 
 const Wishlist = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [products, setProducts] = useState([]);
+  // const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const { products, wishlistItems, loading } = useContext(ProductContext)
+  const wishlistProducts = products.filter(product =>
+    wishlistItems.includes(product._id)
+  );
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const fetchData = () => {
-    const userId = JSON.parse(window.localStorage.getItem("id"));
-    fetch(`https://spotted-thankful-mambo.glitch.me/users/${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const listItems = data.wishlist;
-        fetch("https://spotted-thankful-mambo.glitch.me/products")
-          .then((res) => res.json())
-          .then((productData) => {
-            const allProducts = [
-              ...productData.men,
-              ...productData.women,
-              ...productData.accessories,
-            ];
-            const userProducts = [];
-            listItems.forEach((productId) => {
-              let product = allProducts.find(
-                (productItem) => productItem.id == productId
-              );
-              userProducts.push(product);
-              setProducts(userProducts);
-            });
-            console.log(userProducts);
-          });
-        setLoading(false);
-      })
-      .catch((e) => console.log(e.message));
-  };
+  // const fetchData = () => {
+  //   const userId = JSON.parse(window.localStorage.getItem("id"));
+  //   fetch(`https://spotted-thankful-mambo.glitch.me/users/${userId}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const listItems = data.wishlist;
+  //       fetch("https://spotted-thankful-mambo.glitch.me/products")
+  //         .then((res) => res.json())
+  //         .then((productData) => {
+  //           const allProducts = [
+  //             ...productData.men,
+  //             ...productData.women,
+  //             ...productData.accessories,
+  //           ];
+  //           const userProducts = [];
+  //           listItems.forEach((productId) => {
+  //             let product = allProducts.find(
+  //               (productItem) => productItem.id == productId
+  //             );
+  //             userProducts.push(product);
+  //             setProducts(userProducts);
+  //           });
+  //           console.log(userProducts);
+  //         });
+  //       setLoading(false);
+  //     })
+  //     .catch((e) => console.log(e.message));
+  // };
 
   useEffect(() => {
     // if (!window.localStorage.getItem("id")) {
@@ -66,7 +71,7 @@ const Wishlist = () => {
     });
     AOS.refresh();
 
-    fetchData();
+    // fetchData();
   }, []);
 
   const handleProductClick = (product) => {
@@ -97,18 +102,18 @@ const Wishlist = () => {
         Wishlist
       </h1>
       <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-        {products && products.length > 0 ? (
-          products.map((item) => (
+        {wishlistProducts && wishlistProducts.length > 0 ? (
+          wishlistProducts.map((item) => (
             <Card
               data-aos="zoom-in"
               data-aos-delay="100"
-              key={item.id}
+              key={item._id}
               className="w-full relative "
             >
               <CardHeader shadow={false} floated={false} className="h-96 ">
                 <img
-                  src={item.thumbnail}
-                  alt={item.title}
+                  src={item.image}
+                  alt={item.name}
                   className="h-full w-full object-cover"
                 />
                 <div
@@ -140,7 +145,7 @@ const Wishlist = () => {
               <CardBody>
                 <div className="mb-2 flex items-center justify-between">
                   <Typography color="blue-gray" className="font-semibold">
-                    {item.title}
+                    {item.name}
                   </Typography>
                   <Typography color="blue-gray" className="font-medium">
                     ${item.price}

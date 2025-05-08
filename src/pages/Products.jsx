@@ -2,7 +2,7 @@ import { FaStar, FaRegHeart } from "react-icons/fa";
 import { MdAddShoppingCart, MdOutlineRemoveRedEye } from "react-icons/md";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Card,
   CardHeader,
@@ -14,23 +14,29 @@ import {
 import { Spinner } from "@material-tailwind/react";
 import SingleProduct from "../components/SingleProduct";
 import { FaSearch } from "react-icons/fa";
+import { ProductContext } from '../context/ProductContext';
+
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { products, loading } = useContext(ProductContext);
+
+  // const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const fetchData = () => {
-    fetch("https://spotted-thankful-mambo.glitch.me/products")
-      .then((res) => res.json())
-      .then((data) => {
-        const allProducts = [...data.men, ...data.women, ...data.accessories];
-        setProducts(allProducts);
-        setLoading(false);
-      })
-      .catch((e) => console.log(e.message));
-  };
+ 
+
+  
+  // const fetchData = () => {
+  //   fetch("https://spotted-thankful-mambo.glitch.me/products")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const allProducts = [...data.men, ...data.women, ...data.accessories];
+  //       setProducts(allProducts);
+  //       setLoading(false);
+  //     })
+  //     .catch((e) => console.log(e.message));
+  // };
 
   useEffect(() => {
     AOS.init({
@@ -40,8 +46,8 @@ const Products = () => {
     });
     AOS.refresh();
 
-    fetchData();
-  }, []);
+  //   fetchData();
+   }, []);
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -54,8 +60,8 @@ const Products = () => {
   };
 
   const filteredProducts = products.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+  )  ;
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -106,10 +112,11 @@ const Products = () => {
             >
               <CardHeader shadow={false} floated={false} className="h-96 ">
                 <img
-                  src={item.thumbnail}
-                  alt={item.title}
+                  src={console.log(item.image)}
+                  alt={item.name}
                   className="h-full w-full object-cover"
                 />
+                
                 <div
                   id="icons"
                   className="flex w-full justify-center items-center gap-3 absolute top-[1px]"
@@ -139,7 +146,7 @@ const Products = () => {
               <CardBody>
                 <div className="mb-2 flex items-center justify-between">
                   <Typography color="blue-gray" className="font-semibold">
-                    {item.title}
+                    {item.name}
                   </Typography>
                   <Typography color="blue-gray" className="font-medium">
                     ${item.price}
