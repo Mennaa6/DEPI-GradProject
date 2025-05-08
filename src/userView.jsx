@@ -11,6 +11,8 @@ import Checkout from "./pages/Checkout";
 import Header from "./components/Header";
 import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import Accessories from "./pages/collections/Accessories";
 import UserProfile from "./pages/UserProfile";
 import Wishlist from "./pages/WishList";
@@ -29,6 +31,8 @@ const userView = () => {
     location.pathname !== "/checkout" &&
     location.pathname !== "/women" &&
     location.pathname !== "/men" &&
+    location.pathname !== "/login" &&
+    location.pathname !== "/sign-up" &&
     location.pathname !== "/accessories" &&
     location.pathname !== "/wishlist" &&
     location.pathname !== "/profile";
@@ -65,6 +69,8 @@ const userView = () => {
         <Route path="checkout" element={<Checkout />} />
         <Route path="women" element={<Women />} />
         <Route path="men" element={<Men />} />
+        <Route path="login" element={<Login />} />
+        <Route path="sign-up" element={<SignUp />} />
         <Route path="accessories" element={<Accessories />} />
         <Route path="profile" element={<UserProfile />} />
         <Route path="wishlist" element={<Wishlist />} />
