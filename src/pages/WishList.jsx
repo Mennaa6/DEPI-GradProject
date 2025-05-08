@@ -23,9 +23,7 @@ const Wishlist = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const { products, wishlistItems, loading } = useContext(ProductContext)
-  const wishlistProducts = products.filter(product =>
-    wishlistItems.includes(product._id)
-  );
+  const wishlistProducts = products.filter(product =>wishlistItems.includes(product._id));
 
   // const navigate = useNavigate();
 

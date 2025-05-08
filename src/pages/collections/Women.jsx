@@ -2,7 +2,7 @@ import { FaStar, FaRegHeart } from "react-icons/fa";
 import { MdAddShoppingCart, MdOutlineRemoveRedEye } from "react-icons/md";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import {
   Card,
   CardHeader,
