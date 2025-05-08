@@ -13,23 +13,28 @@ import {
 } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import SingleProduct from "../../components/SingleProduct";
+import { ProductContext } from '../../context/ProductContext';
+
 
 const Women = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+ const { products, loading } = useContext(ProductContext);
+   // const [products, setProducts] = useState([]);
+   // const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const women = products.filter((product) => product.category === "women");
 
-  const fetchData = () => {
-    fetch("https://spotted-thankful-mambo.glitch.me/products")
-      .then((res) => res.json())
-      .then((data) => {
-        const womenProducts = [...data.women];
-        setProducts(womenProducts);
-        setLoading(false);
-      })
-      .catch((e) => console.log(e.message));
-  };
+
+  // const fetchData = () => {
+  //   fetch("https://spotted-thankful-mambo.glitch.me/products")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const womenProducts = [...data.women];
+  //       setProducts(womenProducts);
+  //       setLoading(false);
+  //     })
+  //     .catch((e) => console.log(e.message));
+  // };
 
   useEffect(() => {
     AOS.init({
@@ -39,7 +44,7 @@ const Women = () => {
     });
     AOS.refresh();
 
-    fetchData();
+    // fetchData();
   }, []);
 
   const handleProductClick = (product) => {
@@ -70,18 +75,18 @@ const Women = () => {
         Women Collection
       </h1>
       <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-        {products && products.length > 0 ? (
-          products.map((item) => (
+        {women && women.length > 0 ? (
+          women.map((item) => (
             <Card
               data-aos="zoom-in"
               data-aos-delay="100"
-              key={item.id}
+              key={item._id}
               className="w-full relative "
             >
               <CardHeader shadow={false} floated={false} className="h-96 ">
                 <img
-                  src={item.thumbnail}
-                  alt={item.title}
+                  src={item.image}
+                  alt={item.name}
                   className="h-full w-full object-cover"
                 />
                 <div
@@ -113,7 +118,7 @@ const Women = () => {
               <CardBody>
                 <div className="mb-2 flex items-center justify-between">
                   <Typography color="blue-gray" className="font-semibold">
-                    {item.title}
+                    {item.name}
                   </Typography>
                   <Typography color="blue-gray" className="font-medium">
                     ${item.price}
