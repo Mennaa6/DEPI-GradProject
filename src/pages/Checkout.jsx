@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const { cartItems } = useContext(ProductContext);
+  //local state
   const [shippingDetails, setShippingdetails] = useState({
     name: "",
     email: "",
@@ -17,6 +18,7 @@ const Checkout = () => {
   const handleShippingChange = (key, value) => {
     setShippingdetails(prev => ({...prev, [key]: value }));
   };
+  //local state
   const [paymentDetails, setPaymentdetails] = useState({
     cardNumber: "",
     expDate: "",
@@ -24,12 +26,10 @@ const Checkout = () => {
   });
   const handlePaymentChange = (key, value) => {
     if (key === 'cardNumber') {
-      value = value.replace(/\D/g, '').slice(0, 16);  // Allow only 16 digits
-      value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-    }
+      value = value.replace(/\D/g, '').slice(0, 16);   
+     }
     if (key === 'cvv') {
-      // Allow only digits and limit to 3 digits
-      value = value.replace(/\D/g, '').slice(0, 3);  // Allow only 3 digits
+       value = value.replace(/\D/g, '').slice(0, 3);   
     }
     setPaymentdetails(prev => ({ ...prev, [key]: value }));
   }

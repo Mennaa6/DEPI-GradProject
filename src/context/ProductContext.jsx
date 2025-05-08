@@ -1,56 +1,61 @@
 import React, { createContext, useState, useEffect } from "react";
-export const ProductContext = createContext();
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
+
+export const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState({
-    men: [],
-    women: [],
-    accessories: [],
-  });
+  const [products, setProducts] = useState([]);
   const [signedUser, setSigneduser] = useState(null);
   const [cartItems, setCartitems] = useState([]);
   const [wishlistItems, setWishlistitems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ---------------------------------
-  const getProducts = () => {
-    fetch("https://shared-dust-zoo.glitch.me/products")
-      .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => {
-        console.error("product fetch error:", error);
-      });
+   const getProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/products");
+      setProducts(response.data.products);
+     } catch (error) {
+      console.error("product fetch error:", error);
+    }
   };
 
-  const getSigneduser = () => {
+   const getSigneduser = async () => {
     const userId = JSON.parse(localStorage.getItem("id"));
-    fetch(`https://shared-dust-zoo.glitch.me/users/${userId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSigneduser(data);
-        setCartitems(data.cartItems);
-        setWishlistitems(data.wishlist);
-      })
-      .catch((error) => {
-        console.error("user fetch error:", error);
-      });
+    try {
+      const response = await axios.get(`http://localhost:3000/api/users/${userId}`);
+      setSigneduser(response.data.User);
+      setCartitems(response.data.User.cartItems);
+      setWishlistitems(response.data.User.wishlist);
+     } catch (error) {
+      console.error("user fetch error:", error);
+    }
   };
-  // useEffect(() => {
-  //   if (localStorage.getItem("id")) {
-  //     // navigate("/login");
-  //     console.log("hi");
-  //   } else {
-  //     getProducts();
-  //     getSigneduser();
-  //   }
-  // }, []);
-  // --------------------------
-  const ensureLoggedin = () => {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getProducts();
+        if (localStorage.getItem("id")) {
+          await getSigneduser();
+        }
+      } catch (error) {
+        console.error(error);
+        
+      } finally {
+        setLoading(false);
+      }
+     
+    }
+    
+  }, []);
+
+   const ensureLoggedin = () => {
     if (!signedUser) {
       toast(
-        <div className="bg-yellow-100 text-brown-800 px-4 py-2 rounded-md  ">
+        <div className="bg-yellow-100 text-brown-800 px-4 py-2 rounded-md">
           ⚠️ Please log in to continue.
         </div>
       );
@@ -60,79 +65,53 @@ export const ProductProvider = ({ children }) => {
     return true;
   };
 
-  const updateCartserver = (updatedCart) => {
-    const userId = JSON.parse(localStorage.getItem("id"));
-    fetch(`https://shared-dust-zoo.glitch.me/users/${userId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cartItems: updatedCart }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("HTTP error status");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setSigneduser((prev) => ({ ...prev, ...data }));
-        setCartitems(data.cartItems || updatedCart);
-      })
-      .catch((error) => {
-        console.error("error updating cart:", error);
-      });
-  };
-
-  const updateWishlistserver = (updatedCart, updatedWishlist) => {
-    const userId = JSON.parse(window.localStorage.getItem("id"));
-    fetch(`https://shared-dust-zoo.glitch.me/users/${userId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        cartItems: updatedCart,
-        wishlist: updatedWishlist,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("HTTP error status");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setSigneduser((prev) => ({ ...prev, ...data }));
-        setCartitems(data.cartItems || updatedCart);
-        setWishlistitems(data.wishlist || updatedWishlist);
-      })
-      .catch((error) => {
-        console.error("error updating cart:", error);
-      });
-  };
-
-  const addTocart = (id) => {
-    if (!ensureLoggedin()) return;
-    let product = null;
-    for (const cat in products) {
-      product = products[cat].find((item) => item.id === id);
-      if (product) break;
+   const updateCartserver = async (updatedCart) => {
+    try {
+      const userId = JSON.parse(localStorage.getItem("id"));
+      const response = await axios.patch(`http://localhost:3000/api/users/${userId}`, { cartItems: updatedCart });
+      setSigneduser((prev) => ({ ...prev, ...response.data }));
+      setCartitems(response.data.cartItems);
+    } catch (error) {
+      console.error("error updating cart:", error);
     }
+  };
+
+   const updateWishlistserver = async (updatedCart, updatedWishlist) => {
+    try {
+      const userId = JSON.parse(localStorage.getItem("id"));
+      const response = await axios.patch(`http://localhost:3000/api/users/${userId}`, {
+        cartItems: updatedCart,
+        wishlist: updatedWishlist
+      }, { headers: { "Content-Type": "application/json" } });
+      setSigneduser((prev) => ({ ...prev, ...response.data }));
+      setCartitems(response.data.cartItems);
+      setWishlistitems(response.data.wishlist);
+    } catch (error) {
+      console.error("error updating wishlist:", error);
+    }
+  };
+
+   const addTocart = (id) => {
+    if (!ensureLoggedin()) return;
+    const product = products.find((item) => item._id === id);
     if (!product) {
       console.error("product not found");
       return;
     }
-    const exists = cartItems.find((item) => item.id === id);
+    const exists = cartItems.find((item) => item._id === id);
     let updatedCart = null;
     if (exists) {
       updatedCart = cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item._id === id ? { ...item, quantity: item.quantity + 1 } : item
       );
     } else {
       updatedCart = [
         ...cartItems,
         {
-          id,
-          title: product.title,
+          _id: product._id,
+          name: product.name,
           price: product.price,
-          thumbnail: product.thumbnail,
+          image: product.image,
           quantity: 1,
         },
       ];
@@ -147,51 +126,51 @@ export const ProductProvider = ({ children }) => {
       }
     );
   };
-
   const deleteFromcart = (id) => {
     if (!ensureLoggedin()) return;
-    const updatedCart = cartItems.filter((item) => item.id !== id);
+    const updatedCart = cartItems.filter((item) => item._id !== id);
     updateCartserver(updatedCart);
   };
 
-  const increaseQuantity = (id) => {
+   const moveTowishlist = (id) => {
+    if (!ensureLoggedin()) return;
+    const product = cartItems.find((item) => item._id === id);
+    if (!product) return;
+    const updatedCart = cartItems.filter((item) => item._id !== id);
+    const updatedWishlist = [...wishlistItems, product._id];
+    updateWishlistserver(updatedCart, updatedWishlist);
+  };
+
+   const increaseQuantity = (id) => {
     if (!ensureLoggedin()) return;
     const updatedCart = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      item._id === id ? { ...item, quantity: item.quantity + 1 } : item
     );
     updateCartserver(updatedCart);
   };
+
   const decreaseQuantity = (id) => {
     if (!ensureLoggedin()) return;
-    const item = cartItems.find((item) => item.id === id);
+    const item = cartItems.find((item) => item._id === id);
     if (!item) return;
     let updatedCart;
     if (item.quantity > 1) {
       updatedCart = cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        item._id === id ? { ...item, quantity: item.quantity - 1 } : item
       );
     } else {
-      updatedCart = cartItems.filter((item) => item.id !== id);
+      updatedCart = cartItems.filter((item) => item._id !== id);
     }
     updateCartserver(updatedCart);
-  };
-
-  const moveTowishlist = (id) => {
-    if (!ensureLoggedin()) return;
-    const product = cartItems.find((item) => item.id === id);
-    if (!product) return;
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    const updatedWishlist = [...wishlistItems, product.id];
-    updateWishlistserver(updatedCart, updatedWishlist);
   };
 
   return (
     <ProductContext.Provider
       value={{
         products,
-        signedUser,
         cartItems,
         wishlistItems,
+        loading,
         addTocart,
         deleteFromcart,
         increaseQuantity,
