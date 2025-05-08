@@ -21,7 +21,7 @@ const SignUp = () => {
     try {
       await axios.post("http://localhost:3000/signup", {
         name: user.name,
-        mail: user.email, // ✅ هنا التعديل الأساسي
+        mail: user.email, 
         password: user.password,
       });
 
