@@ -3,9 +3,11 @@ import { ProductContext } from '../context/ProductContext';
 import { Button } from "@material-tailwind/react";
 import {  FaCreditCard } from "react-icons/fa"; 
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+
 
 const Checkout = () => {
-  const { cartItems } = useContext(ProductContext);
+  const { cartItems ,signedUser } = useContext(ProductContext);
   //local state
   const [shippingDetails, setShippingdetails] = useState({
     name: "",
@@ -34,6 +36,25 @@ const Checkout = () => {
     setPaymentdetails(prev => ({ ...prev, [key]: value }));
   }
   const deliveryFee = shippingDetails.governorate === "Mansoura" ? 80 : 50;
+
+  const handlePlaceorder = async () => {
+    if (!signedUser) {
+      toast.error("⚠️ Please log in to continue.");   
+      return;
+    }
+
+    try {
+      const orders = await axios.post();
+      
+      
+    
+
+      
+    } catch (error) {
+      console.error("error updating orders:", error);
+    }
+    
+  }
   
   return (
     <div className="bg-[#E4E0E1] p-8">

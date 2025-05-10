@@ -22,7 +22,7 @@ const Men = () => {
     // const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const men = products.filter((product) => product.category === "men");
+  const men = products.filter((product) => product.category.toLowerCase() === "men");
 
 
   // const fetchData = () => {

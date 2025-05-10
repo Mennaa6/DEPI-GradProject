@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 export const ProductContext = createContext();
+const api_url = "https://depis3.vercel.app/api";
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
@@ -15,9 +16,9 @@ export const ProductProvider = ({ children }) => {
 
   const getProducts = async () => {
      try {
-      const response = await axios.get("http://localhost:3000/api/products");
-       setProducts(response.data.products);
-       setLoading(false);
+       const response = await axios.get( `${api_url}/products`);
+        setProducts(response.data.products);
+        setLoading(false);
     } catch (error) {
       console.error("product fetch error:", error);
     }
@@ -27,7 +28,7 @@ export const ProductProvider = ({ children }) => {
    const getSigneduser = async () => {
     const userId = JSON.parse(localStorage.getItem("id"));
     try {
-      const response = await axios.get(`http://localhost:3000/api/users/${userId}`);
+      const response = await axios.get(`${api_url}/users/${userId}`);
       setSigneduser(response.data.User);
       setCartitems(response.data.User.cartItems);
       setWishlistitems(response.data.User.wishlist);
@@ -60,7 +61,7 @@ export const ProductProvider = ({ children }) => {
    const updateCartserver = async (updatedCart) => {
     try {
       const userId = JSON.parse(localStorage.getItem("id"));
-      const response = await axios.patch(`http://localhost:3000/api/users/${userId}`, { cartItems: updatedCart });
+      const response = await axios.patch(`${api_url}/users/${userId}`, { cartItems: updatedCart });
       setSigneduser((prev) => ({ ...prev, ...response.data }));
       setCartitems(response.data.cartItems);
     } catch (error) {
@@ -71,7 +72,7 @@ export const ProductProvider = ({ children }) => {
    const updateWishlistserver = async (updatedCart, updatedWishlist) => {
     try {
       const userId = JSON.parse(localStorage.getItem("id"));
-      const response = await axios.patch(`http://localhost:3000/api/users/${userId}`, {
+      const response = await axios.patch(`${api_url}/users/${userId}`, {
         cartItems: updatedCart,
         wishlist: updatedWishlist
       });
@@ -157,20 +158,17 @@ export const ProductProvider = ({ children }) => {
   };
 
   return (
-    <ProductContext.Provider
-      value={{
+    <ProductContext.Provider value={{
         products,
         cartItems,
         wishlistItems,
+        signedUser,
         loading,
         addTocart,
         deleteFromcart,
         increaseQuantity,
         decreaseQuantity,
         moveTowishlist,
-      }}
-    >
-      {children}
-    </ProductContext.Provider>
+      }}>{children}</ProductContext.Provider>
   );
 };

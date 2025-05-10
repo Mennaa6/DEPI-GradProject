@@ -22,7 +22,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
-  const {  addTocart } = useContext(ProductContext);
+  const {addTocart} = useContext(ProductContext);
 
   return (
     <Dialog
@@ -34,7 +34,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
     >
       <DialogHeader className="flex justify-between items-center">
         <Typography variant="h5" color="blue-gray">
-          {product.title}
+          {product.name}
         </Typography>
         <Button
           variant="text"
@@ -48,8 +48,8 @@ const SingleProduct = ({ open, handleClose, product }) => {
       <DialogBody divider className="flex flex-col md:flex-row gap-10">
         <div className="md:w-1/2 flex flex-col justify-between items-center ">
           <img
-            src={product.thumbnail}
-            alt={product.title}
+            src={product.image}
+            alt={product.name}
             className="w-full h-80 object-cover rounded-lg shadow-md"
           />
           <div className="flex flex-row justify-between items-center gap-4 ">
@@ -57,11 +57,6 @@ const SingleProduct = ({ open, handleClose, product }) => {
             <Typography variant="h5" color="blue-gray">
               PRICE: ${product.price.toFixed(2)}
             </Typography>
-            {product.discountPercentage > 0 && (
-              <Typography color="red">
-                {product.discountPercentage}% OFF
-              </Typography>
-            )}
           </div>
         </div>
 
@@ -91,27 +86,23 @@ const SingleProduct = ({ open, handleClose, product }) => {
             </Typography>
           </div>
           <Typography variant="small" color="blue-gray">
-            <span className="text-black"> BRAND:</span> {product.brand}
-          </Typography>
-          <Typography variant="small" color="blue-gray">
-            <span className="text-black">DIM: </span>
-            {product.dimensions.width}W x {product.dimensions.height}H x{" "}
-            {product.dimensions.depth}D cm
-          </Typography>
-          <Typography variant="small" color="blue-gray">
             <span className="text-black"> CATEGORY: </span> {product.category}
+          </Typography>
+          <Typography variant="small" color="blue-gray">
+            <span className="text-black"> SUB CATEGORY:</span> {product.subcategory}
           </Typography>
 
           <Typography
             variant="small"
-            color={product.availabilityStatus === "In Stock" ? "green" : "red"}
+            color={product.available === true ? "green" : "red"}
           >
             <span className="text-black"> AVAILABLITY: </span>
-            {product.availabilityStatus}
+            {product.available === true ? "In Stock" : "Out of Stock"}
           </Typography>
 
           {/* Sizes Selection */}
-          <div className="flex flex-col gap-2">
+          {product.category !== "accessories" && (
+            <div className="flex flex-col gap-2">
             <Typography variant="small" color="blue-gray">
               <span className="text-black">SELECT SIZE</span>
             </Typography>
@@ -128,6 +119,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
               ))}
             </div>
           </div>
+          )}
         </div>
       </DialogBody>
       <DialogFooter>
@@ -138,7 +130,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
             color="brown"
             onClick={()=> {
               handleClose();
-              addTocart(product.id);
+              addTocart(product._id);
              }
             }
             className=" hover:bg-hoverColor"
