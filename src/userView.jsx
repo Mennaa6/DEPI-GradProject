@@ -32,7 +32,7 @@ const userView = () => {
     location.pathname !== "/women" &&
     location.pathname !== "/men" &&
     location.pathname !== "/login" &&
-    location.pathname !== "/sign-up" &&
+    location.pathname !== "/signup" &&
     location.pathname !== "/accessories" &&
     location.pathname !== "/wishlist" &&
     location.pathname !== "/profile";
@@ -70,7 +70,7 @@ const userView = () => {
         <Route path="women" element={<Women />} />
         <Route path="men" element={<Men />} />
         <Route path="login" element={<Login />} />
-        <Route path="sign-up" element={<SignUp />} />
+        <Route path="signup" element={<SignUp />} />
         <Route path="accessories" element={<Accessories />} />
         <Route path="profile" element={<UserProfile />} />
         <Route path="wishlist" element={<Wishlist />} />
