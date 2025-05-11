@@ -22,7 +22,7 @@ const Accessories = () => {
   // const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const accessories = products.filter((product) => product.category === "accessories");
+  const accessories = products.filter((product) => product.category.toLowerCase() === "accessories");
 
 
   // const fetchData = () => {
