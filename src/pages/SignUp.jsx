@@ -5,8 +5,10 @@ import { Button } from "@material-tailwind/react";
 
 const SignUp = () => {
   const [user, setUser] = useState({ name: "", email: "", password: "" });
+  const [image, setImage] = useState(null);
   const [mailExists, setMailExists] = useState(false);
   const [invalidData, setInvalidData] = useState(false);
+  const [shortPassword, setShortPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -14,15 +16,24 @@ const SignUp = () => {
     e.preventDefault();
 
     const nameValid = /^[A-Za-z]+$/.test(user.name);
-    setInvalidData(!nameValid);
+    const passwordValid = user.password.length >= 8;
 
-    if (!nameValid) return;
+    setInvalidData(!nameValid);
+    setShortPassword(!passwordValid);
+
+    if (!nameValid || !passwordValid) return;
+
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("email", user.email);
+    formData.append("password", user.password);
+    if (image) formData.append("image", image);
 
     try {
-      await axios.post("http://localhost:3000/signup", {
-        name: user.name,
-        mail: user.email, 
-        password: user.password,
+      await axios.post("http://localhost:3000/api/auth/signup", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       navigate("/login");
@@ -50,6 +61,11 @@ const SignUp = () => {
           {invalidData && (
             <div className="text-red-600 text-sm mb-4 text-center">
               Username must contain only alphabetical letters
+            </div>
+          )}
+          {shortPassword && (
+            <div className="text-red-600 text-sm mb-4 text-center">
+              Password must be at least 8 characters
             </div>
           )}
           {mailExists && (
@@ -99,6 +115,18 @@ const SignUp = () => {
                 className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className="block text-[#493628] font-medium mb-2">
+                Profile Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+                className="w-full"
               />
             </div>
 
