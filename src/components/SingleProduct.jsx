@@ -13,7 +13,11 @@ import { MdCancelPresentation } from "react-icons/md";
 import { useContext } from "react";
 import { ProductContext } from "../context/ProductContext";
 
+
 const SingleProduct = ({ open, handleClose, product }) => {
+
+  const {signedUser} = useContext(ProductContext);
+
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
 
@@ -22,7 +26,25 @@ const SingleProduct = ({ open, handleClose, product }) => {
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
-  const {addTocart} = useContext(ProductContext);
+  const { addTocart } = useContext(ProductContext);
+
+  function handleAddToCart() {
+    // const userId = signedUser._id;
+    const userId = "681cbcdb4fb78a0c071e023a";
+    fetch("https://depis3.vercel.app/api/cart/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: product._id,
+        quantity: 1,
+        userId,
+      }),
+    })
+      .then((res) => res.json())
+      .then(data => console.log(data.cartItems));
+  }
 
   return (
     <Dialog
@@ -89,7 +111,8 @@ const SingleProduct = ({ open, handleClose, product }) => {
             <span className="text-black"> CATEGORY: </span> {product.category}
           </Typography>
           <Typography variant="small" color="blue-gray">
-            <span className="text-black"> SUB CATEGORY:</span> {product.subcategory}
+            <span className="text-black"> SUB CATEGORY:</span>{" "}
+            {product.subcategory}
           </Typography>
 
           <Typography
@@ -103,22 +126,22 @@ const SingleProduct = ({ open, handleClose, product }) => {
           {/* Sizes Selection */}
           {product.category !== "accessories" && (
             <div className="flex flex-col gap-2">
-            <Typography variant="small" color="blue-gray">
-              <span className="text-black">SELECT SIZE</span>
-            </Typography>
-            <div className="flex gap-2">
-              {sizes.map((size) => (
-                <Chip
-                  key={size}
-                  value={size}
-                  onClick={() => handleSizeSelect(size)}
-                  variant={selectedSize === size ? "filled" : "outlined"}
-                  color={selectedSize === size ? "brown" : "gray"}
-                  className="cursor-pointer hover:bg-brown-100"
-                />
-              ))}
+              <Typography variant="small" color="blue-gray">
+                <span className="text-black">SELECT SIZE</span>
+              </Typography>
+              <div className="flex gap-2">
+                {sizes.map((size) => (
+                  <Chip
+                    key={size}
+                    value={size}
+                    onClick={() => handleSizeSelect(size)}
+                    variant={selectedSize === size ? "filled" : "outlined"}
+                    color={selectedSize === size ? "brown" : "gray"}
+                    className="cursor-pointer hover:bg-brown-100"
+                  />
+                ))}
+              </div>
             </div>
-          </div>
           )}
         </div>
       </DialogBody>
@@ -128,11 +151,11 @@ const SingleProduct = ({ open, handleClose, product }) => {
           <Button
             variant="filled"
             color="brown"
-            onClick={()=> {
+            onClick={() => {
               handleClose();
-              addTocart(product._id);
-             }
-            }
+              // addTocart(product._id);
+              handleAddToCart();
+            }}
             className=" hover:bg-hoverColor"
             disabled={!selectedSize}
           >
