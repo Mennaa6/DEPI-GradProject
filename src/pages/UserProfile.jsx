@@ -1,218 +1,197 @@
+import React, { useEffect, useState } from "react";
 import { Avatar, Button, Spinner } from "@material-tailwind/react";
 import { MdLocationOn, MdOutlineDone, MdDelete, MdClose } from "react-icons/md";
 import Order from "../components/Order";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState({});
   const [userAddresses, setUserAddresses] = useState([]);
   const [addAddress, setAddAddress] = useState(false);
   const [newAddress, setNewAddress] = useState("");
-  const [invalidAdress, setInvalidAdress] = useState(false);
+  const [invalidAddress, setInvalidAddress] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    // if (!window.localStorage.getItem("id")) {
-    //   navigate("/login");
-    // }
+    if (!window.localStorage.getItem("id")) {
+      window.localStorage.setItem("id", "681cbcdb4fb78a0c071e023a");
+    }
 
-    const userId = Number(JSON.parse(window.localStorage.getItem("id")));
-    fetch("https://spotted-thankful-mambo.glitch.me/users")
+    const userId = "681cbcdb4fb78a0c071e023a";
+    fetch(`https://depis3.vercel.app/api/users/${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        data.forEach((element) => {
-          if (element.id == userId) {
-            setUserData(element);
-            setUserAddresses(element.addresses);
-            element.orders.forEach((orderId) => {
-              fetch(
-                `https://spotted-thankful-mambo.glitch.me/orders/${orderId}`
-              )
-                .then((res) => res.json())
-                .then((data) => setOrders((prev) => [...prev, data]))
-                .catch((error) => console.log(error));
+        setUserData(data.User);
+        if (userData) {
+          fetch(`https://depis3.vercel.app/api/orders/${userId}`)
+            .then((res) => res.json())
+            .then((data) => {
+              setOrders(data);
             });
-          }
-          setLoading(false);
-        });
+        }
+        setLoading(false);
       });
   }, []);
-
-  function handleNewAdress() {
-    if (newAddress.length === 0) {
-      setInvalidAdress(true);
-      return;
-    }
-    const update = [...userAddresses, newAddress];
-    setUserAddresses(update);
-    setAddAddress(false);
-    fetch(
-      `https://spotted-thankful-mambo.glitch.me/users/${JSON.parse(
-        window.localStorage.getItem("id")
-      )}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          addresses: update, // updated addresses array
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error("Error:", error));
-  }
-
-  function handleDelete(addTodelete) {
-    const updatedAddresses = userAddresses.filter((item) => {
-      return item != addTodelete;
-    });
-    console.log(updatedAddresses);
-    setUserAddresses(updatedAddresses);
-
-    fetch(
-      `https://spotted-thankful-mambo.glitch.me/users/${JSON.parse(
-        window.localStorage.getItem("id")
-      )}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          addresses: updatedAddresses, // updated addresses array
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .catch((error) => console.error("Error:", error));
-  }
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Spinner color="brown" className="h-16 w-16" />
+        <Spinner color="blue" className="h-16 w-16" />
       </div>
     );
   }
 
   return (
-    <div className="flex justify-around sm:m-8 m-3 ">
-      <div className=" w-full flex flex-col justify-center rounded-lg border border-gray-600 h-fit pt-6 pb-6 bg-white">
-        <div className="flex flex-col gap-4 h-[90%]">
-          <div className="flex justify-around">
-            <div className="flex gap-3 w-[96%] text-[0.9em]">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+          {/* User Info Section */}
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-start gap-4">
               <Avatar
                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 alt="avatar"
                 size="lg"
+                className="border border-gray-200"
               />
-              <div className="flex flex-col gap-1">
-                <p>{userData.firstName + " " + userData.lastName}</p>
-                <div className="flex flex-col justify-between sm:flex-row sm:w-[102%]">
-                  <p>Email: {userData.email},</p>
-                  <p>Phone: {userData.phone}</p>
+              <div className="flex-1">
+                <h2 className="text-xl font-semibold text-gray-900 mb-1">
+                  {userData.name || "User Profile"}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-sm text-gray-600">
+                  <p className="flex items-center">
+                    <span className="text-gray-500 mr-2">Email:</span>{" "}
+                    {userData.email}
+                  </p>
+                  <p className="flex items-center">
+                    <span className="text-gray-500 mr-2">Phone:</span>{" "}
+                    {userData.phone}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex justify-center">
-            <hr className="w-[96%] border border-gray-200" />
-          </div>
-          <div className="flex md:justify-around w-[96%] text-[0.85em]">
-            <div className="sm:grid sm:grid-cols-3 flex flex-col gap-4 w-[96%]">
-              {userAddresses.map((element, index) => {
-                return (
-                  <div
-                    className="flex justify-between sm:w-[80%] w-[50%] ml-1"
-                    key={index}
-                  >
-                    <div
-                      className="md:border border-gray-400 rounded p-1 sm:text-sm w-[90%] cursor-pointer"
-                      key={index}
-                    >
-                      <MdLocationOn className="inline-flex" size={16} />
-                      {element}
-                    </div>
-                    <MdDelete
-                      className="rounded-sm mt-1 cursor-pointer hover:bg-gray-400"
-                      size={18}
-                      onClick={() => handleDelete(element)}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="flex justify-around">
-            <div className="w-[96%]">
-              <div className="flex flex-col gap-4">
-                {addAddress && (
-                  <div className="flex justify-between w-[40%]">
-                    <input
-                      type="text"
-                      className="w-[80%] text-gray-900 bg-transparent border border-gray-400 rounded-md p-1 "
-                      placeholder="New Adress"
-                      onChange={(e) => {
-                        setNewAddress(e.target.value);
-                        if (newAddress.length > 0) {
-                          setInvalidAdress(false);
-                        }
-                      }}
-                      value={newAddress}
-                    />
-                    <MdOutlineDone
-                      size={20}
-                      className="border border-gray-900 rounded-sm mt-1 cursor-pointer hover:bg-gray-400"
-                      onClick={handleNewAdress}
-                    />
 
-                    <MdClose
-                      className="border border-gray-900 rounded-sm mt-1 cursor-pointer hover:bg-gray-400"
-                      size={20}
-                      onClick={() => setAddAddress(false)}
-                    />
-                  </div>
-                )}
-                {invalidAdress && (
-                  <h1 className="text-red-700 text-[0.7em]">
-                    Adress Can Not be Empty
-                  </h1>
-                )}
+          {/* Addresses Section */}
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium text-gray-900">
+                My Addresses
+              </h3>
+              {!addAddress && (
                 <Button
                   variant="outlined"
-                  className="w-[33%] text-[0.65em] sm:text-[0.5em] md:text-[0.7em] sm:w-[18%] p-2 border-gray-500"
+                  className="flex items-center gap-1 text-xs py-2 px-3 border-blue-500 text-blue-500"
                   onClick={() => setAddAddress(true)}
                 >
-                  + Add New Adress
+                  <span className="text-lg">+</span> Add New Address
                 </Button>
+              )}
+            </div>
+
+            {addAddress && (
+              <div className="mb-4 p-4 border border-gray-200 rounded-lg bg-gray-50 animate-fadeIn">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="text"
+                    className={`flex-1 border ${
+                      invalidAddress ? "border-red-300" : "border-gray-300"
+                    } rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    placeholder="Enter new address"
+                    value={newAddress}
+                    onChange={(e) => {
+                      setNewAddress(e.target.value);
+                      if (e.target.value.length > 0) {
+                        setInvalidAddress(false);
+                      }
+                    }}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      variant="filled"
+                      className="bg-blue-500 text-xs py-2 px-3 flex items-center gap-1"
+                      onClick={() => {
+                        if (newAddress.length === 0) {
+                          setInvalidAddress(true);
+                          return;
+                        }
+                        const update = [...userAddresses, newAddress];
+                        setUserAddresses(update);
+                        setNewAddress("");
+                        setAddAddress(false);
+                      }}
+                    >
+                      <MdOutlineDone size={16} /> Save
+                    </Button>
+                    <Button
+                      variant="text"
+                      className="text-gray-500 text-xs py-2 px-3 flex items-center gap-1"
+                      onClick={() => {
+                        setAddAddress(false);
+                        setInvalidAddress(false);
+                        setNewAddress("");
+                      }}
+                    >
+                      <MdClose size={16} /> Cancel
+                    </Button>
+                  </div>
+                </div>
+                {invalidAddress && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Address cannot be empty
+                  </p>
+                )}
               </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {userAddresses.length > 0 ? (
+                userAddresses.map((address, index) => (
+                  <div
+                    key={index}
+                    className="flex group items-start border border-gray-200 rounded-lg p-3 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <MdLocationOn className="text-blue-500 text-lg flex-shrink-0 mt-0.5 mr-2" />
+                    <div className="flex-1 text-sm text-gray-700">
+                      {address}
+                    </div>
+                    <button
+                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity duration-200"
+                      onClick={() => {
+                        const updatedAddresses = userAddresses.filter(
+                          (_, i) => i !== index
+                        );
+                        setUserAddresses(updatedAddresses);
+                      }}
+                    >
+                      <MdDelete size={18} />
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-4 text-gray-500 text-sm">
+                  No addresses saved yet
+                </div>
+              )}
             </div>
           </div>
-          <div className="flex justify-center">
-            <hr className="w-[96%] border border-gray-200" />
-          </div>
 
-          <p className="ml-6">Your Orders</p>
-
-          <div className="flex flex-col gap-5 justify-center items-center">
-            {orders.length ? (
-              orders.map((element) => (
-                <Order
-                  order={element}
-                  payment={userData.payment}
-                  key={element.id}
-                />
-              ))
-            ) : (
-              <h1> No orders yet</h1>
-            )}
+          {/* Orders Section */}
+          <div className="p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              My Orders
+            </h3>
+            <div className="space-y-6">
+              {orders && orders.length > 0 ? (
+                orders.map((order, index) => (
+                  <Order key={index} order={order} setOrders={setOrders} />
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  No orders found
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

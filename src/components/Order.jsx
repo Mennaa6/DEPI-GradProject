@@ -1,101 +1,198 @@
+import React, { useState } from "react";
 import { Button } from "@material-tailwind/react";
-import { useEffect, useState } from "react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Phone,
+  Mail,
+  MapPin,
+  AlertTriangle,
+  Check,
+  Truck,
+  ShoppingBag,
+  X,
+} from "lucide-react";
+import OrderProducts from "./OrderProducts";
+import OrderDetails from "./OrderDetails";
+import StatusTimeline from "./StatusTimeline";
 
-const Order = ({ order, payment }) => {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    fetch("https://spotted-thankful-mambo.glitch.me/products")
-      .then((res) => res.json())
-      .then((data) => {
-        const allProducts = [...data.men, ...data.women, ...data.accessories];
-        const userProducts = [];
-        order.items.forEach((productId) => {
-          let product = allProducts.find(
-            (productItem) => productItem.id == productId
-          );
-          userProducts.push(product);
-          setProducts(userProducts);
-        });
-      });
-  }, []);
+const Order = ({ order, setOrders }) => {
+  const [products, setProducts] = useState(order.items);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
 
   function handleTotalPaid() {
     let totalPrice = 0;
-    products.forEach(item => {
+    products.forEach((item) => {
       totalPrice += Number(item.price);
     });
-    return totalPrice;
+    return totalPrice + Number(order.shippingFee);
   }
 
+  function handleCancel() {
+    if (!isConfirmingCancel) {
+      setIsConfirmingCancel(true);
+      return;
+    }
+
+    const userId = "681cbcdb4fb78a0c071e023a";
+    fetch("https://depis3.vercel.app/api/orders", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        orderId: order._id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setOrders(data.orders);
+        setIsConfirmingCancel(false);
+      })
+      .catch((error) => {
+        console.error("Error cancelling order:", error);
+        setIsConfirmingCancel(false);
+      });
+  }
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return "bg-amber-50 text-amber-600 border-amber-200";
+      case "shipped":
+        return "bg-green-50 text-green-600 border-green-200";
+      case "delivered":
+        return "bg-blue-50 text-blue-600 border-blue-200";
+      case "cancelled":
+        return "bg-red-50 text-red-600 border-red-200";
+      default:
+        return "bg-gray-50 text-gray-600 border-gray-200";
+    }
+  };
+
   return (
-    <div className="border border-gray-400 flex flex-col justify-around w-[96%] rounded-lg p-3 gap-3 ml-4">
-      {" "}
-      <div className="w-[96%] flex justify-between">
-        <div className="text-[0.8em] sm:text-sm">
-          <p>
-            Order ID: {order.id + " "}
-            <span
-              className={`${
-                order.status == "pending" ? "text-red-700" : "text-green-500"
-              } font-bold`}
-            >
-              {order.status}
-            </span>
-          </p>
-          <p className="text-gray-600 text-xs">Date: {" " + order.date}</p>
-        </div>
-        {order.status !== "shipped" && (
-          <Button
-            variant="outlined"
-            className="w-[30%] text-red-600 border-red-600 rounded-md text-[0.6em] p-0 sm:text-xs sm:w-[20%]  hover:text-[#FFF] hover:bg-red-500 hover:font-normal"
-          >
-            Cancel order
-          </Button>
-        )}
-      </div>
-      <hr className="w-[96%]" />
-      <div className="flex justify-around text-gray-800 text-[0.8em] sm:text-[0.9em]">
-        <div className="w-[32%]">
-          <p>Contact</p>
-          <p>Mike Johnatan</p>
-          <p>Phone: +201231500789</p>
-          <p>Email: info@mail.com</p>
-        </div>
-        <div className="bg-gray-500 h-[9em] sm:h-[7em] w-[0.1px]"></div>
-        <div className="w-[32%]">
-          <p>Shipping address</p>
-          <p> {order.address}</p>
-        </div>
-        <div className="bg-gray-500 h-[9em] sm:h-[7em] w-[0.1px]"></div>
-        <div className="w-[32%]">
-          <p>Payment</p>
-          <p className="text-green-500">
-            Visa **** **** **** {payment.slice(-5)}
-          </p>
-          <p>Shipping fee: 56EGP</p>
-          <p>Total Paid: {handleTotalPaid()}</p>
-        </div>
-      </div>
-      <hr className="w-[96%]" />
-      <div className="grid grid-cols-3 text-[0.65em] gap-3 sm:text-[0.9em] text-gray-800">
-        {products.map((item) => {
-          return (
-            <div className="w-[33%] flex justify-between gap-3">
-              <img
-                src= {item.thumbnail}
-                alt="item Photo"
-                className="h-[90%] w-[80%]"
-              />
-              <div>
-                {" "}
-                <p className="w-[200%]">{item.title}</p>
-                <p className="w-[200%] font-bold">{item.price + " "}EGP</p>
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
+      <div className="p-4 sm:p-6">
+        {/* Order Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 flex-shrink-0">
+              <ShoppingBag className="w-5 h-5" />
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-lg font-semibold text-gray-900 truncate">
+                  Order #{order._id.slice(-6)}
+                </h3>
+                <span
+                  className={`px-2.5 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(
+                    order.status
+                  )}`}
+                >
+                  {order.status}
+                </span>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center text-sm text-gray-500 gap-1 sm:gap-4">
+                <span className="flex items-center">
+                  Placed: {formatDate(order.date)}
+                </span>
+                <span className="hidden sm:inline text-gray-300">|</span>
+                <span className="text-xs sm:text-sm font-mono text-gray-400">
+                  ID: {order._id}
+                </span>
               </div>
             </div>
-          );
-        })}
-        
+          </div>
+
+          <div className="flex items-center gap-2 ml-auto">
+            {order.status !== "shipped" &&
+              (isConfirmingCancel ? (
+                <div className="flex items-center gap-2 animate-pulse">
+                  <Button
+                    variant="text"
+                    size="sm"
+                    className="text-gray-500 px-3 py-1.5 text-xs"
+                    onClick={() => setIsConfirmingCancel(false)}
+                  >
+                    <X className="h-3.5 w-3.5 mr-1" /> Cancel
+                  </Button>
+                  <Button
+                    variant="filled"
+                    size="sm"
+                    className="bg-red-500 hover:bg-red-600 px-3 py-1.5 text-xs"
+                    onClick={handleCancel}
+                  >
+                    Confirm
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="outlined"
+                  size="sm"
+                  className="border-red-300 text-red-500 hover:border-red-500 hover:bg-red-50 px-3 py-1.5 text-xs"
+                  onClick={handleCancel}
+                >
+                  Cancel Order
+                </Button>
+              ))}
+
+            <Button
+              variant="text"
+              size="sm"
+              className="text-blue-500 hover:bg-blue-50 flex items-center px-3 py-1.5 text-xs"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? (
+                <>
+                  <ChevronUp className="h-3.5 w-3.5 mr-1" /> Less Details
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-3.5 w-3.5 mr-1" /> View Details
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Order Summary (always visible) */}
+        <div className="mt-4 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-sm text-gray-700">
+          <div className="flex items-center mb-2 sm:mb-0">
+            <span className="font-medium mr-2">Total:</span>
+            <span className="text-gray-900 font-semibold">
+              {handleTotalPaid()} EGP
+            </span>
+            <span className="mx-3 text-gray-400">|</span>
+            <span className="font-medium mr-2">Items:</span>
+            <span className="text-gray-900">{products.length}</span>
+          </div>
+          <StatusTimeline status={order.status} />
+        </div>
+
+        {/* Expandable section */}
+        <div
+          className={`overflow-hidden transition-all duration-500 ease-in-out ${
+            isExpanded ? "max-h-[2000px] opacity-100 mt-6" : "max-h-0 opacity-0"
+          }`}
+        >
+          <OrderDetails order={order} />
+          <OrderProducts products={products} />
+        </div>
       </div>
     </div>
   );
