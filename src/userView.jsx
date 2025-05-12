@@ -8,6 +8,7 @@ import Products from "./pages/Products";
 import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 import Header from "./components/Header";
 import Women from "./pages/collections/Women";
 import Men from "./pages/collections/Men";
@@ -33,6 +34,7 @@ const userView = () => {
     location.pathname !== "/men" &&
     location.pathname !== "/login" &&
     location.pathname !== "/signup" &&
+    location.pathname !== "/orderconfirmation" &&
     location.pathname !== "/accessories" &&
     location.pathname !== "/wishlist" &&
     location.pathname !== "/profile";
@@ -71,6 +73,7 @@ const userView = () => {
         <Route path="men" element={<Men />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
+        <Route path="orderconfirmation" element={<OrderConfirmation />} />
         <Route path="accessories" element={<Accessories />} />
         <Route path="profile" element={<UserProfile />} />
         <Route path="wishlist" element={<Wishlist />} />
