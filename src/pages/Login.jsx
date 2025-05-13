@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button } from "@material-tailwind/react";
 
 const Login = () => {
-  const [user, setUser] = useState({ mail: "", password: "" });
+  const [user, setUser] = useState({ email: "", password: "" });
   const [mailExists, setMailExists] = useState(true);
   const [wrongPass, setWrongPass] = useState(false);
 
@@ -14,10 +14,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:3000/api/v1/users/login", {
-        email: user.mail,
-        password: user.password,
-      });
+      const res = await axios.post(
+        "https://depis3.vercel.app/api/auth/login",
+        {
+          email: user.email,
+          password: user.password,
+        }
+      );
 
       // Save token and user info in localStorage
       localStorage.setItem("token", res.data.token);
@@ -67,7 +70,7 @@ const Login = () => {
                 type="email"
                 className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.mail}
-                onChange={(e) => setUser({ ...user, mail: e.target.value })}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
             </div>
 

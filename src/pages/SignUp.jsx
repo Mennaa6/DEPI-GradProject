@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Button } from "@material-tailwind/react";
 
 const SignUp = () => {
@@ -9,6 +8,8 @@ const SignUp = () => {
   const [mailExists, setMailExists] = useState(false);
   const [invalidData, setInvalidData] = useState(false);
   const [shortPassword, setShortPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const navigate = useNavigate();
 
@@ -16,12 +17,17 @@ const SignUp = () => {
     e.preventDefault();
 
     const nameValid = /^[A-Za-z]+$/.test(user.name);
+    const emailValid = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(
+      user.email
+    );
     const passwordValid = user.password.length >= 8;
 
     setInvalidData(!nameValid);
     setShortPassword(!passwordValid);
+    setErrorMsg("");
+    setMailExists(false);
 
-    if (!nameValid || !passwordValid) return;
+    if (!nameValid || !emailValid || !passwordValid) return;
 
     const formData = new FormData();
     formData.append("name", user.name);
@@ -29,21 +35,34 @@ const SignUp = () => {
     formData.append("password", user.password);
     if (image) formData.append("image", image);
 
+    setLoading(true);
+
     try {
-      await axios.post("http://localhost:3000/api/auth/signup", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await fetch(
+        "https://depis3.vercel.app/api/auth/signup",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      setLoading(false);
+
+      if (!response.ok) {
+        const message = data.message || "Signup failed";
+        if (message.toLowerCase().includes("email")) {
+          setMailExists(true);
+        } else {
+          setErrorMsg(message);
+        }
+        return;
+      }
 
       navigate("/login");
     } catch (err) {
-      const message = err.response?.data?.message || "Signup failed";
-      if (message.toLowerCase().includes("email")) {
-        setMailExists(true);
-      } else {
-        alert(message);
-      }
+      setLoading(false);
+      setErrorMsg("Something went wrong. Please try again.");
     }
   };
 
@@ -71,6 +90,11 @@ const SignUp = () => {
           {mailExists && (
             <div className="text-red-600 text-sm mb-4 text-center">
               User already exists, try to sign in
+            </div>
+          )}
+          {errorMsg && (
+            <div className="text-red-600 text-sm mb-4 text-center">
+              {errorMsg}
             </div>
           )}
 
@@ -133,8 +157,9 @@ const SignUp = () => {
             <Button
               type="submit"
               className="w-full py-3 bg-[#493628] hover:bg-[#AB886D] text-white font-bold rounded-lg transition-colors duration-200"
+              disabled={loading}
             >
-              CREATE ACCOUNT
+              {loading ? "Creating Account..." : "CREATE ACCOUNT"}
             </Button>
 
             <div className="text-center text-[#493628]">
