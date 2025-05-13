@@ -14,7 +14,8 @@ function DropDown() {
   const navigate = useNavigate();
   
   function handleLogout() {
-    window.localStorage.removeItem("id");
+    window.localStorage.removeItem("user");
+    window.localStorage.removeItem("token");
     navigate("/");
   }
 
