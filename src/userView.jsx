@@ -1,8 +1,6 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import NotFound from "./pages/NotFound";
-// import Login from "./pages/Login";
-// import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Footer from "./components/Footer";
@@ -25,8 +23,6 @@ const userView = () => {
   const location = useLocation();
   const isNotFoundPage =
     location.pathname !== "/" &&
-    // location.pathname !== "/login" &&
-    // location.pathname !== "/sign-up" &&
     location.pathname !== "/products" &&
     location.pathname !== "/cart" &&
     location.pathname !== "/checkout" &&
@@ -64,8 +60,8 @@ const userView = () => {
       {!isNotFoundPage && <Header />}
       <Routes>
         <Route index element={<Home />} />
-        <Route path="/login" element={<Login />} />
-          <Route path="/sign-up" element={<SignUp />} />
+        {/* <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} /> */}
         <Route path="products" element={<Products />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
