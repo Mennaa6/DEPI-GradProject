@@ -35,26 +35,28 @@ const Order = ({ order, setOrders }) => {
       return;
     }
 
-    const userId = "681cbcdb4fb78a0c071e023a";
-    fetch("https://depis3.vercel.app/api/orders", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        orderId: order._id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setOrders(data.orders);
-        setIsConfirmingCancel(false);
+    const userId = window.localStorage.getItem("id");
+    if (userId) {
+      fetch("https://depis3.vercel.app/api/orders", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          orderId: order._id,
+        }),
       })
-      .catch((error) => {
-        console.error("Error cancelling order:", error);
-        setIsConfirmingCancel(false);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          setOrders(data.orders);
+          setIsConfirmingCancel(false);
+        })
+        .catch((error) => {
+          console.error("Error cancelling order:", error);
+          setIsConfirmingCancel(false);
+        });
+    }
   }
 
   const formatDate = (dateString) => {

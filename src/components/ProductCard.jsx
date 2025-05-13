@@ -31,21 +31,23 @@ const productCard = ({ product }) => {
   };
 
   function addToFav() {
-    const userId = "681cbcdb4fb78a0c071e023a";
-    fetch("https://depis3.vercel.app/api/wishlist/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        productId: product._id,
-      }),
-    });
+    const userId = window.localStorage.getItem("id");
+    if (userId) {
+      fetch("https://depis3.vercel.app/api/wishlist/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          productId: product._id,
+        }),
+      });
+    }
   }
 
   function removeFromFav() {
-    const userId = "681cbcdb4fb78a0c071e023a";
+    const userId = window.localStorage.getItem("id");
     fetch("https://depis3.vercel.app/api/wishlist/", {
       method: "DELETE",
       headers: {
