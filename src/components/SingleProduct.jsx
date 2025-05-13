@@ -14,8 +14,7 @@ import { useContext } from "react";
 import { ProductContext } from "../context/ProductContext";
 
 const SingleProduct = ({ open, handleClose, product }) => {
-  const { signedUser } = useContext(ProductContext);
-
+ 
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
 
@@ -24,7 +23,10 @@ const SingleProduct = ({ open, handleClose, product }) => {
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
-  const { addTocart } = useContext(ProductContext);
+  const { addTocart, loading } = useContext(ProductContext);
+   const handleAddtoCart = async () => {
+    await addTocart(product._id); // ensures loading is handled in context
+   };
 
   function handleAddToCart() {
     // const userId = signedUser._id;
@@ -41,7 +43,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data.cartItems));
+      .then(data => console.log(data.cartItems));
   }
 
   return (
@@ -140,14 +142,10 @@ const SingleProduct = ({ open, handleClose, product }) => {
             color="brown"
             onClick={() => {
               handleClose();
-              // addTocart(product._id);
-              handleAddToCart();
+              handleAddtoCart();
             }}
             className=" hover:bg-hoverColor"
-            disabled={
-              !selectedSize &&
-              (product.category == "men" || product.category == "women")
-            }
+            // disabled={!selectedSize}
           >
             Add to Cart
           </Button>
