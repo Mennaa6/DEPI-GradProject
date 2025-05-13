@@ -13,10 +13,8 @@ import { MdCancelPresentation } from "react-icons/md";
 import { useContext } from "react";
 import { ProductContext } from "../context/ProductContext";
 
-
 const SingleProduct = ({ open, handleClose, product }) => {
-
-  const {signedUser} = useContext(ProductContext);
+  const { signedUser } = useContext(ProductContext);
 
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
@@ -43,7 +41,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
       }),
     })
       .then((res) => res.json())
-      .then(data => console.log(data.cartItems));
+      .then((data) => console.log(data.cartItems));
   }
 
   return (
@@ -67,24 +65,20 @@ const SingleProduct = ({ open, handleClose, product }) => {
           <MdCancelPresentation size={30} />
         </Button>
       </DialogHeader>
-      <DialogBody divider className="flex flex-col md:flex-row gap-10">
+      <DialogBody divider className="flex flex-col md:flex-row gap-5">
         <div className="md:w-1/2 flex flex-col justify-between items-center ">
           <img
             src={product.image}
             alt={product.name}
             className="w-full h-80 object-cover rounded-lg shadow-md"
           />
-          <div className="flex flex-row justify-between items-center gap-4 ">
-            {" "}
-            <Typography variant="h5" color="blue-gray">
-              PRICE: ${product.price.toFixed(2)}
-            </Typography>
-          </div>
         </div>
 
         <div className="md:w-1/2 flex flex-col gap-4">
+          <Typography className="text-2xl mb-3" color="blue-gray">
+            PRICE: ${product.price.toFixed(2)}
+          </Typography>
           <Typography variant="paragraph" color="gray">
-            <span className="text-black">DESCRIPTION: </span>
             {product.description}
           </Typography>
 
@@ -98,21 +92,14 @@ const SingleProduct = ({ open, handleClose, product }) => {
                 key={i}
                 className={
                   i < Math.round(product.rating)
-                    ? "text-yellow-500"
+                    ? "text-yellow-800"
                     : "text-gray-400"
                 }
               />
             ))}
-            <Typography variant="small" color="blue-gray" className="ml-2">
-              ({product.rating.toFixed(1)})
-            </Typography>
           </div>
-          <Typography variant="small" color="blue-gray">
-            <span className="text-black"> CATEGORY: </span> {product.category}
-          </Typography>
-          <Typography variant="small" color="blue-gray">
-            <span className="text-black"> SUB CATEGORY:</span>{" "}
-            {product.subcategory}
+          <Typography variant="small" color="blue-gray" className="capitalize">
+            <span className="text-black "> CATEGORY: </span> {product.category}
           </Typography>
 
           <Typography
@@ -157,7 +144,10 @@ const SingleProduct = ({ open, handleClose, product }) => {
               handleAddToCart();
             }}
             className=" hover:bg-hoverColor"
-            disabled={!selectedSize}
+            disabled={
+              !selectedSize &&
+              (product.category == "men" || product.category == "women")
+            }
           >
             Add to Cart
           </Button>
