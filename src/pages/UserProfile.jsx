@@ -13,24 +13,22 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!window.localStorage.getItem("id")) {
-      window.localStorage.setItem("id", "681cbcdb4fb78a0c071e023a");
+    const userId = window.localStorage.getItem("id");
+    if (userId) {
+      fetch(`https://depis3.vercel.app/api/users/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUserData(data.User);
+          if (userData) {
+            fetch(`https://depis3.vercel.app/api/orders/${userId}`)
+              .then((res) => res.json())
+              .then((data) => {
+                setOrders(data);
+              });
+          }
+          setLoading(false);
+        });
     }
-
-    const userId = "681cbcdb4fb78a0c071e023a";
-    fetch(`https://depis3.vercel.app/api/users/${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setUserData(data.User);
-        if (userData) {
-          fetch(`https://depis3.vercel.app/api/orders/${userId}`)
-            .then((res) => res.json())
-            .then((data) => {
-              setOrders(data);
-            });
-        }
-        setLoading(false);
-      });
   }, []);
 
   if (loading) {
