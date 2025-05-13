@@ -9,10 +9,10 @@ import {
 } from "@material-tailwind/react";
 import { FaCartShopping } from "react-icons/fa6";
 import { MdFavorite } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom"; // Import Link
 import { ProductContext } from '../context/ProductContext';
+import DropDown from "./DropDown";
 const Header = () => {
   const navigate = useNavigate();
   const [openNav, setOpenNav] = React.useState(false);
@@ -87,9 +87,7 @@ const Header = () => {
             <Link to="/wishlist">
               <MdFavorite />
             </Link>
-            <Link to="/profile">
-              <CgProfile />
-            </Link>
+            <DropDown/>
           </div>
           <IconButton
             variant="text"

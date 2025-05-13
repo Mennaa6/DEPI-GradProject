@@ -64,8 +64,8 @@ const userView = () => {
       {!isNotFoundPage && <Header />}
       <Routes>
         <Route index element={<Home />} />
-        {/* <Route path="/login" element={<Login />} />
-          <Route path="/sign-up" element={<SignUp />} /> */}
+        <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
         <Route path="products" element={<Products />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />

@@ -4,23 +4,26 @@ import "aos/dist/aos.css";
 import React, { useState, useEffect, useContext } from "react";
 import { Typography } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 
 const Wishlist = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const fetchData = () => {
-    // const userId = JSON.parse(window.localStorage.getItem("id"));
-    const userId = "681cbcdb4fb78a0c071e023a";
-    fetch(`https://depis3.vercel.app/api/wishlist/${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.wishlist);
-        setLoading(false);
-      });
+    const userId = JSON.parse(window.localStorage.getItem("id"));
+    if (userId) {
+      fetch(`https://depis3.vercel.app/api/wishlist/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setProducts(data.wishlist);
+          setLoading(false);
+        }); 
+    }
+    navigate("/sign-up");
   };
 
   useEffect(() => {
