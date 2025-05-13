@@ -13,7 +13,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userId = window.localStorage.getItem("id");
+    const userId = JSON.parse(window.localStorage.getItem("user")).id;
     if (userId) {
       fetch(`https://depis3.vercel.app/api/users/${userId}`)
         .then((res) => res.json())

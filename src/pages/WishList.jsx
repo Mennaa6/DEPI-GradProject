@@ -14,15 +14,18 @@ const Wishlist = () => {
   const navigate = useNavigate();
 
   const fetchData = () => {
-    // const userId = JSON.parse(window.localStorage.getItem("id"));
-    // const userId = "681ff5af68095a9c8a226e78";
-    fetch(`https://depis3.vercel.app/api/wishlist/${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched wishlist:", data);
-        setProducts(data.wishlist);
-        setLoading(false);
-      });
+    const userId = JSON.parse(window.localStorage.getItem("user")).id;
+    if (userId) {
+      fetch(`https://depis3.vercel.app/api/wishlist/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setProducts(data.wishlist);
+          setLoading(false);
+        }); 
+    }
+    else {
+      navigate("/signup");
+    }
   };
 
   useEffect(() => {
