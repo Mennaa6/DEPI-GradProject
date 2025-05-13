@@ -5,6 +5,7 @@ import { FaCreditCard } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { productshow } from "../assets/productsShow";
 
 const Checkout = () => {
   const { cartItems, signedUser } = useContext(ProductContext);
@@ -16,8 +17,7 @@ const Checkout = () => {
     address: "",
     city: "",
     governorate: "",
-    zip: "",
-  });
+   });
 
   const handleShippingChange = (key, value) => {
     setShippingdetails((prev) => ({ ...prev, [key]: value }));
@@ -40,32 +40,47 @@ const Checkout = () => {
   };
 
   const deliveryFee = shippingDetails.governorate === "Mansoura" ? 80 : 50;
+   
+ const handlePlaceorder = async () => {
+  if (!signedUser) {
+    toast.error("⚠️ Please log in to continue.");   
+    return;
+  }
 
-  const handlePlaceorder = async () => {
-    if (!signedUser) {
-      toast.error("⚠️ Please log in to continue.");
-      return;
-    }
+   // const userId = signedUser._id; 
+   const userId="681ff5af68095a9c8a226e78"
 
-    const productIds = cartItems.map((item) => item.id);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3001/api/orders/create-order",
-        {
-          userId: signedUser._id,
-          address: shippingDetails.address,
-          items: productIds,
-        }
-      );
-
-      const orderId = response.data._id;
-      navigate("/orderconfirmation", { state: { orderId } });
-    } catch (error) {
-      console.error("Error creating order:", error);
-      toast.error("❌ Failed to place order.");
-    }
+  const stringfiedAddress = `${shippingDetails.address}, ${shippingDetails.city}, ${shippingDetails.governorate}`;
+  
+  const order = {
+    address: stringfiedAddress,
+    items: cartItems.map((item) => ({
+      product: item.productId._id,
+      quantity: item.quantity,
+    })),
+    totalPrice: cartItems.reduce(
+      (total, item) => total + item.quantity * item.productId.price,
+      0
+    ) + deliveryFee,
+    shippingFee: deliveryFee,
+    status: "pending",
   };
+
+  console.log("Order object:", JSON.stringify(order, null, 2));
+
+  try {
+    const response = await axios.post(
+      `https://depis3.vercel.app/api/orders/${userId}`,
+      order
+    );
+    toast.success("Order placed successfully!");
+    const orderId = response.data._id;
+    navigate("/orderconfirmation", { state: { orderId } });
+  } catch (error) {
+    console.error("error placing order:", error);
+    toast.error("⚠️ There was an issue placing your order.");
+  }
+};
 
   return (
     <div className="bg-[#E4E0E1] p-8">
@@ -121,20 +136,13 @@ const Checkout = () => {
                 }
                 className="w-full p-3 border border-gray-300 rounded-md bg-white"
               >
-                <option value="">Select State</option>
+                <option value="">Select Governorate</option>
                 <option value="Cairo">Cairo</option>
                 <option value="Giza">Giza</option>
                 <option value="Alexandria">Alexandria</option>
                 <option value="Mansoura">Mansoura</option>
               </select>
-              <input
-                type="text"
-                placeholder="ZIP Code"
-                value={shippingDetails.zip}
-                onChange={(e) => handleShippingChange("zip", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-
+              
               <div className="mt-4">
                 <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4 flex items-center">
                   <FaCreditCard className="mr-2" />
@@ -181,10 +189,10 @@ const Checkout = () => {
             <div className="space-y-4">
               {cartItems.map((item) => (
                 <div key={item.id} className="flex justify-between items-start">
-                  <h2 className="w-[40%] text-sm">{item.title}</h2>
+                  <h2 className="w-[40%] text-sm">{item.productId.name}</h2>
                   <p className="w-[30%] text-sm">Quantity: {item.quantity}</p>
                   <p className="w-[30%] text-sm">
-                    {(item.price * item.quantity).toFixed(2)}
+                    {(item.productId.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
               ))}
@@ -198,7 +206,7 @@ const Checkout = () => {
                 <span>
                   {(
                     cartItems.reduce(
-                      (total, item) => total + item.quantity * item.price,
+                      (total, item) => total + item.quantity * item.productId.price,
                       0
                     ) + deliveryFee
                   ).toFixed(2)}
