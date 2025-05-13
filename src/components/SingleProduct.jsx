@@ -23,27 +23,24 @@ const SingleProduct = ({ open, handleClose, product }) => {
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
-  const { addTocart, loading } = useContext(ProductContext);
-   const handleAddtoCart = async () => {
-    await addTocart(product._id); // ensures loading is handled in context
-   };
 
   function handleAddToCart() {
-    // const userId = signedUser._id;
-    const userId = "681cbcdb4fb78a0c071e023a";
-    fetch("https://depis3.vercel.app/api/cart/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productId: product._id,
-        quantity: 1,
-        userId,
-      }),
-    })
-      .then((res) => res.json())
-      .then(data => console.log(data.cartItems));
+    const userId = JSON.parse(window.localStorage.getItem("user")).id;
+    if (userId) {
+      fetch("https://depis3.vercel.app/api/cart/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: product._id,
+          quantity: 1,
+          userId,
+        }),
+      }).catch((err) => console.log(err));
+    } else {
+      console.log("fetch error");
+    }
   }
 
   return (

@@ -31,7 +31,7 @@ const productCard = ({ product }) => {
   };
 
   function addToFav() {
-    const userId = window.localStorage.getItem("id");
+    const userId = JSON.parse(window.localStorage.getItem("user")).id;
     if (userId) {
       fetch("https://depis3.vercel.app/api/wishlist/", {
         method: "POST",
@@ -43,21 +43,27 @@ const productCard = ({ product }) => {
           productId: product._id,
         }),
       });
+    } else {
+      console.log("fetch error");
     }
   }
 
   function removeFromFav() {
-    const userId = window.localStorage.getItem("id");
-    fetch("https://depis3.vercel.app/api/wishlist/", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        productId: product._id,
-      }),
-    });
+    const userId = JSON.parse(window.localStorage.getItem("user")).id;
+    if (userId) {
+      fetch("https://depis3.vercel.app/api/wishlist/", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          productId: product._id,
+        }),
+      });
+    } else {
+      console.log("fetch error");
+    }
   }
 
   function toggleFav() {
