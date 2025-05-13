@@ -14,8 +14,7 @@ import {
 import { Spinner } from "@material-tailwind/react";
 import SingleProduct from "../components/SingleProduct";
 import { FaSearch } from "react-icons/fa";
-import { ProductContext } from '../context/ProductContext';
-
+import { ProductContext } from "../context/ProductContext";
 
 const Products = () => {
   const { products, loading } = useContext(ProductContext);
@@ -24,8 +23,7 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
- 
-  
+
   // const fetchData = () => {
   //   fetch("https://spotted-thankful-mambo.glitch.me/products")
   //     .then((res) => res.json())
@@ -45,8 +43,8 @@ const Products = () => {
     });
     AOS.refresh();
 
-  //   fetchData();
-   }, []);
+    //   fetchData();
+  }, []);
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -59,8 +57,8 @@ const Products = () => {
   };
 
   const filteredProducts = products.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-  )  ;
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -100,7 +98,8 @@ const Products = () => {
           />
         </div>
       </div>
-      <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
+
+      <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-11 gap-5 m-5 md:grid-cols-2">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((item) => (
             <Card
@@ -111,11 +110,11 @@ const Products = () => {
             >
               <CardHeader shadow={false} floated={false} className="h-96 ">
                 <img
-                  src={console.log(item.image)}
+                  src={item.image}
                   alt={item.name}
                   className="h-full w-full object-cover"
                 />
-                
+
                 <div
                   id="icons"
                   className="flex w-full justify-center items-center gap-3 absolute top-[1px]"

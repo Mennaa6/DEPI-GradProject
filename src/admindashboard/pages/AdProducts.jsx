@@ -22,11 +22,12 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import PageTitle from "../components/PageTitle";
-import { mockProducts } from "../data/mockData";
+import { ProductContext } from "../../context/ProductContext";
+import { useContext } from "react";
 
 const AdProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { products, loading, deleteProduct } = useContext(ProductContext);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -42,16 +43,8 @@ const AdProducts = () => {
   // Categories extracted from mock data
   const categories = [
     "All",
-    ...new Set(mockProducts.map((product) => product.category)),
+    ...new Set(products.map((product) => product.category)),
   ];
-
-  useEffect(() => {
-    // Simulate API fetch delay
-    setTimeout(() => {
-      setProducts(mockProducts);
-      setLoading(false);
-    }, 1000);
-  }, []);
 
   // Handle search
   const handleSearch = (e) => {
@@ -83,11 +76,14 @@ const AdProducts = () => {
     setDeleteDialogOpen(true);
   };
 
-  const handleDelete = () => {
-    // In a real app, you would make an API call to delete the product
-    setProducts(products.filter((p) => p.id !== productToDelete.id));
-    setDeleteDialogOpen(false);
-    setProductToDelete(null);
+  const handleDelete = async () => {
+    try {
+      await deleteProduct(productToDelete._id);
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   // Filter and sort products
@@ -285,7 +281,7 @@ const AdProducts = () => {
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {currentProducts.map((product) => (
-                          <tr key={product.id} className="hover:bg-gray-50">
+                          <tr key={product._id} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <div className="w-10 h-10 flex-shrink-0 rounded-md overflow-hidden">
@@ -314,7 +310,7 @@ const AdProducts = () => {
                               ${product.price.toFixed(2)}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              {product.stock > 10 ? (
+                              {product.stock > 5 ? (
                                 <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-50 text-green-700">
                                   In Stock ({product.stock})
                                 </span>
@@ -332,7 +328,7 @@ const AdProducts = () => {
                               <div className="flex justify-end space-x-2">
                                 <button
                                   onClick={() =>
-                                    navigate(`/products/${product.id}`)
+                                    navigate(`/admin/products/${product._id}`)
                                   }
                                   className="text-gray-600 hover:text-gray-900"
                                 >
@@ -340,7 +336,9 @@ const AdProducts = () => {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    navigate(`/products/${product.id}/edit`)
+                                    navigate(
+                                      `/admin/products/${product._id}/edit`
+                                    )
                                   }
                                   className="text-blue-600 hover:text-blue-900"
                                 >
@@ -364,7 +362,7 @@ const AdProducts = () => {
                   <div className="md:hidden">
                     {currentProducts.map((product) => (
                       <div
-                        key={product.id}
+                        key={product._id}
                         className="border-b border-gray-200 py-4"
                       >
                         <div className="flex items-start">
@@ -409,7 +407,7 @@ const AdProducts = () => {
                           <div className="flex space-x-2">
                             <button
                               onClick={() =>
-                                navigate(`/products/${product.id}`)
+                                navigate(`/products/${product._id}`)
                               }
                               className="p-1.5 rounded text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                             >
@@ -417,7 +415,7 @@ const AdProducts = () => {
                             </button>
                             <button
                               onClick={() =>
-                                navigate(`/admin/products/${product.id}/edit`)
+                                navigate(`/admin/products/${product._id}/edit`)
                               }
                               className="p-1.5 rounded text-blue-600 hover:text-blue-900 hover:bg-blue-50"
                             >

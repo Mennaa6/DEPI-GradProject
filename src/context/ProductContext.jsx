@@ -15,17 +15,106 @@ export const ProductProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const getProducts = async () => {
-     try {
-       const response = await axios.get( `${api_url}/products`);
-        setProducts(response.data.products);
-        setLoading(false);
+    try {
+      const response = await axios.get(`${api_url}/products`);
+      setProducts(response.data.products);
+      setLoading(false);
     } catch (error) {
       console.error("product fetch error:", error);
     }
   };
-  
 
-   const getSigneduser = async () => {
+  //get single product
+  const getSingleProduct = async (id) => {
+    try {
+      const response = await axios.get(`${api_url}/products/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching single product:", error);
+      throw error;
+    }
+  };
+
+  //add new product
+  const addProduct = async (productData) => {
+    try {
+      const formData = new FormData();
+      formData.append("name", productData.name);
+      formData.append("description", productData.description);
+      formData.append("price", productData.price);
+      formData.append("category", productData.category);
+      formData.append("subcategory", productData.subcategory);
+      formData.append("image", productData.image);
+      formData.append("stock", productData.stock);
+      formData.append("available", productData.available);
+
+      const response = await axios.post(`${api_url}/products`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success("Product created! successfully");
+      getProducts();
+      return response.data;
+    } catch (error) {
+      console.error("Error adding product:", error);
+      toast.error("Failed to create product.");
+      throw error;
+    }
+  };
+
+  //update product
+  const updateProduct = async (id, updatedData) => {
+    try {
+      let payload;
+      let headers = {};
+
+      if (updatedData.image instanceof File) {
+        // If the image is a File, use FormData
+        payload = new FormData();
+        payload.append("name", updatedData.name);
+        payload.append("category", updatedData.category);
+        payload.append("price", updatedData.price);
+        payload.append("stock", updatedData.stock);
+        payload.append("description", updatedData.description);
+        payload.append("image", updatedData.image);
+
+        headers["Content-Type"] = "multipart/form-data";
+      } else {
+        // Otherwise send as JSON
+        payload = updatedData;
+        headers["Content-Type"] = "application/json";
+      }
+
+      const response = await axios.patch(`${api_url}/products/${id}`, payload, {
+        headers,
+      });
+
+      toast.success("Product updated!");
+      getProducts();
+      return response.data;
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast.error("Failed to update product.");
+      throw error;
+    }
+  };
+
+  //delete a product
+  const deleteProduct = async (id) => {
+    try {
+      await axios.delete(`${api_url}/products/${id}`);
+      toast.info("Product deleted successfully.");
+      setProducts(products.filter((p) => p._id !== id));
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product.");
+      throw error;
+    }
+  };
+
+  const getSigneduser = async () => {
     const userId = JSON.parse(localStorage.getItem("id"));
     try {
       const response = await axios.get(`${api_url}/users/${userId}`);
@@ -33,7 +122,7 @@ export const ProductProvider = ({ children }) => {
       setCartitems(response.data.User.cartItems);
       setWishlistitems(response.data.User.wishlist);
       setLoading(false);
-     } catch (error) {
+    } catch (error) {
       console.error("user fetch error:", error);
     }
   };
@@ -41,11 +130,11 @@ export const ProductProvider = ({ children }) => {
   useEffect(() => {
     getProducts();
     if (localStorage.getItem("id")) {
-        getSigneduser();
-        }
+      getSigneduser();
+    }
   }, []);
 
-   const ensureLoggedin = () => {
+  const ensureLoggedin = () => {
     if (!signedUser) {
       toast(
         <div className="bg-yellow-100 text-brown-800 px-4 py-2 rounded-md">
@@ -58,10 +147,12 @@ export const ProductProvider = ({ children }) => {
     return true;
   };
 
-   const updateCartserver = async (updatedCart) => {
+  const updateCartserver = async (updatedCart) => {
     try {
       const userId = JSON.parse(localStorage.getItem("id"));
-      const response = await axios.patch(`${api_url}/users/${userId}`, { cartItems: updatedCart });
+      const response = await axios.patch(`${api_url}/users/${userId}`, {
+        cartItems: updatedCart,
+      });
       setSigneduser((prev) => ({ ...prev, ...response.data }));
       setCartitems(response.data.cartItems);
     } catch (error) {
@@ -69,12 +160,12 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-   const updateWishlistserver = async (updatedCart, updatedWishlist) => {
+  const updateWishlistserver = async (updatedCart, updatedWishlist) => {
     try {
       const userId = JSON.parse(localStorage.getItem("id"));
       const response = await axios.patch(`${api_url}/users/${userId}`, {
         cartItems: updatedCart,
-        wishlist: updatedWishlist
+        wishlist: updatedWishlist,
       });
       setSigneduser((prev) => ({ ...prev, ...response.data }));
       setCartitems(response.data.cartItems);
@@ -84,7 +175,7 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-   const addTocart = (id) => {
+  const addTocart = (id) => {
     if (!ensureLoggedin()) return;
     const product = products.find((item) => item._id === id);
     if (!product) {
@@ -125,7 +216,7 @@ export const ProductProvider = ({ children }) => {
     updateCartserver(updatedCart);
   };
 
-   const moveTowishlist = (id) => {
+  const moveTowishlist = (id) => {
     if (!ensureLoggedin()) return;
     const product = cartItems.find((item) => item._id === id);
     if (!product) return;
@@ -134,7 +225,7 @@ export const ProductProvider = ({ children }) => {
     updateWishlistserver(updatedCart, updatedWishlist);
   };
 
-   const increaseQuantity = (id) => {
+  const increaseQuantity = (id) => {
     if (!ensureLoggedin()) return;
     const updatedCart = cartItems.map((item) =>
       item._id === id ? { ...item, quantity: item.quantity + 1 } : item
@@ -158,7 +249,8 @@ export const ProductProvider = ({ children }) => {
   };
 
   return (
-    <ProductContext.Provider value={{
+    <ProductContext.Provider
+      value={{
         products,
         cartItems,
         wishlistItems,
@@ -169,6 +261,13 @@ export const ProductProvider = ({ children }) => {
         increaseQuantity,
         decreaseQuantity,
         moveTowishlist,
-      }}>{children}</ProductContext.Provider>
+        getSingleProduct,
+        addProduct,
+        updateProduct,
+        deleteProduct,
+      }}
+    >
+      {children}
+    </ProductContext.Provider>
   );
 };

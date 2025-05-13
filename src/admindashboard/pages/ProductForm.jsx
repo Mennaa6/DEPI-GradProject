@@ -13,6 +13,8 @@ import {
 } from "@material-tailwind/react";
 import PageTitle from "../components/PageTitle";
 import { mockProducts } from "../data/mockData";
+import { ProductContext } from "../../context/ProductContext";
+import { useContext } from "react";
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -21,53 +23,58 @@ const ProductForm = () => {
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [formErrors, setFormErrors] = useState({});
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  //get the functions
+  const { getSingleProduct, addProduct, updateProduct, products } =
+    useContext(ProductContext);
 
   // Form state
   const [formData, setFormData] = useState({
     name: "",
-    category: "",
-    price: "",
-    stock: "",
     description: "",
-    image: "",
+    price: "",
+    category: "",
+    subcategory: "",
+    stock: "",
+    available: true,
+    rating: "",
   });
 
   // Available categories
-  const categories = [
-    ...new Set(mockProducts.map((product) => product.category)),
+
+  const categories = [...new Set(products.map((product) => product.category))];
+
+  const subcategories = [
+    ...new Set(products.map((product) => product.subcategory)),
   ];
 
   useEffect(() => {
-    if (isEditMode) {
-      // In a real app, fetch from API using the ID
-      const fetchProduct = async () => {
+    const fetchProduct = async () => {
+      if (isEditMode) {
         try {
-          // Simulate API delay
-          setTimeout(() => {
-            const foundProduct = mockProducts.find(
-              (p) => p.id === parseInt(id)
-            );
-            if (foundProduct) {
-              setFormData({
-                name: foundProduct.name,
-                category: foundProduct.category,
-                price: foundProduct.price.toString(),
-                stock: foundProduct.stock.toString(),
-                description: foundProduct.description,
-                image: foundProduct.image,
-              });
-            }
-            setLoading(false);
-          }, 1000);
+          const product = await getSingleProduct(id);
+          setFormData({
+            name: product.name,
+            description: product.description,
+            price: product.price.toString(),
+            category: product.category,
+            subcategory: product.subcategory,
+            stock: product.stock.toString(),
+            available: product.available,
+          });
+          setImagePreview(product.image);
         } catch (error) {
           console.error("Error fetching product:", error);
+        } finally {
           setLoading(false);
         }
-      };
+      }
+    };
 
-      fetchProduct();
-    }
-  }, [id, isEditMode]);
+    fetchProduct();
+  }, [id, isEditMode, getSingleProduct]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -85,6 +92,30 @@ const ProductForm = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setFormErrors({
+        ...formErrors,
+        image: "Please select an image file",
+      });
+      return;
+    }
+    setImageFile(file);
+    setFormErrors({
+      ...formErrors,
+      image: null,
+    });
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleCategoryChange = (value) => {
     setFormData({
       ...formData,
@@ -100,16 +131,42 @@ const ProductForm = () => {
     }
   };
 
+  const handleSubCategoryChange = (value) => {
+    setFormData({
+      ...formData,
+      subcategory: value,
+    });
+
+    // Clear error when field is changed
+    if (formErrors.subcategory) {
+      setFormErrors({
+        ...formErrors,
+        subcategory: null,
+      });
+    }
+  };
+
   const validate = () => {
     const errors = {};
 
     if (!formData.name.trim()) errors.name = "Product name is required";
     if (!formData.category) errors.category = "Category is required";
+    if (!formData.subcategory) errors.subcategory = "Category is required";
 
     if (!formData.price) {
       errors.price = "Price is required";
     } else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
       errors.price = "Price must be a positive number";
+    }
+
+    if (!formData.rating) {
+      errors.rating = "Rating is required";
+    } else if (
+      isNaN(Number(formData.rating)) ||
+      Number(formData.rating) <= 0 ||
+      Number(formData.rating) > 5
+    ) {
+      errors.rating = "Price must be a positive number and not more than 5";
     }
 
     if (!formData.stock) {
@@ -124,8 +181,7 @@ const ProductForm = () => {
 
     if (!formData.description.trim())
       errors.description = "Description is required";
-    if (!formData.image.trim()) errors.image = "Image URL is required";
-
+    if (!isEditMode && !imageFile) errors.image = "Please select an image";
     return errors;
   };
 
@@ -142,11 +198,18 @@ const ProductForm = () => {
     setSaving(true);
 
     try {
-      // In a real app, make API call to create/update product
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
+      const productData = {
+        ...formData,
+        image: imageFile,
+      };
 
-      // Redirect back to products list or details page
-      navigate(isEditMode ? `/products/${id}` : "/products");
+      if (isEditMode) {
+        await updateProduct(id, productData);
+      } else {
+        await addProduct(productData);
+      }
+
+      navigate("/admin/products");
     } catch (error) {
       console.error("Error saving product:", error);
       setSaving(false);
@@ -253,6 +316,33 @@ const ProductForm = () => {
                   color="blue-gray"
                   className="mb-2 font-medium"
                 >
+                  Sub-Category*
+                </Typography>
+                <Select
+                  value={formData.subcategory}
+                  onChange={handleSubCategoryChange}
+                  error={!!formErrors.subcategory}
+                  className={formErrors.subcategory ? "border-red-500" : ""}
+                >
+                  {subcategories.map((subcategory) => (
+                    <Option key={subcategory} value={subcategory}>
+                      {subcategory}
+                    </Option>
+                  ))}
+                </Select>
+                {formErrors.subcategory && (
+                  <Typography variant="small" color="red" className="mt-1">
+                    {formErrors.subcategory}
+                  </Typography>
+                )}
+              </div>
+
+              <div>
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="mb-2 font-medium"
+                >
                   Price ($)*
                 </Typography>
                 <Input
@@ -268,6 +358,30 @@ const ProductForm = () => {
                 {formErrors.price && (
                   <Typography variant="small" color="red" className="mt-1">
                     {formErrors.price}
+                  </Typography>
+                )}
+              </div>
+              <div>
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="mb-2 font-medium"
+                >
+                  Rating*
+                </Typography>
+                <Input
+                  type="number"
+                  name="rating"
+                  value={formData.rating}
+                  onChange={handleChange}
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0"
+                  className={formErrors.rating ? "border-red-500" : ""}
+                />
+                {formErrors.rating && (
+                  <Typography variant="small" color="red" className="mt-1">
+                    {formErrors.rating}
                   </Typography>
                 )}
               </div>
@@ -320,67 +434,58 @@ const ProductForm = () => {
                 </Typography>
               )}
             </div>
-
             <div className="mb-6">
               <Typography
                 variant="small"
                 color="blue-gray"
                 className="mb-2 font-medium"
               >
-                Image URL*
+                Product Image{!isEditMode && "*"}
               </Typography>
-              <div className="flex">
-                <Input
-                  type="text"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.jpg"
-                  className={`${
-                    formErrors.image ? "border-red-500" : ""
-                  } flex-grow`}
-                  icon={<FaImage />}
-                />
-              </div>
-              {formErrors.image && (
-                <Typography variant="small" color="red" className="mt-1">
-                  {formErrors.image}
-                </Typography>
-              )}
-
-              {formData.image && (
-                <div className="mt-3 border rounded-lg p-2 inline-block">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-1 font-medium"
-                  >
-                    Preview:
-                  </Typography>
-                  <img
-                    src={formData.image}
-                    alt="Preview"
-                    className="w-32 h-32 object-cover rounded"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://via.placeholder.com/150?text=Image+Error";
-                    }}
+              <div className="flex flex-col md:flex-row md:items-start gap-4">
+                <div className="flex-1">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className={formErrors.image ? "border-red-500" : ""}
                   />
+                  {formErrors.image && (
+                    <Typography variant="small" color="red" className="mt-1">
+                      {formErrors.image}
+                    </Typography>
+                  )}
                 </div>
-              )}
-            </div>
 
+                {imagePreview && (
+                  <div className="border rounded-lg p-2">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="mb-1 font-medium"
+                    >
+                      Preview:
+                    </Typography>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-32 h-32 object-cover rounded"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/150?text=Image+Error";
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="flex justify-end gap-4">
               <Button
                 variant="outlined"
                 color="red"
                 className="flex items-center gap-2"
-                onClick={() =>
-                  navigate(
-                    isEditMode ? `/admin/products/${id}` : "/admin/products"
-                  )
-                }
+                onClick={() => navigate("/admin/products")}
                 disabled={saving}
               >
                 <FaTimes size={14} /> Cancel
@@ -391,7 +496,7 @@ const ProductForm = () => {
                 className="flex items-center gap-2"
                 disabled={saving}
               >
-                <FaSave size={14} />{" "}
+                <FaSave size={14} />
                 {saving
                   ? "Saving..."
                   : isEditMode
