@@ -20,10 +20,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
 
   if (!product) return null;
 
-  const handleSizeSelect = (size) => {
-    setSelectedSize(size);
-  };
-
+  
   function handleAddToCart() {
     const userId = JSON.parse(window.localStorage.getItem("user")).id;
     if (userId) {
@@ -42,7 +39,10 @@ const SingleProduct = ({ open, handleClose, product }) => {
       console.log("fetch error");
     }
   }
-
+  
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+  };
   return (
     <Dialog
       open={open}
@@ -139,7 +139,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
             color="brown"
             onClick={() => {
               handleClose();
-              handleAddtoCart();
+              handleAddToCart();
             }}
             className=" hover:bg-hoverColor"
             // disabled={!selectedSize}

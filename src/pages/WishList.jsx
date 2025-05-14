@@ -5,6 +5,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { Typography } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import { GiEmptyWoodBucket } from "react-icons/gi";
+
 
 const Wishlist = () => {
   const [products, setProducts] = useState([]);
@@ -14,16 +16,15 @@ const Wishlist = () => {
   const navigate = useNavigate();
 
   const fetchData = () => {
-    const userId = JSON.parse(window.localStorage.getItem("user")).id;
+    const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
     if (userId) {
       fetch(`https://depis3.vercel.app/api/wishlist/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setProducts(data.wishlist);
           setLoading(false);
-        }); 
-    }
-    else {
+        });
+    } else {
       navigate("/signup");
     }
   };
@@ -61,15 +62,19 @@ const Wishlist = () => {
       >
         Wishlist
       </h1>
-      <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-        {products && products.length > 0 ? (
-          products.map((item, index) => (
+      {products && products.length > 0 ? (
+        <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
+          {products.map((item, index) => (
             <ProductCard product={item} key={index} />
-          ))
-        ) : (
-          <Typography className="text-center">Loading products...</Typography>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-[80vh]">
+          <Typography className="text-brown-700">
+            Wishlist is currently empty
+          </Typography>
+        </div>
+      )}
     </div>
   );
 };
