@@ -10,11 +10,12 @@ import { IoMdLogIn } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 
 function DropDown() {
-  const userExists = window.localStorage.getItem("id");
+  const userExists = window.localStorage.getItem("user");
   const navigate = useNavigate();
   
   function handleLogout() {
-    window.localStorage.removeItem("id");
+    window.localStorage.removeItem("user");
+    window.localStorage.removeItem("token");
     navigate("/");
   }
 
@@ -80,7 +81,7 @@ function DropDown() {
           </MenuList>
         </Menu>
       ) : (
-        <IoMdLogIn onClick={() => {navigate("/sign-up")}}  size={22} className="cursor-pointer"/>
+        <IoMdLogIn onClick={() => {navigate("/signup")}}  size={22} className="cursor-pointer"/>
       )}
     </>
   );
