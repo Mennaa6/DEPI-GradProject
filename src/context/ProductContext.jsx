@@ -135,6 +135,7 @@ export const ProductProvider = ({ children }) => {
       value={{
         products,
         wishlistItems,
+        setWishlistItems,
         loading,
         getSingleProduct,
         addProduct,
