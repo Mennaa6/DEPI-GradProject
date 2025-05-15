@@ -21,7 +21,8 @@ export const CartProvider = ({ children }) => {
     const userId = getUserId();
     if (!userId) return;
      try { 
-        const response = await axios.get(`${api_url}/cart/${userId}`);
+       const response = await axios.get(`${api_url}/cart/${userId}`);
+       console.log(response.data.cartItems)
         setCartitems(response.data.cartItems);
         setLoading(false);
       } catch (error) {
@@ -40,11 +41,9 @@ export const CartProvider = ({ children }) => {
         userId: userId,
       }),
     });
-    const data = await response.json();
-     setCartitems(data.cartItems);
-     setLoading(true);
-     await fetchData();
-     setLoading(false);
+     const data = await response.json();
+     //update state
+    setCartitems(prev => prev.filter(item => item.productId._id !== id));
   } catch (error) {
     console.error("Error deleting from cart:", error);
   }
@@ -67,11 +66,9 @@ export const CartProvider = ({ children }) => {
     });
 
      const cart = await axios.get(`${api_url}/cart/${userId}`);
-    setCartitems(cart.data.cartItems);
+    setCartitems(prev => prev.filter(item => item.productId._id !== id));
     setWishlist(response.data.wishlist);
-    setLoading(true);
-    await fetchData();
-    setLoading(false);
+    
   } catch (error) {
     console.error("Error moving to wishlist:", error);
   }
@@ -89,16 +86,10 @@ export const CartProvider = ({ children }) => {
     });
 
     setCartitems(response.data.cartItems);
-    setLoading(true);
-    await fetchData();
-    setLoading(false);
   } catch (error) {
     console.error("Error increasing quantity:", error);
   }
 };
-
-
-
   const decreaseQuantity = async (id) => {
      const userId = getUserId();
      const item = cartItems.find(item => item.productId._id === id);
@@ -109,37 +100,25 @@ export const CartProvider = ({ children }) => {
       productId: id,
       quantity: itemQuantity - 1
     });
-
-    if (itemQuantity < 1) {
-      const response = await fetch(`${api_url}/cart`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        productId: id,
-        userId: userId,
-      }),
-      })
-        const data = await response.json(); 
-      setCartitems(data.cartItems);
-         setLoading(true);
-         await fetchData();
-         setLoading(false);
-
-    }
     setCartitems(response.data.cartItems);
-       fetchData();
 
   } catch (error) {
     console.error("Error decreasing quantity:", error);
   }
+  };
+  const clearCart = () => {
+  setCartitems([]);
+  setWishlist([]);
+  setLoading(false);
 };
-
-
 
   useEffect(() => {
    if(getUserId()){
-    fetchData();  
-  }
+     fetchData();  
+   } else {
+    setLoading(false);
+    }
+    
 }, []);
 
   return (
@@ -151,7 +130,8 @@ export const CartProvider = ({ children }) => {
         moveTowishlist,
         increaseQuantity,
         decreaseQuantity,
-        fetchData
+        fetchData,
+        clearCart
       }}
     >
       {children}
