@@ -9,8 +9,7 @@ const api_url = "https://depis3.vercel.app/api";
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
-  const [cartItems, setCartitems] = useState([]);
-  const [wishlistItems, setWishlistitems] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -114,23 +113,28 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  
- 
+  function getWishlist() {
+    const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
+    if (userId) {
+      fetch(`${api_url}/wishlist/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setWishlistItems(data.wishlist);
+          setLoading(false);
+        });
+    }
+  }
 
   useEffect(() => {
     getProducts();
+    getWishlist();
   }, []);
-  
-
-   
- 
-   
 
   return (
     <ProductContext.Provider
       value={{
         products,
-        
+        wishlistItems,
         loading,
         getSingleProduct,
         addProduct,
@@ -141,4 +145,4 @@ export const ProductProvider = ({ children }) => {
       {children}
     </ProductContext.Provider>
   );
-}
+};
