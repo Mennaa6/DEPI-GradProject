@@ -1,14 +1,12 @@
 import React, { useState, useContext } from "react";
-import { ProductContext } from "../context/ProductContext";
+import { CartContext } from "../context/CartContext";
 import { Button } from "@material-tailwind/react";
 import { FaCreditCard } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { productshow } from "../assets/productsShow";
-
 const Checkout = () => {
-  const { cartItems, signedUser } = useContext(ProductContext);
+  const { cartItems, signedUser } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [shippingDetails, setShippingdetails] = useState({
@@ -42,14 +40,12 @@ const Checkout = () => {
   const deliveryFee = shippingDetails.governorate === "Mansoura" ? 80 : 50;
    
  const handlePlaceorder = async () => {
-  if (!signedUser) {
-    toast.error("⚠️ Please log in to continue.");   
+  const user = JSON.parse(localStorage.getItem('user'));
+   const userId = user?.id;
+   if (!userId) {
+     toast.error("⚠️ Please log in to continue.");   
     return;
-  }
-
-   // const userId = signedUser._id; 
-   const userId="681ff5af68095a9c8a226e78"
-
+   }
   const stringfiedAddress = `${shippingDetails.address}, ${shippingDetails.city}, ${shippingDetails.governorate}`;
   
   const order = {

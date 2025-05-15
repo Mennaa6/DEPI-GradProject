@@ -12,11 +12,12 @@ import { MdFavorite } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom"; // Import Link
 import { ProductContext } from '../context/ProductContext';
+import {CartContext} from '../context/CartContext'
 import DropDown from "./DropDown";
 const Header = () => {
   const navigate = useNavigate();
   const [openNav, setOpenNav] = React.useState(false);
-  const { cartItems =[] } = useContext(ProductContext);
+  const { cartItems } = useContext(CartContext);
 
   React.useEffect(() => {
     window.addEventListener(
