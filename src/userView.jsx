@@ -18,8 +18,6 @@ import Wishlist from "./pages/WishList";
 import DeliveryTerms from "./pages/DeliveryTerms";
 
 const userView = () => {
-
-
   const location = useLocation();
   const isNotFoundPage =
     location.pathname !== "/" &&
@@ -35,26 +33,25 @@ const userView = () => {
     location.pathname !== "/wishlist" &&
     location.pathname !== "/profile";
 
+  // Scroll to top on route change and handle hash navigation
+  useEffect(() => {
+    window.scrollTo(0, 0);
 
-    // Scroll to top on route change and handle hash navigation
-    useEffect(() => {
-      window.scrollTo(0, 0);
-
-      if (location.hash) {
-        setTimeout(() => {
-          const element = document.getElementById(location.hash.substring(1));
-          if (element) {
-            const offset = 80;
-            const elementPosition =
-              element.getBoundingClientRect().top + window.pageYOffset;
-            window.scrollTo({
-              top: elementPosition - offset,
-              behavior: "smooth",
-            });
-          }
-        }, 0);
-      }
-    }, [location.pathname, location.hash]);
+    if (location.hash) {
+      setTimeout(() => {
+        const element = document.getElementById(location.hash.substring(1));
+        if (element) {
+          const offset = 80;
+          const elementPosition =
+            element.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({
+            top: elementPosition - offset,
+            behavior: "smooth",
+          });
+        }
+      }, 0);
+    }
+  }, [location.pathname, location.hash]);
   return (
     <div>
       {!isNotFoundPage && <Header />}
@@ -68,7 +65,7 @@ const userView = () => {
         <Route path="women" element={<Women />} />
         <Route path="men" element={<Men />} />
         <Route path="login" element={<Login />} />
-        <Route path="signup" element={<SignUp />} />
+        <Route path="sign-up" element={<SignUp />} />
         <Route path="orderconfirmation" element={<OrderConfirmation />} />
         <Route path="accessories" element={<Accessories />} />
         <Route path="profile" element={<UserProfile />} />

@@ -1,8 +1,8 @@
-import { FaStar, FaRegHeart, FaHeart } from "react-icons/fa";
+import {FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdAddShoppingCart, MdOutlineRemoveRedEye } from "react-icons/md";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import SingleProduct from "./SingleProduct";
 import {
   Card,
@@ -13,8 +13,16 @@ import {
   Button,
   list,
 } from "@material-tailwind/react";
+import { ProductContext } from "../context/ProductContext";
 
 const productCard = ({ product }) => {
+  const { wishlistItems,setWishlistItems } = useContext(ProductContext);
+
+  function checkIsFav() {
+    return wishlistItems.some((item) => item._id == product._id);
+  }
+
+
   const [isFav, setIsFav] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -31,6 +39,7 @@ const productCard = ({ product }) => {
   };
 
   function addToFav() {
+    setWishlistItems([...wishlistItems, product]);
     const userId = JSON.parse(window.localStorage.getItem("user")).id;
     if (userId) {
       fetch("https://depis3.vercel.app/api/wishlist/", {
@@ -49,6 +58,7 @@ const productCard = ({ product }) => {
   }
 
   function removeFromFav() {
+    setWishlistItems(wishlistItems.filter((item) => item._id != product._id));
     const userId = JSON.parse(window.localStorage.getItem("user")).id;
     if (userId) {
       fetch("https://depis3.vercel.app/api/wishlist/", {
@@ -69,19 +79,22 @@ const productCard = ({ product }) => {
   function toggleFav() {
     const newFavState = !isFav;
     setIsFav(!isFav);
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
+    // if (debounceTimer.current) {
+    //   clearTimeout(debounceTimer.current);
+    // }
 
-    debounceTimer.current = setTimeout(() => {
+    // debounceTimer.current = setTimeout(() => {
       if (newFavState) {
         addToFav();
       } else {
         removeFromFav();
       }
-    }, 500);
+    // }, 100);
   }
 
+  useEffect(() => {
+    setIsFav(wishlistItems.some((item) => item._id == product._id));
+  },[isFav]);
   return (
     <div>
       <Card
@@ -108,7 +121,7 @@ const productCard = ({ product }) => {
               <MdOutlineRemoveRedEye />
             </div>
 
-            {isFav ? (
+            {checkIsFav() ? (
               <div
                 className="bg-buttonColor hover:bg-hoverColor hover:text-black rounded-full p-2 text-white cursor-pointer"
                 onClick={() => {
