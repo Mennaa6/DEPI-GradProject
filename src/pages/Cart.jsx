@@ -53,11 +53,11 @@ const Cart = () => {
                   </div>
                 </div>
                 <div className='flex items-start gap-4 mt-2 md:mt-0'>
-                  <div className='border bg-white flex items-center gap-4 px-2 py-1 rounded-md'>
-                    <button className='px-2' onClick={() => increaseQuantity(item.productId._id)}>+</button>
+                  <div className='border bg-gray-200 flex items-center gap-4 px-2 py-1 rounded-md'>
+                    <button className='px-2  ' onClick={() => increaseQuantity(item.productId._id)}>+</button>
                     <span>{item.quantity}</span>
-                    <button className='px-2' onClick={() => decreaseQuantity(item.productId._id)}>-</button>
-                  </div>
+                    <button className= {`px-2 ${item.quantity <= 1? "text-gray-500 cursor-not-allowed": "text-black"}`} disabled={item.quantity<=1}  onClick={() => decreaseQuantity(item.productId._id)}>-</button>
+                    </div>
                   <p className='font-semibold'>{item.productId.price} EGP</p>
                 </div>
               </div>
