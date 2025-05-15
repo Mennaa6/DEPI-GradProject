@@ -27,7 +27,7 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       // Navigate to profile page
-      navigate("/profile");
+      navigate("/");
     } catch (err) {
       if (err.response?.status === 401) {
         setWrongPass(true);
@@ -66,7 +66,6 @@ const Login = () => {
                 Email
               </label>
               <input
-                required
                 type="email"
                 className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.mail}
@@ -79,7 +78,6 @@ const Login = () => {
                 Password
               </label>
               <input
-                required
                 type="password"
                 className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.password}
