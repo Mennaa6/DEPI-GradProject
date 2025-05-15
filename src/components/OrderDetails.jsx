@@ -45,7 +45,7 @@ const OrderDetails = ({ order }) => {
             <span className="text-gray-600">Subtotal:</span>
             <span className="font-medium">
               {order.items.reduce(
-                (total, item) => total + Number(item.price),
+                (total, item) => total + Number(item.product.price),
                 0
               )}{" "}
               EGP
@@ -63,7 +63,7 @@ const OrderDetails = ({ order }) => {
             <span className="text-gray-800">Total:</span>
             <span className="text-gray-900">
               {order.items.reduce(
-                (total, item) => total + Number(item.price),
+                (total, item) => total + Number(item.product.price),
                 0
               ) + Number(order.shippingFee)}{" "}
               EGP
