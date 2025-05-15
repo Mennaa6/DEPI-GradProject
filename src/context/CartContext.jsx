@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 export const CartContext = createContext();
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const api_url = "https://depis3.vercel.app/api";
 
@@ -23,7 +21,8 @@ export const CartProvider = ({ children }) => {
      try { 
        const response = await axios.get(`${api_url}/cart/${userId}`);
        console.log(response.data.cartItems)
-        setCartitems(response.data.cartItems);
+       setCartitems(response.data.cartItems);
+       console.log(response.data.cartItems)
         setLoading(false);
       } catch (error) {
         console.error('Error fetching cart items',error);
@@ -64,8 +63,6 @@ export const CartProvider = ({ children }) => {
       userId,
       productId: id
     });
-
-     const cart = await axios.get(`${api_url}/cart/${userId}`);
     setCartitems(prev => prev.filter(item => item.productId._id !== id));
     setWishlist(response.data.wishlist);
     

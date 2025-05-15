@@ -83,7 +83,7 @@ const Header = () => {
               <Link to="/cart">
                 <FaCartShopping />
                 </Link>
-                <span className=" absolute -top-2 -right-2  text-sm">{cartItems.length > 0 ? cartItems.reduce((total, item) => total + item.quantity, 0) :""}</span>
+                <span className=" absolute -top-2 -right-2  text-sm">{cartItems.length}</span>
               </div>
             <Link to="/wishlist">
               <MdFavorite />
