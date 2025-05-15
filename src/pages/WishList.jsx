@@ -5,44 +5,25 @@ import React, { useState, useEffect, useContext } from "react";
 import { Typography } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { GiEmptyWoodBucket } from "react-icons/gi";
-
+import { ProductContext } from "../context/ProductContext";
 
 const Wishlist = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false);
+  const { wishlistItems, loading } = useContext(ProductContext);
 
   const navigate = useNavigate();
 
-  const fetchData = () => {
+  useEffect(() => {
     const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
-    if (userId) {
-      fetch(`https://depis3.vercel.app/api/wishlist/${userId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setProducts(data.wishlist);
-          setLoading(false);
-        });
-    } else {
+    if (!userId) {
       navigate("/signup");
     }
-  };
-
-  useEffect(() => {
-    // if (!window.localStorage.getItem("id")) {
-    //   window.localStorage.setItem("id", "1");
-    //   navigate("/login");
-    // }
-
     AOS.init({
       offset: 100,
       duration: 500,
       easing: "ease-in-out",
     });
     AOS.refresh();
-
-    fetchData();
   }, []);
 
   if (loading) {
@@ -62,9 +43,9 @@ const Wishlist = () => {
       >
         Wishlist
       </h1>
-      {products && products.length > 0 ? (
+      {wishlistItems && wishlistItems.length > 0 ? (
         <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-          {products.map((item, index) => (
+          {wishlistItems.map((item, index) => (
             <ProductCard product={item} key={index} />
           ))}
         </div>
