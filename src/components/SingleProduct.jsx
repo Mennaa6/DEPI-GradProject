@@ -11,18 +11,25 @@ import {
 import { FaStar } from "react-icons/fa";
 import { MdCancelPresentation } from "react-icons/md";
 import { useContext } from "react";
-import { ProductContext } from "../context/ProductContext";
+import { CartContext } from "../context/CartContext";
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 const SingleProduct = ({ open, handleClose, product }) => {
- 
+  const { fetchData } = useContext(CartContext);
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
-
+  const navigate = useNavigate();
   if (!product) return null;
 
   
   function handleAddToCart() {
-    const userId = JSON.parse(window.localStorage.getItem("user")).id;
+    const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
+    if (!userId) {
+      toast.warn("⚠️ Please log in to add items to your cart.");
+      navigate("/login");
+      return;
+    }
     if (userId) {
       fetch("https://depis3.vercel.app/api/cart/", {
         method: "POST",
@@ -34,9 +41,20 @@ const SingleProduct = ({ open, handleClose, product }) => {
           quantity: 1,
           userId,
         }),
-      }).catch((err) => console.log(err));
+      }).then((response) => {
+        if (!response.ok) { 
+        console.error("failed to add to cart");
+        return;}
+        toast.success("🛒 Item added to cart!",{autoClose: 1500, });
+        fetchData();
+      }).catch(
+        (err) => {
+          console.log(err);
+          toast.error("Something went wrong. Please try again.")
+        }
+      );
     } else {
-      console.log("fetch error");
+      console.log("fetch error");  
     }
   }
   

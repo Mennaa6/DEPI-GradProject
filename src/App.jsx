@@ -1,5 +1,6 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import { ProductProvider } from "./context/ProductContext";
+import { CartProvider } from './context/CartContext';
 import { ToastContainer } from "react-toastify";
 import AdminView from "./adminView";
 import UserView from "./userView";
@@ -30,6 +31,7 @@ const App = () => {
   return (
     <div>
       <ProductProvider>
+        <CartProvider>
         <ToastContainer position="top-right" />
         <Routes>
           <Route path="/*" element={<UserView />} />
@@ -38,7 +40,8 @@ const App = () => {
             element={role == "admin" ? <AdminView /> : <NotFound />}
           />
           <Route path="*" element={<NotFound />} />
-        </Routes>
+          </Routes>
+          </CartProvider>
       </ProductProvider>
     </div>
   );
