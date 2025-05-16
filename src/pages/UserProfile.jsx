@@ -47,7 +47,10 @@ const UserProfile = () => {
           <div className="p-6 border-b border-gray-100">
             <div className="flex items-start gap-4">
               <Avatar
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                src={
+                  userData.image ||
+                  "https://res.cloudinary.com/dvlmrrmdx/image/upload/v1747390819/836_gyc3ug.jpg"
+                }
                 alt="avatar"
                 size="lg"
                 className="border border-gray-200"
@@ -60,10 +63,6 @@ const UserProfile = () => {
                   <p className="flex items-center">
                     <span className="text-gray-500 mr-2">Email:</span>{" "}
                     {userData.email}
-                  </p>
-                  <p className="flex items-center">
-                    <span className="text-gray-500 mr-2">Phone:</span>{" "}
-                    {userData.phone}
                   </p>
                 </div>
               </div>

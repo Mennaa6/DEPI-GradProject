@@ -14,13 +14,10 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "https://depis3.vercel.app/api/auth/login",
-        {
-          email: user.email,
-          password: user.password,
-        }
-      );
+      const res = await axios.post("https://depis3.vercel.app/api/auth/login", {
+        email: user.email,
+        password: user.password,
+      });
 
       // Save token and user info in localStorage
       localStorage.setItem("token", res.data.token);
@@ -50,12 +47,12 @@ const Login = () => {
 
         <div className="bg-[#D6C0B3] rounded-lg shadow-lg p-8">
           {!mailExists && (
-            <div className="text-red-600 text-sm mb-4 text-center">
+            <div className="text-red-600 text-sm mb-4 text-center bg-white p-2 rounded-lg font-bold">
               User doesn't exist, try to sign up
             </div>
           )}
           {wrongPass && (
-            <div className="text-red-600 text-sm mb-4 text-center">
+            <div className="text-red-600 text-sm mb-4 text-center bg-white p-2 rounded-lg font-bold">
               Wrong password
             </div>
           )}
@@ -67,7 +64,8 @@ const Login = () => {
               </label>
               <input
                 type="email"
-                className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 rounded-lg bg-white border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.mail}
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
@@ -79,7 +77,8 @@ const Login = () => {
               </label>
               <input
                 type="password"
-                className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
+                placeholder="Enter your password"
+                className="w-full px-4 py-2 rounded-lg bg-white border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
@@ -96,7 +95,7 @@ const Login = () => {
               Don't Have an Account?{" "}
               <Link
                 to="/sign-up"
-                className="text-[#493628] hover:text-[#AB886D] font-medium hover:underline"
+                className="text-[#493628]  font-bold hover:underline"
               >
                 Sign up
               </Link>
