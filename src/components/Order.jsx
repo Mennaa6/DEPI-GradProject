@@ -24,7 +24,7 @@ const Order = ({ order, setOrders }) => {
   function handleTotalPaid() {
     let totalPrice = 0;
     products.forEach((item) => {
-      totalPrice += Number(item.price);
+      totalPrice += Number(item.product.price);
     });
     return totalPrice + Number(order.shippingFee);
   }

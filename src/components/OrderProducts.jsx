@@ -12,22 +12,22 @@ const OrderProducts = ({ products }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((item) => (
           <div
-            key={item.id}
+            key={item.product._id}
             className="flex border border-gray-100 rounded-lg overflow-hidden hover:border-gray-200 transition-all duration-200 hover:shadow-sm"
           >
             <div className="w-24 h-24 flex-shrink-0 bg-gray-50">
               <img
-                src={item.image}
-                alt={item.description}
+                src={item.product.image}
+                alt={item.product.description}
                 className="h-full w-full object-cover"
               />
             </div>
             <div className="flex-1 p-3">
               <h5 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
-                {item.description}
+                {item.product.description}
               </h5>
               <p className="text-sm font-bold text-gray-900">
-                {item.price} EGP
+                {item.product.price} EGP
               </p>
             </div>
           </div>
