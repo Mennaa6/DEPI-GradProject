@@ -20,7 +20,8 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import PageTitle from "../components/PageTitle";
-import { mockUsers } from "../data/mockData";
+import { ProductContext } from "../../context/ProductContext";
+import { useContext } from "react";
 import { format } from "date-fns";
 
 const UserDetails = () => {
@@ -29,34 +30,38 @@ const UserDetails = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { getSingleUser, deleteUser } = useContext(ProductContext);
 
   useEffect(() => {
-    // In a real app, fetch from API using the ID
     const fetchUser = async () => {
       try {
-        // Simulate API delay
-        setTimeout(() => {
-          const foundUser = mockUsers.find((u) => u.id === parseInt(id));
-          if (foundUser) {
-            setUser(foundUser);
-          }
-          setLoading(false);
-        }, 1000);
+        const userData = await getSingleUser(id);
+        setUser(userData);
       } catch (error) {
         console.error("Error fetching user:", error);
+        setError("Failed to load user details");
+      } finally {
         setLoading(false);
       }
     };
 
     fetchUser();
-  }, [id]);
+  }, [id, getSingleUser]);
 
-  const handleDelete = () => {
-    // In a real app, make API call to delete
-    // For now, just navigate back to users list
-    navigate("/admin/users");
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteUser(id);
+      navigate("/admin/users");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      setError("Failed to delete user");
+      setIsDeleting(false);
+    }
   };
-
   if (loading) {
     return (
       <div>
@@ -86,7 +91,22 @@ const UserDetails = () => {
       </div>
     );
   }
-
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <Typography variant="h4" color="red" className="mb-4">
+          {error}
+        </Typography>
+        <Button
+          variant="outlined"
+          color="gray"
+          onClick={() => navigate("/admin/users")}
+        >
+          Back to Users
+        </Button>
+      </div>
+    );
+  }
   if (!user) {
     return (
       <div className="text-center py-12">
@@ -151,9 +171,14 @@ const UserDetails = () => {
           <CardBody className="p-6 -mt-12">
             <div className="flex flex-col items-center">
               <img
-                src={user.avatar}
+                src={user.image}
                 alt={user.name}
                 className="w-24 h-24 rounded-full border-4 border-white object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://via.placeholder.com/400x400?text=No+Image";
+                }}
               />
               <Typography variant="h5" color="blue-gray" className="mt-4 mb-1">
                 {user.name}
@@ -164,19 +189,6 @@ const UserDetails = () => {
               >
                 {user.role}
               </Typography>
-              <div className="flex items-center mb-2">
-                <FaCircle
-                  size={10}
-                  className={`mr-2 ${
-                    user.status === "active"
-                      ? "text-green-500"
-                      : "text-gray-400"
-                  }`}
-                />
-                <Typography variant="small" className="font-medium">
-                  {user.status === "active" ? "Active" : "Inactive"}
-                </Typography>
-              </div>
             </div>
 
             <div className="border-t border-gray-200 mt-6 pt-6">
@@ -221,7 +233,7 @@ const UserDetails = () => {
                   </Typography>
                 </div>
                 <Typography variant="small" className="ml-8 mt-1">
-                  {format(new Date(user.joinedAt), "MMMM d, yyyy")}
+                  {format(new Date(user.createdAt), "MMMM d, yyyy")}
                 </Typography>
               </div>
             </div>
@@ -271,7 +283,7 @@ const UserDetails = () => {
                   Completed onboarding
                 </Typography>
                 <Typography variant="small" className="text-gray-600">
-                  {format(new Date(user.joinedAt), "MMMM d, yyyy")}
+                  {format(new Date(user.createdAt), "MMMM d, yyyy")}
                 </Typography>
               </div>
             </div>

@@ -310,7 +310,7 @@ const AdProducts = () => {
                               ${product.price.toFixed(2)}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              {product.stock > 5 ? (
+                              {product.stock > 10 ? (
                                 <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-50 text-green-700">
                                   In Stock ({product.stock})
                                 </span>
@@ -407,7 +407,7 @@ const AdProducts = () => {
                           <div className="flex space-x-2">
                             <button
                               onClick={() =>
-                                navigate(`/products/${product._id}`)
+                                navigate(`/admin/products/${product._id}`)
                               }
                               className="p-1.5 rounded text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                             >

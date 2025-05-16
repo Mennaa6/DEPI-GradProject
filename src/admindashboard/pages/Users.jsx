@@ -21,12 +21,13 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import PageTitle from "../components/PageTitle";
-import { mockUsers } from "../data/mockData";
+
 import { format } from "date-fns";
+import { ProductContext } from "../../context/ProductContext";
+import { useContext } from "react";
 
 const Users = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { users, loading, getUsers, deleteUser } = useContext(ProductContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -38,12 +39,8 @@ const Users = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulate API fetch delay
-    setTimeout(() => {
-      setUsers(mockUsers);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    getUsers();
+  }, [getUsers]);
 
   // Handle search
   const handleSearch = (e) => {
@@ -68,11 +65,14 @@ const Users = () => {
     setDeleteDialogOpen(true);
   };
 
-  const handleDelete = () => {
-    // In a real app, you would make an API call to delete the user
-    setUsers(users.filter((u) => u.id !== userToDelete.id));
-    setDeleteDialogOpen(false);
-    setUserToDelete(null);
+  const handleDelete = async () => {
+    try {
+      await deleteUser(userToDelete._id);
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
+    } catch (error) {
+      console.error("Error deleting User:", error);
+    }
   };
 
   // Filter and sort users
@@ -118,14 +118,6 @@ const Users = () => {
     <div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <PageTitle title="Users" subtitle="Manage user accounts" />
-
-        <Button
-          size="sm"
-          className="flex items-center gap-2 bg-gray-800 mt-4 md:mt-0"
-          onClick={() => navigate("/admin/users/new")}
-        >
-          <FaPlus size={14} /> Add User
-        </Button>
       </div>
 
       <Card className="mb-6">
@@ -208,15 +200,6 @@ const Users = () => {
                           </th>
                           <th
                             className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            onClick={() => handleSort("status")}
-                          >
-                            <div className="flex items-center space-x-1">
-                              <span>Status</span>
-                              {getSortIcon("status")}
-                            </div>
-                          </th>
-                          <th
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             onClick={() => handleSort("joinedAt")}
                           >
                             <div className="flex items-center space-x-1">
@@ -231,12 +214,12 @@ const Users = () => {
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {currentUsers.map((user) => (
-                          <tr key={user.id} className="hover:bg-gray-50">
+                          <tr key={user._id} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 rounded-full overflow-hidden">
                                   <img
-                                    src={user.avatar}
+                                    src={user.image}
                                     alt=""
                                     className="h-full w-full object-cover"
                                   />
@@ -267,25 +250,15 @@ const Users = () => {
                                 {user.role}
                               </Typography>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {user.status === "active" ? (
-                                <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-50 text-green-700">
-                                  Active
-                                </span>
-                              ) : (
-                                <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-50 text-gray-700">
-                                  Inactive
-                                </span>
-                              )}
-                            </td>
+
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {format(new Date(user.joinedAt), "MMM d, yyyy")}
+                              {format(new Date(user.createdAt), "MMM d, yyyy")}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                               <div className="flex justify-end space-x-2">
                                 <button
                                   onClick={() =>
-                                    navigate(`/admin/users/${user.id}`)
+                                    navigate(`/admin/users/${user._id}`)
                                   }
                                   className="text-gray-600 hover:text-gray-900"
                                 >
@@ -293,7 +266,7 @@ const Users = () => {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    navigate(`/admin/users/${user.id}/edit`)
+                                    navigate(`/admin/users/${user._id}/edit`)
                                   }
                                   className="text-blue-600 hover:text-blue-900"
                                 >
@@ -317,14 +290,14 @@ const Users = () => {
                   <div className="md:hidden">
                     {currentUsers.map((user) => (
                       <div
-                        key={user.id}
+                        key={user._id}
                         className="border-b border-gray-200 py-4"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
                             <div className="h-10 w-10 rounded-full overflow-hidden">
                               <img
-                                src={user.avatar}
+                                src={user.image}
                                 alt=""
                                 className="h-full w-full object-cover"
                               />
@@ -349,23 +322,13 @@ const Users = () => {
                                 >
                                   {user.role}
                                 </Typography>
-                                <span className="text-gray-300">•</span>
-                                {user.status === "active" ? (
-                                  <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-green-50 text-green-700">
-                                    Active
-                                  </span>
-                                ) : (
-                                  <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-50 text-gray-700">
-                                    Inactive
-                                  </span>
-                                )}
                               </div>
                             </div>
                           </div>
                           <div className="flex space-x-2">
                             <button
                               onClick={() =>
-                                navigate(`/admin/users/${user.id}`)
+                                navigate(`/admin/users/${user._id}`)
                               }
                               className="p-1.5 rounded text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                             >
@@ -373,7 +336,7 @@ const Users = () => {
                             </button>
                             <button
                               onClick={() =>
-                                navigate(`/admin/users/${user.id}/edit`)
+                                navigate(`/admin/users/${user._id}/edit`)
                               }
                               className="p-1.5 rounded text-blue-600 hover:text-blue-900 hover:bg-blue-50"
                             >

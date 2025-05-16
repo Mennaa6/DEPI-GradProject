@@ -12,7 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 function DropDown() {
   const userExists = window.localStorage.getItem("id");
   const navigate = useNavigate();
-  
+
   function handleLogout() {
     window.localStorage.removeItem("id");
     navigate("/");
@@ -80,7 +80,13 @@ function DropDown() {
           </MenuList>
         </Menu>
       ) : (
-        <IoMdLogIn onClick={() => {navigate("/sign-up")}}  size={22} className="cursor-pointer"/>
+        <IoMdLogIn
+          onClick={() => {
+            navigate("/sign-up");
+          }}
+          size={22}
+          className="cursor-pointer"
+        />
       )}
     </>
   );

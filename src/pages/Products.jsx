@@ -147,7 +147,7 @@ const Products = () => {
                     {item.name}
                   </Typography>
                   <Typography color="blue-gray" className="font-medium">
-                    ${item.price}
+                    {item.price} EGP
                   </Typography>
                 </div>
                 <Typography

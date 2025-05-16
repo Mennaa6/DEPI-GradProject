@@ -11,7 +11,8 @@ import {
   Option,
 } from "@material-tailwind/react";
 import PageTitle from "../components/PageTitle";
-import { mockUsers } from "../data/mockData";
+import { ProductContext } from "../../context/ProductContext";
+import { useContext } from "react";
 
 const UserForm = () => {
   const { id } = useParams();
@@ -20,48 +21,44 @@ const UserForm = () => {
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [formErrors, setFormErrors] = useState({});
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  //get the functions
+  const { getSingleUser, updateUser, users } = useContext(ProductContext);
 
   // Form state
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     role: "",
-    status: "active",
-    avatar: "",
   });
 
   // Available roles and statuses
-  const roles = ["Admin", "Manager", "Editor", "User"];
-  const statuses = ["active", "inactive"];
+  const roles = ["Admin", "User"];
 
   useEffect(() => {
-    if (isEditMode) {
-      // In a real app, fetch from API using the ID
-      const fetchUser = async () => {
+    const fetchUser = async () => {
+      if (isEditMode) {
         try {
-          // Simulate API delay
-          setTimeout(() => {
-            const foundUser = mockUsers.find((u) => u.id === parseInt(id));
-            if (foundUser) {
-              setFormData({
-                name: foundUser.name,
-                email: foundUser.email,
-                role: foundUser.role,
-                status: foundUser.status,
-                avatar: foundUser.avatar,
-              });
-            }
-            setLoading(false);
-          }, 1000);
+          const user = await getSingleUser(id);
+          setFormData({
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          });
+          setImagePreview(user.image);
         } catch (error) {
           console.error("Error fetching user:", error);
+        } finally {
           setLoading(false);
         }
-      };
+      }
+    };
 
-      fetchUser();
-    }
-  }, [id, isEditMode]);
+    fetchUser();
+  }, [id, isEditMode, getSingleUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,6 +91,30 @@ const UserForm = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setFormErrors({
+        ...formErrors,
+        image: "Please select an image file",
+      });
+      return;
+    }
+    setImageFile(file);
+    setFormErrors({
+      ...formErrors,
+      image: null,
+    });
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const validate = () => {
     const errors = {};
 
@@ -106,8 +127,6 @@ const UserForm = () => {
     }
 
     if (!formData.role) errors.role = "Role is required";
-    if (!formData.status) errors.status = "Status is required";
-    if (!formData.avatar.trim()) errors.avatar = "Avatar URL is required";
 
     return errors;
   };
@@ -125,11 +144,16 @@ const UserForm = () => {
     setSaving(true);
 
     try {
-      // In a real app, make API call to create/update user
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
+      const userData = {
+        ...formData,
+        image: imageFile,
+      };
 
-      // Redirect back to users list or details page
-      navigate(isEditMode ? `/admin/users/${id}` : "/users");
+      if (isEditMode) {
+        await updateUser(id, userData);
+      }
+
+      navigate("/admin/users");
     } catch (error) {
       console.error("Error saving user:", error);
       setSaving(false);
@@ -160,16 +184,14 @@ const UserForm = () => {
   return (
     <div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <PageTitle title={isEditMode ? "Edit User" : "Add New User"} />
+        <PageTitle title="Edit User" />
 
         <Button
           variant="outlined"
           color="gray"
           size="sm"
           className="flex items-center gap-2 mt-4 md:mt-0"
-          onClick={() =>
-            navigate(isEditMode ? `/admin/users${id}` : "/admin/users")
-          }
+          onClick={() => navigate(isEditMode ? `/admin/users` : "/admin/users")}
         >
           <FaArrowLeft size={14} /> Back
         </Button>
@@ -251,30 +273,6 @@ const UserForm = () => {
                   </Typography>
                 )}
               </div>
-
-              <div>
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="mb-2 font-medium"
-                >
-                  Status*
-                </Typography>
-                <Select
-                  value={formData.status}
-                  onChange={(value) => handleSelectChange("status", value)}
-                  error={!!formErrors.status}
-                  className={formErrors.status ? "border-red-500" : ""}
-                >
-                  <Option value="active">Active</Option>
-                  <Option value="inactive">Inactive</Option>
-                </Select>
-                {formErrors.status && (
-                  <Typography variant="small" color="red" className="mt-1">
-                    {formErrors.status}
-                  </Typography>
-                )}
-              </div>
             </div>
 
             <div className="mb-6">
@@ -289,23 +287,22 @@ const UserForm = () => {
                 <Input
                   type="text"
                   name="avatar"
-                  value={formData.avatar}
+                  value={formData.image}
                   onChange={handleChange}
                   placeholder="https://example.com/avatar.jpg"
                   className={`${
-                    formErrors.avatar ? "border-red-500" : ""
+                    formErrors.image ? "border-red-500" : ""
                   } flex-grow`}
                   icon={<FaImage />}
                 />
               </div>
-              {formErrors.avatar && (
+              {formErrors.image && (
                 <Typography variant="small" color="red" className="mt-1">
-                  {formErrors.avatar}
+                  {formErrors.image}
                 </Typography>
               )}
-
-              {formData.avatar && (
-                <div className="mt-3 border rounded-lg p-2 inline-block">
+              {imagePreview && (
+                <div className="border rounded-lg p-2">
                   <Typography
                     variant="small"
                     color="blue-gray"
@@ -314,13 +311,13 @@ const UserForm = () => {
                     Preview:
                   </Typography>
                   <img
-                    src={formData.avatar}
+                    src={imagePreview}
                     alt="Preview"
-                    className="w-16 h-16 object-cover rounded-full"
+                    className="w-32 h-32 object-cover rounded"
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src =
-                        "https://via.placeholder.com/150?text=Avatar";
+                        "https://via.placeholder.com/150?text=Image+Error";
                     }}
                   />
                 </div>
@@ -352,9 +349,7 @@ const UserForm = () => {
                 variant="outlined"
                 color="red"
                 className="flex items-center gap-2"
-                onClick={() =>
-                  navigate(isEditMode ? `/admin/users/${id}` : "/users")
-                }
+                onClick={() => navigate("/admin/users")}
                 disabled={saving}
               >
                 <FaTimes size={14} /> Cancel

@@ -8,6 +8,7 @@ import {
   FaChevronRight,
   FaShoppingCart,
 } from "react-icons/fa";
+import { FaShop } from "react-icons/fa6";
 
 const Sidebar = ({ isOpen, toggleSidebar, isMobile }) => {
   const location = useLocation();
@@ -21,6 +22,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile }) => {
       name: "Orders",
       icon: <FaShoppingCart size={18} />,
     },
+    { path: "/products", name: "View Shop", icon: <FaShop size={18} /> },
   ];
 
   const handleOverlayClick = (e) => {
