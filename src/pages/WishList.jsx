@@ -16,7 +16,7 @@ const Wishlist = () => {
   useEffect(() => {
     const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
     if (!userId) {
-      navigate("/signup");
+      navigate("/sign-up");
     }
     AOS.init({
       offset: 100,

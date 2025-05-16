@@ -50,7 +50,9 @@ const productCard = ({ product }) => {
           userId,
           productId: product._id,
         }),
-      });
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data));
     } else {
       console.log("fetch error");
     }

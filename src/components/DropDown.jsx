@@ -6,7 +6,7 @@ import {
   Avatar,
   Typography,
 } from "@material-tailwind/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
@@ -17,14 +17,19 @@ function DropDown() {
   const { clearCart } = useContext(CartContext);
   const userExists = window.localStorage.getItem("user");
   const navigate = useNavigate();
-  const { signedUser } = useContext(ProductContext);
+  const { signedUser,wishlistItems } = useContext(ProductContext);
 
   function handleLogout() {
     window.localStorage.removeItem("user");
     window.localStorage.removeItem("token");
     clearCart();
+    wishlistItems.length = 0;
     navigate("/");
   }
+
+  useEffect(() => {
+    console.log(signedUser);
+  })
 
   return (
     <>
