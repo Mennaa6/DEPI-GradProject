@@ -8,9 +8,11 @@ export const ProductContext = createContext();
 const api_url = "https://depis3.vercel.app/api";
 
 export const ProductProvider = ({ children }) => {
-   const [products, setProducts] = useState([]);
-   const [loading, setLoading] = useState(true);
- 
+  const [products, setProducts] = useState([]);
+  const [wishlistItems, setWishlistitems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   const getProducts = async () => {
     try {
       const response = await axios.get(`${api_url}/products`);
