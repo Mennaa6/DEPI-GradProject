@@ -13,10 +13,11 @@ import {
   Button,
   list,
 } from "@material-tailwind/react";
-import { ProductContext } from "../context/ProductContext";
+import { CartContext } from "../context/CartContext";
+
 
 const productCard = ({ product }) => {
-  const { wishlistItems,setWishlistItems } = useContext(ProductContext);
+  const { wishlistItems} = useContext(CartContext);
 
   function checkIsFav() {
     return wishlistItems.some((item) => item._id == product._id);
