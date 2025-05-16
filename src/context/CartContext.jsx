@@ -6,7 +6,7 @@ const api_url = "https://depis3.vercel.app/api";
 
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartitems] = useState([]);
-    const [wishlist, setWishlist] = useState([]);
+    const [wishlistItems, setWishlistitems] = useState([]);
     const [loading, setLoading] = useState(true);
    
   // function to get userid from local storage
@@ -20,7 +20,6 @@ export const CartProvider = ({ children }) => {
     if (!userId) return;
      try { 
        const response = await axios.get(`${api_url}/cart/${userId}`);
-       console.log(response.data.cartItems)
        setCartitems(response.data.cartItems);
        console.log(response.data.cartItems)
         setLoading(false);
@@ -64,7 +63,8 @@ export const CartProvider = ({ children }) => {
       productId: id
     });
     setCartitems(prev => prev.filter(item => item.productId._id !== id));
-    setWishlist(response.data.wishlist);
+    setWishlistitems(response.data.wishlist);
+    console.log(response.data.wishlist)
     
   } catch (error) {
     console.error("Error moving to wishlist:", error);
@@ -122,6 +122,7 @@ export const CartProvider = ({ children }) => {
     <CartContext.Provider
       value={{
         cartItems,
+        wishlistItems,
         loading,
         deleteFromcart,
         moveTowishlist,
