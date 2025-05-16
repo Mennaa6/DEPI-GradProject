@@ -12,6 +12,8 @@ export const ProductProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
+  const [signedUser, setSignedUser] = useState(null);
+
   const navigate = useNavigate();
 
   //get all products
@@ -173,9 +175,19 @@ export const ProductProvider = ({ children }) => {
     }
   }
 
+  function getSignedUser() {
+    const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
+    if (userId) {
+      fetch(`${api_url}/users/${userId}`)
+        .then((res) => res.json())
+        .then((data) => setSignedUser(data.User));
+    }
+  }
+
   useEffect(() => {
     getProducts();
     getWishlist();
+    getSignedUser();
   }, []);
 
   return (
@@ -194,6 +206,8 @@ export const ProductProvider = ({ children }) => {
         updateUser,
         getSingleUser,
         deleteUser,
+        signedUser,
+        getSignedUser,
       }}
     >
       {children}

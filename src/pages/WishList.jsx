@@ -5,21 +5,19 @@ import React, { useState, useEffect, useContext } from "react";
 import { Typography } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
- import { CartContext } from "../context/CartContext";
+import { ProductContext } from "../context/ProductContext";
 
 const Wishlist = () => {
   const [products, setProducts] = useState([]);
-  const { wishlistItems, loading } = useContext(CartContext);
- 
+  const { wishlistItems, loading } = useContext(ProductContext);
+
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
     if (!userId) {
       navigate("/signup");
     }
-    console.log(wishlistItems)
     AOS.init({
       offset: 100,
       duration: 500,
@@ -48,7 +46,7 @@ const Wishlist = () => {
       {wishlistItems && wishlistItems.length > 0 ? (
         <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
           {wishlistItems.map((item, index) => (
-            <ProductCard product={item._id} key={index} />
+            <ProductCard product={item} key={index} />
           ))}
         </div>
       ) : (

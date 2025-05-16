@@ -48,7 +48,7 @@ const UserProfile = () => {
             <div className="flex items-start gap-4">
               <Avatar
                 src={
-                  userData.image ||
+                  // userData.image ||
                   "https://res.cloudinary.com/dvlmrrmdx/image/upload/v1747390819/836_gyc3ug.jpg"
                 }
                 alt="avatar"

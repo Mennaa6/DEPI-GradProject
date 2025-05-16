@@ -1,4 +1,4 @@
-import {FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdAddShoppingCart, MdOutlineRemoveRedEye } from "react-icons/md";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -13,16 +13,14 @@ import {
   Button,
   list,
 } from "@material-tailwind/react";
-import { CartContext } from "../context/CartContext";
-
+import { ProductContext } from "../context/ProductContext";
 
 const productCard = ({ product }) => {
-  const { wishlistItems} = useContext(CartContext);
+  const { wishlistItems, setWishlistItems } = useContext(ProductContext);
 
   function checkIsFav() {
     return wishlistItems.some((item) => item._id == product._id);
   }
-
 
   const [isFav, setIsFav] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -85,17 +83,17 @@ const productCard = ({ product }) => {
     // }
 
     // debounceTimer.current = setTimeout(() => {
-      if (newFavState) {
-        addToFav();
-      } else {
-        removeFromFav();
-      }
+    if (newFavState) {
+      addToFav();
+    } else {
+      removeFromFav();
+    }
     // }, 100);
   }
 
   useEffect(() => {
     setIsFav(wishlistItems.some((item) => item._id == product._id));
-  },[isFav]);
+  }, [isFav]);
   return (
     <div>
       <Card

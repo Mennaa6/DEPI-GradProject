@@ -10,11 +10,14 @@ import { useContext } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+import { ProductContext } from "../context/ProductContext";
+import { MdDashboard } from "react-icons/md";
 
 function DropDown() {
   const { clearCart } = useContext(CartContext);
   const userExists = window.localStorage.getItem("user");
   const navigate = useNavigate();
+  const { signedUser } = useContext(ProductContext);
 
   function handleLogout() {
     window.localStorage.removeItem("user");
@@ -59,6 +62,16 @@ function DropDown() {
               </MenuItem>
             </Link>
             <hr className="my-2 border-blue-gray-50" />
+            {signedUser?.role == "Admin" && (
+              <Link to={"/admin/dashboard"}>
+                <MenuItem className="flex items-center gap-2 ">
+                  <MdDashboard />
+                  <Typography variant="small" className="font-medium">
+                    dashboard
+                  </Typography>
+                </MenuItem>
+              </Link>
+            )}
             <MenuItem className="flex items-center gap-2 ">
               <svg
                 width="16"
@@ -87,7 +100,8 @@ function DropDown() {
       ) : (
         <IoMdLogIn
           onClick={() => {
-            navigate("/sign-up");
+              navigate("/sign-up");
+              handleLogout();
           }}
           size={22}
           className="cursor-pointer"

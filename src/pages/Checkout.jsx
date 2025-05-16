@@ -5,6 +5,7 @@ import { FaCreditCard } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+
 const Checkout = () => {
   const { cartItems } = useContext(CartContext);
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Checkout = () => {
     address: "",
     city: "",
     governorate: "",
-   });
+  });
 
   const handleShippingChange = (key, value) => {
     setShippingdetails((prev) => ({ ...prev, [key]: value }));
@@ -41,45 +42,45 @@ const Checkout = () => {
   };
 
   const deliveryFee = shippingDetails.governorate === "Mansoura" ? 80 : 50;
-   
- const handlePlaceorder = async () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-   const userId = user?.id;
-   if (!userId) {
-     toast.error("⚠️ Please log in to continue.");   
-    return;
-   }
-  const stringfiedAddress = `${shippingDetails.address}, ${shippingDetails.city}, ${shippingDetails.governorate}`;
-  
-  const order = {
-    address: stringfiedAddress,
-    items: cartItems.map((item) => ({
-      product: item.productId._id,
-      quantity: item.quantity,
-    })),
-    totalPrice: cartItems.reduce(
-      (total, item) => total + item.quantity * item.productId.price,
-      0
-    ) + deliveryFee,
-    shippingFee: deliveryFee,
-    status: "pending",
+
+  const handlePlaceorder = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.id;
+    if (!userId) {
+      toast.error("⚠️ Please log in to continue.");
+      return;
+    }
+    const stringfiedAddress = `${shippingDetails.address}, ${shippingDetails.city}, ${shippingDetails.governorate}`;
+
+    const order = {
+      address: stringfiedAddress,
+      items: cartItems.map((item) => ({
+        product: item.productId._id,
+        quantity: item.quantity,
+      })),
+      totalPrice:
+        cartItems.reduce(
+          (total, item) => total + item.quantity * item.productId.price,
+          0
+        ) + deliveryFee,
+      shippingFee: deliveryFee,
+      status: "pending",
+    };
+
+    console.log("Order object:", JSON.stringify(order, null, 2));
+
+    try {
+      const response = await axios.post(
+        `https://depis3.vercel.app/api/orders/${userId}`,
+        order
+      );
+      toast.success("Order placed successfully!");
+      navigate("/");
+    } catch (error) {
+      console.error("error placing order:", error);
+      toast.error("⚠️ There was an issue placing your order.");
+    }
   };
-
-  console.log("Order object:", JSON.stringify(order, null, 2));
-
-  try {
-    const response = await axios.post(
-      `https://depis3.vercel.app/api/orders/${userId}`,
-      order
-    );
-    toast.success("Order placed successfully!");
-    const orderId = response.data._id;
-    navigate("/orderconfirmation", { state: { orderId } });
-  } catch (error) {
-    console.error("error placing order:", error);
-    toast.error("⚠️ There was an issue placing your order.");
-  }
-};
 
   return (
     <div className="bg-[#E4E0E1] p-8">
@@ -141,7 +142,7 @@ const Checkout = () => {
                 <option value="Alexandria">Alexandria</option>
                 <option value="Mansoura">Mansoura</option>
               </select>
-              
+
               <div className="mt-4">
                 <h2 className="text-xl md:text-2xl font-semibold mt-8 mb-4 flex items-center">
                   <FaCreditCard className="mr-2" />
@@ -205,7 +206,8 @@ const Checkout = () => {
                 <span>
                   {(
                     cartItems.reduce(
-                      (total, item) => total + item.quantity * item.productId.price,
+                      (total, item) =>
+                        total + item.quantity * item.productId.price,
                       0
                     ) + deliveryFee
                   ).toFixed(2)}

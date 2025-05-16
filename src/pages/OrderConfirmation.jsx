@@ -12,9 +12,11 @@ const OrderConfirmation = () => {
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("user"))?.id;
-    if (orderId) {
+    if (orderId && userId) {
       axios
-        .get(`http://localhost:3001/api/orders/${userId}/${orderId}`)
+        .get(
+          `https://depis3.vercel.app/api/orders/${userId}/${orderId}`
+        )
         .then((response) => {
           setOrderDetails(response.data);
           setLoading(false);
@@ -30,9 +32,9 @@ const OrderConfirmation = () => {
     return <div className="text-center mt-20 text-xl font-bold">Loading order details...</div>;
   }
 
-  if (!orderDetails) {
-    return <div className="text-center mt-20 text-xl font-bold">Order not found.</div>;
-  }
+  // if (!orderDetails) {
+  //   return <div className="text-center mt-20 text-xl font-bold">Order not found.</div>;
+  // }
 
   return (
     <div className="bg-[#F4EFE9] min-h-screen py-12">
