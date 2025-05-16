@@ -73,6 +73,7 @@ const Checkout = () => {
       order
     );
     toast.success("Order placed successfully!");
+    console.log(response.data._id)
     const orderId = response.data._id;
     navigate("/orderconfirmation", { state: { orderId } });
   } catch (error) {

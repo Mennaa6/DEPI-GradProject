@@ -14,7 +14,7 @@ const OrderConfirmation = () => {
     const userId = JSON.parse(localStorage.getItem("user"))?.id;
     if (orderId) {
       axios
-        .get(`http://localhost:3001/api/orders/${userId}/${orderId}`)
+        .get(`https://depis3.vercel.app/api/orders/${userId}/${orderId}`)
         .then((response) => {
           setOrderDetails(response.data);
           setLoading(false);
@@ -51,7 +51,7 @@ const OrderConfirmation = () => {
         <ul className="space-y-2 mb-6">
           {orderDetails.items.map((item, index) => (
             <li key={index} className="border-b pb-2">
-              📦 Product ID: {item}
+              📦 Product ID: {item.product}
             </li>
           ))}
         </ul>
