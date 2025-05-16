@@ -17,7 +17,7 @@ const SignUp = () => {
   const signUp = async (e) => {
     e.preventDefault();
 
-    const nameValid = /^[A-Za-z]+$/.test(user.name);
+    const nameValid = /^[A-Za-z_]+$/.test(user.name.trim());
     const emailValid = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(
       user.email
     );
@@ -34,7 +34,14 @@ const SignUp = () => {
     formData.append("name", user.name);
     formData.append("email", user.email);
     formData.append("password", user.password);
-    if (image) formData.append("image", image);
+    if (image) {
+      formData.append("image", image);
+    } else {
+      formData.append(
+        "image",
+        "https://res.cloudinary.com/dvlmrrmdx/image/upload/v1747390819/836_gyc3ug.jpg"
+      );
+    }
 
     setLoading(true);
 
@@ -71,30 +78,30 @@ const SignUp = () => {
     <div className="flex items-center justify-center min-h-screen bg-[#E4E0E1] p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#493628] mb-2">
+          <h1 className="text-3xl font-bold text-buttonColor mb-2">
             Create Account
           </h1>
-          <p className="text-[#493628]">Join our fashion community</p>
+          <p className="text-buttonColor">Join our fashion community</p>
         </div>
 
         <div className="bg-[#D6C0B3] rounded-lg shadow-lg p-8">
           {invalidData && (
-            <div className="text-red-600 text-sm mb-4 text-center">
-              Username must contain only alphabetical letters
+            <div className="text-red-600 text-sm mb-4 text-center bg-white p-2 rounded-lg font-bold">
+              Username must contain only letters and and underscores
             </div>
           )}
           {shortPassword && (
-            <div className="text-red-600 text-sm mb-4 text-center">
+            <div className="text-red-600 text-sm mb-4 text-center bg-white p-2 rounded-lg font-bold">
               Password must be at least 8 characters
             </div>
           )}
           {mailExists && (
-            <div className="text-red-600 text-sm mb-4 text-center">
+            <div className="text-red-600 text-sm mb-4 text-center bg-white p-2 rounded-lg font-bold">
               User already exists, try to sign in
             </div>
           )}
           {errorMsg && (
-            <div className="text-red-600 text-sm mb-4 text-center">
+            <div className="text-red-600 text-sm mb-4 text-center bg-white p-2 rounded-lg font-bold">
               {errorMsg}
             </div>
           )}
@@ -105,11 +112,10 @@ const SignUp = () => {
                 Username
               </label>
               <input
-            
                 minLength={3}
                 type="text"
-                placeholder="Only letters allowed"
-                className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
+                placeholder="Only letters and underscores"
+                className="w-full px-4 py-2 rounded-lg bg-white border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.name}
                 onChange={(e) => setUser({ ...user, name: e.target.value })}
               />
@@ -121,7 +127,8 @@ const SignUp = () => {
               </label>
               <input
                 type="email"
-                className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
+                placeholder="Enter you email"
+                className="w-full px-4 py-2 rounded-lg bg-white border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.email}
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
@@ -132,11 +139,10 @@ const SignUp = () => {
                 Password
               </label>
               <input
-                
                 minLength={8}
                 type="password"
                 placeholder="Minimum 8 characters"
-                className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
+                className="w-full px-4 py-2 rounded-lg bg-white border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
@@ -148,9 +154,8 @@ const SignUp = () => {
               </label>
               <input
                 type="file"
-                accept="image/*"
                 onChange={(e) => setImage(e.target.files[0])}
-                className="w-full"
+                className="w-full px-4 py-2 rounded-lg bg-white border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628] "
               />
             </div>
 
@@ -166,7 +171,7 @@ const SignUp = () => {
               Already Have an Account?{" "}
               <a
                 href="/login"
-                className="text-[#493628] hover:text-[#AB886D] font-medium hover:underline"
+                className="text-[#493628]  font-bold hover:underline "
               >
                 Sign in
               </a>
