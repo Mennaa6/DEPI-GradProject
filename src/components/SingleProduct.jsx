@@ -11,41 +11,56 @@ import {
 import { FaStar } from "react-icons/fa";
 import { MdCancelPresentation } from "react-icons/md";
 import { useContext } from "react";
-import { ProductContext } from "../context/ProductContext";
+import { CartContext } from "../context/CartContext";
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 const SingleProduct = ({ open, handleClose, product }) => {
- 
+  const { fetchData } = useContext(CartContext);
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
-
+  const navigate = useNavigate();
   if (!product) return null;
 
+  
+  function handleAddToCart() {
+    const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
+    if (!userId) {
+      toast.warn("⚠️ Please log in to add items to your cart.");
+      navigate("/login");
+      return;
+    }
+    if (userId) {
+      fetch("https://depis3.vercel.app/api/cart/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: product._id,
+          quantity: 1,
+          userId,
+        }),
+      }).then((response) => {
+        if (!response.ok) { 
+        console.error("failed to add to cart");
+        return;}
+        toast.success("🛒 Item added to cart!",{autoClose: 1500, });
+        fetchData();
+      }).catch(
+        (err) => {
+          console.log(err);
+          toast.error("Something went wrong. Please try again.")
+        }
+      );
+    } else {
+      console.log("fetch error");  
+    }
+  }
+  
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
-  const { addTocart, loading } = useContext(ProductContext);
-   const handleAddtoCart = async () => {
-    await addTocart(product._id); // ensures loading is handled in context
-   };
-
-  function handleAddToCart() {
-    // const userId = signedUser._id;
-    const userId = "681cbcdb4fb78a0c071e023a";
-    fetch("https://depis3.vercel.app/api/cart/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productId: product._id,
-        quantity: 1,
-        userId,
-      }),
-    })
-      .then((res) => res.json())
-      .then(data => console.log(data.cartItems));
-  }
-
   return (
     <Dialog
       open={open}
@@ -142,7 +157,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
             color="brown"
             onClick={() => {
               handleClose();
-              handleAddtoCart();
+              handleAddToCart();
             }}
             className=" hover:bg-hoverColor"
             // disabled={!selectedSize}

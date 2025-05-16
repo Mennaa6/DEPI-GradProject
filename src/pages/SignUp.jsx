@@ -105,7 +105,7 @@ const SignUp = () => {
                 Username
               </label>
               <input
-                required
+            
                 minLength={3}
                 type="text"
                 placeholder="Only letters allowed"
@@ -120,7 +120,6 @@ const SignUp = () => {
                 Email
               </label>
               <input
-                required
                 type="email"
                 className="w-full px-4 py-2 rounded-lg bg-[#E4E0E1] border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628]"
                 value={user.email}
@@ -133,7 +132,7 @@ const SignUp = () => {
                 Password
               </label>
               <input
-                required
+                
                 minLength={8}
                 type="password"
                 placeholder="Minimum 8 characters"

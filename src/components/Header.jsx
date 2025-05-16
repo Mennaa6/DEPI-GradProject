@@ -12,11 +12,12 @@ import { MdFavorite } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom"; // Import Link
 import { ProductContext } from '../context/ProductContext';
+import {CartContext} from '../context/CartContext'
 import DropDown from "./DropDown";
 const Header = () => {
   const navigate = useNavigate();
   const [openNav, setOpenNav] = React.useState(false);
-  const { cartItems =[] } = useContext(ProductContext);
+  const { cartItems } = useContext(CartContext);
 
   React.useEffect(() => {
     window.addEventListener(
@@ -82,7 +83,7 @@ const Header = () => {
               <Link to="/cart">
                 <FaCartShopping />
                 </Link>
-                <span className=" absolute -top-2 -right-2  text-sm">{cartItems.length > 0 ? cartItems.reduce((total, item) => total + item.quantity, 0) :""}</span>
+                <span className=" absolute -top-2 -right-2  text-sm">{cartItems.length}</span>
               </div>
             <Link to="/wishlist">
               <MdFavorite />

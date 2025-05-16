@@ -8,10 +8,8 @@ export const ProductContext = createContext();
 const api_url = "https://depis3.vercel.app/api";
 
 export const ProductProvider = ({ children }) => {
-  const [signedUser, setSigneduser] = useState(null);
   const [products, setProducts] = useState([]);
-  const [cartItems, setCartitems] = useState([]);
-  const [wishlistItems, setWishlistitems] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
@@ -105,7 +103,6 @@ export const ProductProvider = ({ children }) => {
       throw error;
     }
   };
-
   //get all users for the dashboard
   const getUsers = async () => {
     try {
@@ -164,182 +161,30 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  const getSigneduser = async () => {
-    // const userId = JSON.parse(localStorage.getItem("id"));
-    const userId = "681ff5af68095a9c8a226e78";
-    try {
-      const response = await axios.get(`${api_url}/users/${userId}`);
-      setSigneduser(response.data.User);
-      setCartitems(response.data.User.cartItems);
-      setWishlistitems(response.data.User.wishlist);
-      setLoading(false);
-    } catch (error) {
-      console.error("user fetch error:", error);
+  function getWishlist() {
+    const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
+    if (userId) {
+      fetch(`${api_url}/wishlist/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setWishlistItems(data.wishlist);
+          setLoading(false);
+        });
     }
-  };
-
-  const ensureLoggedin = () => {
-    if (!signedUser) {
-      toast(
-        <div className="bg-yellow-100 text-brown-800 px-4 py-2 rounded-md">
-          ⚠️ Please log in to continue.
-        </div>
-      );
-      navigate("/login");
-      return false;
-    }
-    return true;
-  };
+  }
 
   useEffect(() => {
     getProducts();
-    //  if (localStorage.getItem("id")) {
-    getSigneduser();
-    // }
+    getWishlist();
   }, []);
-
-  const addTocart = async (id) => {
-    // const userId = "681ff5af68095a9c8a226e78";
-    if (!ensureLoggedin()) return;
-    const product = products.find((item) => item._id === id);
-    if (!product) {
-      console.error("product not found");
-      return;
-    }
-    try {
-      const response = await axios.post(`${api_url}/cart`, {
-        productId: product._id,
-        quantity: 1,
-        userId,
-      });
-      console.log(response.data.cartItems);
-      const updatedCart = response.data.cartItems.map((item) => ({
-        _id: item._id,
-        quantity: item.quantity,
-        product: item.productId,
-      }));
-      setCartitems(updatedCart);
-      setLoading(false);
-
-      toast(
-        <div className="bg-white text-[#493628] px-4 py-2 rounded-md">
-          🛒 Item added to cart!
-        </div>,
-        {
-          autoClose: 1500,
-        }
-      );
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-    }
-  };
-
-  const deleteFromcart = async (id) => {
-    if (!ensureLoggedin()) return;
-    // const userId = "681ff5af68095a9c8a226e78";
-
-    //  const userId = JSON.parse(localStorage.getItem("id"));
-    try {
-      const response = await fetch(`${api_url}/cart`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: id,
-          userId: userId,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const updatedCart = data.cartItems.map((item) => ({
-            _id: item._id,
-            product: item.productId,
-          }));
-          setCartitems(updatedCart);
-          setLoading(false);
-        });
-    } catch (error) {
-      console.error("Error deleting from cart:", error);
-    }
-  };
-
-  const moveTowishlist = async (id) => {
-    if (!ensureLoggedin()) return;
-    //  const userId = "681ff5af68095a9c8a226e78";
-
-    //  const userId = JSON.parse(localStorage.getItem("id"));
-    try {
-      await axios.delete(`${api_url}/cart`, {
-        data: { productId: id, userId },
-      });
-      const response = await axios.post(`${api_url}/wishlist`, {
-        userId,
-        productId: id,
-      });
-
-      setWishlistitems(response.data.wishlist);
-      const cart = await axios.get(`${api_url}/cart/${userId}`);
-      setCartitems(cart.data.cartItems);
-    } catch (error) {
-      console.error("Error moving to wishlist:", error);
-    }
-  };
-
-  const increaseQuantity = async (id) => {
-    if (!ensureLoggedin()) return;
-    //  const userId = "681ff5af68095a9c8a226e78";
-
-    //  const userId = JSON.parse(localStorage.getItem("id"));
-    const item = cartItems.find((item) => item.productId._id === id);
-    const itemQuantity = item ? item.quantity : 0;
-    try {
-      const response = await axios.patch(`${api_url}/cart/${userId}`, {
-        productId: id,
-        quantity: itemQuantity + 1,
-      });
-      console.log(response.data.cartItems);
-      setCartitems(response.data.cartItems);
-    } catch (error) {
-      console.error("error increasing quantity:", error);
-    }
-  };
-
-  const decreaseQuantity = async (id) => {
-    if (!ensureLoggedin()) return;
-    // const userId = "681ff5af68095a9c8a226e78";
-
-    //  const userId = JSON.parse(localStorage.getItem("id"));
-    const item = cartItems.find((item) => item.productId._id === id);
-    const itemQuantity = item ? item.quantity : 0;
-    try {
-      const response = await axios.patch(`${api_url}/cart/${userId}`, {
-        productId: id,
-        quantity: itemQuantity - 1,
-      });
-      if (itemQuantity < 1) {
-        const filtered = response.data.cartItems.filter(
-          (item) => item.productId._id !== id
-        );
-        setCartitems(filtered);
-      }
-      setCartitems(response.data.cartItems);
-    } catch (error) {
-      console.error("error decreasing quantity:", error);
-    }
-  };
 
   return (
     <ProductContext.Provider
       value={{
         products,
-        cartItems,
         wishlistItems,
-        signedUser,
+        setWishlistItems,
         loading,
-        addTocart,
-        deleteFromcart,
-        increaseQuantity,
-        decreaseQuantity,
-        moveTowishlist,
         getSingleProduct,
         addProduct,
         updateProduct,

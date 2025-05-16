@@ -6,15 +6,20 @@ import {
   Avatar,
   Typography,
 } from "@material-tailwind/react";
+import { useContext } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 
 function DropDown() {
-  const userExists = window.localStorage.getItem("id");
+  const { clearCart } = useContext(CartContext);
+  const userExists = window.localStorage.getItem("user");
   const navigate = useNavigate();
 
   function handleLogout() {
-    window.localStorage.removeItem("id");
+    window.localStorage.removeItem("user");
+    window.localStorage.removeItem("token");
+    clearCart();
     navigate("/");
   }
 

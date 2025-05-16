@@ -5,40 +5,25 @@ import React, { useState, useEffect, useContext } from "react";
 import { Typography } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import { ProductContext } from "../context/ProductContext";
 
 const Wishlist = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false);
+  const { wishlistItems, loading } = useContext(ProductContext);
 
   const navigate = useNavigate();
 
-  const fetchData = () => {
-    // const userId = JSON.parse(window.localStorage.getItem("id"));
-    // const userId = "681ff5af68095a9c8a226e78";
-    fetch(`https://depis3.vercel.app/api/wishlist/${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched wishlist:", data);
-        setProducts(data.wishlist);
-        setLoading(false);
-      });
-  };
-
   useEffect(() => {
-    // if (!window.localStorage.getItem("id")) {
-    //   window.localStorage.setItem("id", "1");
-    //   navigate("/login");
-    // }
-
+    const userId = JSON.parse(window.localStorage.getItem("user"))?.id;
+    if (!userId) {
+      navigate("/signup");
+    }
     AOS.init({
       offset: 100,
       duration: 500,
       easing: "ease-in-out",
     });
     AOS.refresh();
-
-    fetchData();
   }, []);
 
   if (loading) {
@@ -58,15 +43,19 @@ const Wishlist = () => {
       >
         Wishlist
       </h1>
-      <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-        {products && products.length > 0 ? (
-          products.map((item, index) => (
+      {wishlistItems && wishlistItems.length > 0 ? (
+        <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
+          {wishlistItems.map((item, index) => (
             <ProductCard product={item} key={index} />
-          ))
-        ) : (
-          <Typography className="text-center">Loading products...</Typography>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-[80vh]">
+          <Typography className="text-brown-700">
+            Wishlist is currently empty
+          </Typography>
+        </div>
+      )}
     </div>
   );
 };
