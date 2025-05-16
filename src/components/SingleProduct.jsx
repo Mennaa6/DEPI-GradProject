@@ -13,7 +13,8 @@ import { MdCancelPresentation } from "react-icons/md";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
 
 const SingleProduct = ({ open, handleClose, product }) => {
   const { fetchData } = useContext(CartContext);
@@ -45,8 +46,7 @@ const SingleProduct = ({ open, handleClose, product }) => {
         if (!response.ok) { 
         console.error("failed to add to cart");
         return;}
-        toast.success("🛒 Item added to cart!",{autoClose: 1500, });
-        fetchData();
+         fetchData();
       }).catch(
         (err) => {
           console.log(err);
