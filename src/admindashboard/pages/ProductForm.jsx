@@ -12,7 +12,6 @@ import {
   Option,
 } from "@material-tailwind/react";
 import PageTitle from "../components/PageTitle";
-import { mockProducts } from "../data/mockData";
 import { ProductContext } from "../../context/ProductContext";
 import { useContext } from "react";
 
@@ -63,6 +62,7 @@ const ProductForm = () => {
             subcategory: product.subcategory,
             stock: product.stock.toString(),
             available: product.available,
+            rating: product.rating,
           });
           setImagePreview(product.image);
         } catch (error) {
@@ -249,7 +249,9 @@ const ProductForm = () => {
           size="sm"
           className="flex items-center gap-2 mt-4 md:mt-0"
           onClick={() =>
-            navigate(isEditMode ? `/admin/products${id}` : "/admin/products")
+            navigate(
+              isEditMode ? `/admin/products/${id}/edit` : "/admin/products"
+            )
           }
         >
           <FaArrowLeft size={14} /> Back

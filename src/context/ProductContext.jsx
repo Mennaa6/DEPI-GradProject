@@ -11,8 +11,10 @@ export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
+  //get all products
   const getProducts = async () => {
     try {
       const response = await axios.get(`${api_url}/products`);
@@ -27,7 +29,7 @@ export const ProductProvider = ({ children }) => {
   const getSingleProduct = async (id) => {
     try {
       const response = await axios.get(`${api_url}/products/${id}`);
-      return response.data;
+      return response.data.product;
     } catch (error) {
       console.error("Error fetching single product:", error);
       throw error;
@@ -66,29 +68,18 @@ export const ProductProvider = ({ children }) => {
   //update product
   const updateProduct = async (id, updatedData) => {
     try {
-      let payload;
-      let headers = {};
+      // Create a copy without the image field
+      const { image, ...dataWithoutImage } = updatedData;
 
-      if (updatedData.image instanceof File) {
-        // If the image is a File, use FormData
-        payload = new FormData();
-        payload.append("name", updatedData.name);
-        payload.append("category", updatedData.category);
-        payload.append("price", updatedData.price);
-        payload.append("stock", updatedData.stock);
-        payload.append("description", updatedData.description);
-        payload.append("image", updatedData.image);
-
-        headers["Content-Type"] = "multipart/form-data";
-      } else {
-        // Otherwise send as JSON
-        payload = updatedData;
-        headers["Content-Type"] = "application/json";
-      }
-
-      const response = await axios.patch(`${api_url}/products/${id}`, payload, {
-        headers,
-      });
+      const response = await axios.patch(
+        `${api_url}/products/${id}`,
+        dataWithoutImage,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       toast.success("Product updated!");
       getProducts();
@@ -109,6 +100,63 @@ export const ProductProvider = ({ children }) => {
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error("Failed to delete product.");
+      throw error;
+    }
+  };
+  //get all users for the dashboard
+  const getUsers = async () => {
+    try {
+      const response = await axios.get(`${api_url}/users`);
+      setUsers(response.data.Users);
+      setLoading(false);
+    } catch (error) {
+      console.error("users fetch error:", error);
+    }
+  };
+
+  const updateUser = async (id, updatedData) => {
+    try {
+      // Create a copy without the image field
+      const { image, ...dataWithoutImage } = updatedData;
+
+      const response = await axios.patch(
+        `${api_url}/users/${id}`,
+        dataWithoutImage,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast.success("User updated!");
+      getProducts();
+      return response.data;
+    } catch (error) {
+      console.error("Error updating user:", error);
+      toast.error("Failed to update user.");
+      throw error;
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      await axios.delete(`${api_url}/users/${id}`);
+      toast.info("User deleted successfully.");
+      setProducts(products.filter((p) => p._id !== id));
+    } catch (error) {
+      console.error("Error deleting User:", error);
+      toast.error("Failed to delete User.");
+      throw error;
+    }
+  };
+
+  const getSingleUser = async (id) => {
+    try {
+      const response = await axios.get(`${api_url}/users/${id}`);
+      return response.data.User;
+    } catch (error) {
+      console.error("Error fetching single product:", error);
       throw error;
     }
   };
@@ -141,6 +189,11 @@ export const ProductProvider = ({ children }) => {
         addProduct,
         updateProduct,
         deleteProduct,
+        getUsers,
+        users,
+        updateUser,
+        getSingleUser,
+        deleteUser,
       }}
     >
       {children}

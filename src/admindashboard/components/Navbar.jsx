@@ -108,59 +108,11 @@ const Navbar = ({ toggleSidebar }) => {
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-2 border-t border-gray-100 text-center">
-                  <button className="text-sm text-primary-600 hover:text-primary-700">
-                    View all notifications
-                  </button>
-                </div>
               </div>
             )}
           </div>
-
-          {/* Messages */}
-          <button className="p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none relative">
-            <FaEnvelope size={18} />
-            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
 
           {/* Profile */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center"
-            >
-              <img alt="User" className="w-8 h-8 rounded-full object-cover" />
-              <span className="hidden md:block ml-2 text-sm font-medium text-gray-700"></span>
-            </button>
-
-            {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 animate-fadeIn">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-sm font-medium text-gray-800"></p>
-                  <p className="text-xs text-gray-500 truncate"></p>
-                </div>
-                <a
-                  href="#profile"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  <FaUserCircle className="mr-3 text-gray-500" />
-                  Profile
-                </a>
-                <a
-                  href="#settings"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  <FaCog className="mr-3 text-gray-500" />
-                  Settings
-                </a>
-                <div className="border-t border-gray-100 my-1"></div>
-                <button className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  <FaSignOutAlt className="mr-3 text-gray-500" />
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </header>

@@ -17,7 +17,6 @@ import { FaSearch } from "react-icons/fa";
 import { ProductContext } from "../context/ProductContext";
 import ProductCard from "../components/ProductCard";
 
-
 const Products = () => {
   const { products, loading } = useContext(ProductContext);
 
@@ -64,20 +63,15 @@ const Products = () => {
       >
         Browse All Products
       </h1>
+
+      {/* Search bar */}
       <div
         data-aos="zoom-in"
         data-aos-delay="200"
         className="w-full max-w-sm min-w-[200px]"
       >
         <div className="relative flex items-center">
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600"
-          >
-            <FaSearch size={20} className="text-brown-400" />;
-          </svg>
-
+          <FaSearch size={20} className="absolute left-3 text-brown-400" />
           <input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -87,18 +81,17 @@ const Products = () => {
         </div>
       </div>
 
+      {/* Products Grid or "No matches" */}
       {filteredProducts.length > 0 ? (
-        filteredProducts.map((item) => (
-          <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-            {filteredProducts.map((item, index) => (
-              <ProductCard product={item} key={index} />
-            ))}
-          </div>
-        ))
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5">
+          {filteredProducts.map((item, index) => (
+            <ProductCard product={item} key={index} />
+          ))}
+        </div>
       ) : (
         <Typography
           variant="h5"
-          className=" w-full text-center col-span-full text-brown-700 mt-4 mb-10"
+          className="w-full text-center col-span-full text-brown-700 mt-4 mb-10"
         >
           No matches found...
         </Typography>
