@@ -85,23 +85,19 @@ const Products = () => {
           />
         </div>
       </div>
-
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map((item) => (
-          <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
-            {filteredProducts.map((item, index) => (
-              <ProductCard product={item} key={index} />
-            ))}
-          </div>
-        ))
-      ) : (
-        <Typography
-          variant="h5"
-          className=" w-full text-center col-span-full text-brown-700 mt-4 mb-10"
-        >
-          No matches found...
-        </Typography>
-      )}
+      <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">
+        {filteredProducts.map((item, index) => (
+          <ProductCard product={item} key={index} />
+        ))}
+      </div>
+      ) ) : (
+      <Typography
+        variant="h5"
+        className=" w-full text-center col-span-full text-brown-700 mt-4 mb-10"
+      >
+        No matches found...
+      </Typography>
+      )
     </div>
   );
 };
