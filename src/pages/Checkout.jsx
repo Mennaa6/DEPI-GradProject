@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 const Checkout = () => {
-  const { cartItems, signedUser } = useContext(CartContext);
+  const { cartItems } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [shippingDetails, setShippingdetails] = useState({
@@ -30,6 +30,9 @@ const Checkout = () => {
   const handlePaymentChange = (key, value) => {
     if (key === "cardNumber") {
       value = value.replace(/\D/g, "").slice(0, 16);
+    }
+    if (key === "expData") {
+      value = value.replace(/[^\d/]/g, "");
     }
     if (key === "cvv") {
       value = value.replace(/\D/g, "").slice(0, 3);

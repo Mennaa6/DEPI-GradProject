@@ -11,9 +11,10 @@ const OrderConfirmation = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("user"))?.id;
     if (orderId) {
       axios
-        .get(`http://localhost:3001/api/orders/${orderId}`)
+        .get(`http://localhost:3001/api/orders/${userId}/${orderId}`)
         .then((response) => {
           setOrderDetails(response.data);
           setLoading(false);
