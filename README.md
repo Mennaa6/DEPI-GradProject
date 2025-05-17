@@ -19,12 +19,14 @@
 - Protected routes for admin access
 
 
+
 ## 🧩 Technology Stack
 
 ### Frontend
 - **React.js**
 - **Tailwind CSS**
-- **Material Tailwind** 
+- **Material Tailwind**
+- **AOS** for animations
 - **React Router DOM**
 - **Context API** for state management
 
