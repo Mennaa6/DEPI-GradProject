@@ -148,17 +148,6 @@ const SignUp = () => {
               />
             </div>
 
-            <div>
-              <label className="block text-[#493628] font-medium mb-2">
-                Profile Image
-              </label>
-              <input
-                type="file"
-                onChange={(e) => setImage(e.target.files[0])}
-                className="w-full px-4 py-2 rounded-lg bg-white border border-[#AB886D] focus:border-[#493628] focus:outline-none text-[#493628] "
-              />
-            </div>
-
             <Button
               type="submit"
               className="w-full py-3 bg-[#493628] hover:bg-[#AB886D] text-white font-bold rounded-lg transition-colors duration-200"

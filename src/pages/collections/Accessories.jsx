@@ -47,7 +47,7 @@ const Accessories = () => {
         data-aos-delay="200"
         className="text-brown-700 font-semibold text-[42px] leading-[50px] text-center"
       >
-        accessories Collection
+        Accessories Collection
       </h1>
       {accessories && accessories.length > 0 ? (
         <div className=" grid lg:grid-cols-3 grid-cols-1 justify-center items-center lg:gap-10 gap-5 m-5 md:grid-cols-2">

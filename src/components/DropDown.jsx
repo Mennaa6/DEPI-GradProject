@@ -40,7 +40,7 @@ function DropDown() {
               variant="circular"
               alt="user profile"
               className="cursor-pointer w-9 h-9"
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+              src="https://res.cloudinary.com/dvlmrrmdx/image/upload/v1747390819/836_gyc3ug.jpg"
             />
           </MenuHandler>
           <MenuList>
@@ -105,8 +105,8 @@ function DropDown() {
       ) : (
         <IoMdLogIn
           onClick={() => {
-              navigate("/sign-up");
-              handleLogout();
+            navigate("/sign-up");
+            handleLogout();
           }}
           size={22}
           className="cursor-pointer"
