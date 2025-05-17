@@ -1,4 +1,4 @@
-#🛍️ VINTAGE - MERN Stack Online Shopping Website
+# VINTAGE - MERN Stack Online Shopping Website
 
 **Vintage** is a full-stack e-commerce website built using the MERN stack (MongoDB, Express.js, React.js, Node.js). It provides a smooth shopping experience for users with a modern frontend design and a powerful backend for managing products with an admin dashboard.
 
