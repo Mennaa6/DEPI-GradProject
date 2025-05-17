@@ -1,12 +1,40 @@
-# React + Vite
+#🛍️ VINTAGE - MERN Stack Online Shopping Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Vintage** is a full-stack e-commerce website built using the MERN stack (MongoDB, Express.js, React.js, Node.js). It provides a smooth shopping experience for users with a modern frontend design and a powerful backend for managing products with an admin dashboard.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧩 Features
 
-## Expanding the ESLint configuration
+### User Features
+- Browse products on the Shop page
+- View featured items on the Home page
+- Add to cart / Wishlist
+- Responsive and mobile-friendly UI
+- Smooth product loading and filtering
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Admin Features
+- Admin Dashboard with full **CRUD** functionality
+- Manage **Products**, **Users** and **Orders**
+- View all data in a structured table with many filtering features
+- Protected routes for admin access
+
+
+## 🧩 Technology Stack
+
+### Frontend
+- **React.js**
+- **Tailwind CSS**
+- **Material Tailwind** 
+- **React Router DOM**
+- **Context API** for state management
+
+### Backend
+- **Node.js**
+- **Express.js**
+- **MongoDB** with **Mongoose**
+- **RESTful APIs**
+- **Multer** and **Cloudinary** for image uploads
+- **JWT** for secure authentication and authorization
+
+
+
