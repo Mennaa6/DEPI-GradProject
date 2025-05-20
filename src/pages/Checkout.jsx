@@ -11,6 +11,7 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   const [shippingDetails, setShippingdetails] = useState({
+    
     name: "",
     email: "",
     address: "",
@@ -53,6 +54,7 @@ const Checkout = () => {
     const stringfiedAddress = `${shippingDetails.address}, ${shippingDetails.city}, ${shippingDetails.governorate}`;
 
     const order = {
+      userId,
       address: stringfiedAddress,
       items: cartItems.map((item) => ({
         product: item.productId._id,
@@ -71,11 +73,13 @@ const Checkout = () => {
 
     try {
       const response = await axios.post(
-        `https://depis3.vercel.app/api/orders/${userId}`,
+        `https://depis3.vercel.app/api/orders`,
         order
       );
       toast.success("Order placed successfully!");
-      navigate("/");
+      navigate("/", {
+        
+      });
     } catch (error) {
       console.error("error placing order:", error);
       toast.error("⚠️ There was an issue placing your order.");
